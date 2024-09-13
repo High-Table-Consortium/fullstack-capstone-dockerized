@@ -1,26 +1,27 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME, TEST_DB_HOST } =
-  process.env;
+// Load environment variables for connection details
+const {
+  MONGODB_ATLAS_USER,
+  MONGODB_ATLAS_PASSWORD,
+  MONGODB_ATLAS_DATABASE,
+} = process.env;
 
-const DB_URI = `mongodb://${DB_USER}:${DB_PASSWORD}@${
-  process.env.NODE_ENV === "test" ? TEST_DB_HOST : DB_HOST
-}:${DB_PORT}/${DB_NAME}?authSource=admin`;
+// MongoDB Atlas connection string with dynamic user, password, and database
+const url = `mongodb+srv://${MONGODB_ATLAS_USER}:${MONGODB_ATLAS_PASSWORD}@cluster0.4mlkv.mongodb.net/${MONGODB_ATLAS_DATABASE}?retryWrites=true&w=majority`;
 
-const url = DB_URI;
+const connectionParams = {
+  useNewUrlParser: true,
+};
 
 const connectToMongo = () => {
-  mongoose.connect(url, { useNewUrlParser: true });
-
-  db = mongoose.connection;
-
-  db.once("open", () => {
-    console.log("Database connected: ", url);
-  });
-
-  db.on("error", (err) => {
-    console.error("Database connection error: ", err);
-  });
+  mongoose.connect(url, connectionParams)
+    .then(() => {
+      console.log('Connected to the database');
+    })
+    .catch((err) => {
+      console.error(`Error connecting to the database.\n${err}`);
+    });
 };
 
 module.exports = connectToMongo;

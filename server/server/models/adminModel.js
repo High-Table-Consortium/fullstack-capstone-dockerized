@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
 
 // Define the schema for Admin model
 const adminSchema = new mongoose.Schema({
@@ -35,6 +36,18 @@ const adminSchema = new mongoose.Schema({
   // - This field is optional and can store multiple preferences
   preferences: [String],
 });
+
+// Hash the password before saving the admin
+adminSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+// Compare the password entered by the admin with the hashed password
+adminSchema.methods.comparePassword = async function (password) {
+  return bcrypt.compare(password, this.password);
+};
 
 // Create the Admin model using the schema
 const Admin = mongoose.model("Admin", adminSchema);

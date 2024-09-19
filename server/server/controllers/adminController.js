@@ -38,6 +38,7 @@ exports.registerAdmin = async (req, res) => {
     // Save admin to database
     await admin.save();
 
+
     // Generate JWT token for new admin
     const token = generateToken(admin);
     // Return success response with JWT token

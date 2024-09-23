@@ -5,7 +5,9 @@ import SignInPage from "./pages/signin/page";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      {/* <body>{children}<SignInPage/></body> */}
+      <body>{children}
+        <SignInPage/>
+        </body>
     </html>
   );
 }

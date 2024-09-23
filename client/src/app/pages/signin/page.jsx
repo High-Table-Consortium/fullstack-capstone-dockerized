@@ -30,7 +30,6 @@ const SignInPage = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="w-full max-w-md bg-white p-8 rounded shadow-md">
-        {/* Unbolded heading */}
         <h1 className="text-4xl font-normal text-black text-center mb-6">Welcome back!</h1>
 
         <Forms
@@ -38,7 +37,6 @@ const SignInPage = () => {
           validationSchema={validationSchema}
           onSubmit={handleSignIn}
           buttonText="Sign In"
-          // Removed w-full, kept w-2/3 for width and mx-auto for centering
           buttonClassName="rounded-full w-2/3 mx-auto font-bold"
         />
 

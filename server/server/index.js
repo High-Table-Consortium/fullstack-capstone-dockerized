@@ -4,6 +4,7 @@ const adminRoutes = require("./routes/adminRoutes");
 require("dotenv").config();
 
 const connectToMongo = require("./db/connection");
+const attractionRoutes = require("./routes/attractionRoutes");
 
 const app = express();
 const port =
@@ -21,5 +22,6 @@ app.listen(port, () => {
 });
 
 app.use("/api/admin", adminRoutes);
+app.use("/api/attractions", attractionRoutes);
 
 module.exports = app;

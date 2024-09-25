@@ -26,4 +26,5 @@ app.get("/test", (req, res) => {
   );
 });
 
+app.use("/api/recommendations" ,recommendationsroutes)
 module.exports = app;

@@ -1,18 +1,32 @@
-"use client";
-import React, { useEffect, useState } from "react";
+"use client"
 
-const Hello = () => {
-  const [testResult, setTestResult] = useState("");
+import { useEffect, useState } from 'react';
+
+const TestComponent = () => {
+  const [testResult, setTestResult] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:3001/test")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.json();
+      })
       .then((data) => {
         setTestResult(data);
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
       });
   }, []);
 
-  return <div>{testResult}</div>;
+  return (
+    <div>
+      {testResult ? <p>{testResult.message}</p> : <p>Loading...</p>}
+    </div>
+  );
 };
 
-export default Hello;
+export default TestComponent;
+

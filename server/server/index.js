@@ -3,6 +3,7 @@ const cors = require("cors");
 const adminRoutes = require("./routes/adminRoutes");
 require("dotenv").config();
 
+const attractionRoutes = require("./routes/attractionRoutes")
 const connectToMongo = require("./db/connection");
 
 const app = express();
@@ -22,4 +23,5 @@ app.listen(port, () => {
 
 app.use("/api/admin", adminRoutes);
 
+app.use("/api/attractions", attractionRoutes);
 module.exports = app;

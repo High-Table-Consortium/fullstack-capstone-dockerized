@@ -10,7 +10,7 @@ export default function ExplorePage() {
         <h2 className="text-2xl font-bold mb-4">Places you may like</h2>
         <div className="w-full overflow-x-auto whitespace-nowrap rounded-md border">
           <div className="flex w-max space-x-4 p-4">
-            {["Paris", "Tokyo", "New York", "Rome", "Sydney", "London"].map((city) => (
+            {["Cape Town", "Johannesburg", "Bloemfontein", "Durban", "Port Elizabeth", "Pretoria"].map((city) => (
               <div key={city} className="w-[250px] shrink-0 bg-white shadow-lg rounded-lg">
                 <div className="p-0">
                   <Image
@@ -61,7 +61,7 @@ export default function ExplorePage() {
       <section>
         <h2 className="text-2xl font-bold mb-4">Cities in South Africa</h2>
         <div className="flex overflow-x-auto space-x-4 pb-4">
-          {["Cape Town", "Johannesburg", "Durban", "Pretoria", "Port Elizabeth"].map((city) => (
+          {["Cape Town", "Johannesburg", "Bloemfontein", "Durban", "Port Elizabeth", "Pretoria"].map((city) => (
             <div key={city} className="w-[200px] shrink-0 bg-white shadow-lg rounded-lg">
               <div className="p-0">
                 <Image

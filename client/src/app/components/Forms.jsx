@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-const Forms = ({ fields, onSubmit, validationSchema, buttonText }) => {
+const Forms = ({ fields, onSubmit, validationSchema, buttonText, buttonClassName }) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -38,7 +38,7 @@ const Forms = ({ fields, onSubmit, validationSchema, buttonText }) => {
     <form onSubmit={handleSubmit} className="space-y-4">
       {fields.map((field, index) => (
         <div key={index} className="space-y-2">
-          <label htmlFor={field.name}>{field.label}</label>
+          <label htmlFor={field.name} className="font-bold text-black">{field.label}</label>
           <input
             id={field.name}
             name={field.name}
@@ -47,12 +47,12 @@ const Forms = ({ fields, onSubmit, validationSchema, buttonText }) => {
             value={formValues[field.name] || ''}
             onChange={handleInputChange}
             required={field.required}
-            className="w-full px-3 py-2 border rounded"
+            className="w-full px-3 py-2 border-2 border-gray-300 rounded"
           />
           {errors[field.name] && <span className="text-red-500 text-sm">{errors[field.name]}</span>}
         </div>
       ))}
-      <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
+      <button type="submit" className={`bg-green-900 text-white py-2 ${buttonClassName}`}>
         {buttonText}
       </button>
     </form>

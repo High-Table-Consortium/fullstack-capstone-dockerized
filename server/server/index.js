@@ -22,4 +22,5 @@ app.listen(port, () => {
 
 app.use("/api/admin", adminRoutes);
 
+app.use("/api/recommendations" ,recommendationsroutes)
 module.exports = app;

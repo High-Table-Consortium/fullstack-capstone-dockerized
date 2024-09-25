@@ -4,10 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
-export function FooterComponent() {
+export default function FooterComponent() {
   return (
-    <footer className="bg-gray-100 border-t">
-      <div className="max-w-6xl mx-auto px-4 py-8">
+    <footer className="bg-gray-100 border-t w-full">
+      <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Policies */}
           <div>
@@ -114,7 +114,6 @@ export function FooterComponent() {
             </ul>
           </div>
         </div>
-
         <div className="mt-8 border-t pt-8 text-center text-gray-500">
           <p>
             &copy; {new Date().getFullYear()} MeeGuide. All rights reserved.

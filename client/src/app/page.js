@@ -1,11 +1,13 @@
-import Test from "./Components/Test";
+// import Test from "./Components/Test";
+import Navbar from "@/components/Navbar";
+import FooterComponent from "../components/Footer";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <Test />
-      </div>
+    <main className="">
+      <div className=""></div>
+      <Navbar/>
+      <FooterComponent />
     </main>
   );
 }

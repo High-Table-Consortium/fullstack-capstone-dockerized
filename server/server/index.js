@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const recommendationsroute = require("./controllers/recommendations");
 
 require("dotenv").config();
 
@@ -26,5 +27,6 @@ app.get("/test", (req, res) => {
   );
 });
 
-app.use("/api/recommendations" ,recommendationsroutes)
+app.use("/api/recommendations" ,recommendationsroute); 
+
 module.exports = app;

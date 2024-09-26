@@ -10,7 +10,9 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 
 // GET route to fetch the logged-in user's profile
+
 router.get('/profile', authenticateToken, getUserProfile); 
+
 
 // PUT route to update the user's profile
 router.put('/profile', authenticateToken, updateUserProfile);

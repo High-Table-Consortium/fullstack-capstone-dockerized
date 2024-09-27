@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,13 +30,18 @@ export default function Navbar() {
   }, []);
 
   const handleSignInClick = () => {
-    router.push("/signin");
+    router.push("/auth/signin");
   };
 
   const handleSignOut = () => {
-    setIsLoggedIn(false);
-    setUsername("");
-    localStorage.removeItem("username");
+    try {
+      setIsLoggedIn(false);
+      setUsername("");
+      localStorage.removeItem("username");
+      router.push("/");
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
   };
 
   return (
@@ -135,7 +140,7 @@ export default function Navbar() {
                 variant="outline"
                 className="ml-4 text-yellow-500 border-yellow-500 hover:bg-green-800 hover:text-yellow-300"
               >
-                Sign In / Sign Up
+                Sign In
               </Button>
             )}
           </div>

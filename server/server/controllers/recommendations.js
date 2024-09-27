@@ -1,39 +1,46 @@
-const express = require('express');
-const router = express.Router();
-const Recommendation = require('../models/recommendationModel'); // Assuming your model is in a 'models' folder
+const Recommendation = require("../models/recommendationModel"); // Assuming your model is in a 'models' folder
 
 // GET all recommendations
-router.get('/', async (req, res) => {
+exports.getRecommendations = async (req, res) => {
   try {
-    const recommendations = await Recommendation.find().populate('attraction_id'); // Populate the 'attraction_id' field
+    // Fetch all recommendations and populate the 'attraction_id' field
+    const recommendations = await Recommendation.find().populate(
+      "attraction_id"
+    ); // Populate the 'attraction_id' field
     res.json(recommendations);
   } catch (err) {
+    // Handle any errors that occur during the fetch
     res.status(500).json({ message: err.message });
   }
-});
+};
 
 // GET a specific recommendation by ID
-router.get('/:id', getRecommendation, (req, res) => {
+exports.getRecommendationById = async (req, res) => {
+  // Return the recommendation fetched by the middleware
   res.json(res.recommendation);
-});
+};
 
 // CREATE a new recommendation
-router.post('/', async (req, res) => {
+exports.createRecommendation = async (req, res) => {
+  // Create a new recommendation instance with the provided data
   const recommendation = new Recommendation({
     attraction_id: req.body.attraction_id,
     name: req.body.name,
   });
 
   try {
+    // Save the new recommendation to the database
     const newRecommendation = await recommendation.save();
     res.status(201).json(newRecommendation);
   } catch (err) {
+    // Handle any errors that occur during the save
     res.status(400).json({ message: err.message });
   }
-});
+};
 
 // UPDATE a recommendation
-router.patch('/:id', getRecommendation, async (req, res) => {
+exports.updateRecommendation = async (req, res) => {
+  // Update the recommendation fields if they are provided in the request body
   if (req.body.attraction_id != null) {
     res.recommendation.attraction_id = req.body.attraction_id;
   }
@@ -42,37 +49,43 @@ router.patch('/:id', getRecommendation, async (req, res) => {
   }
 
   try {
+    // Save the updated recommendation to the database
     const updatedRecommendation = await res.recommendation.save();
     res.json(updatedRecommendation);
   } catch (err) {
+    // Handle any errors that occur during the save
     res.status(400).json({ message: err.message });
   }
-});
+};
 
 // DELETE a recommendation
-router.delete('/:id', getRecommendation, async (req, res) => {
+exports.deleteRecommendation = async (req, res) => {
   try {
+    // Remove the recommendation from the database
     await res.recommendation.remove();
-    res.json({ message: 'Recommendation deleted' });
+    res.json({ message: "Recommendation deleted" });
   } catch (err) {
+    // Handle any errors that occur during the delete
     res.status(500).json({ message: err.message });
   }
-});
+};
 
 // Middleware function to get a recommendation by ID
-async function getRecommendation(req, res, next) {
+exports.getRecommendationMiddleware = async (req, res, next) => {
   let recommendation;
   try {
+    // Fetch the recommendation by ID from the database
     recommendation = await Recommendation.findById(req.params.id);
     if (recommendation == null) {
-      return res.status(404).json({ message: 'Cannot find recommendation' });
+      // Return a 404 error if the recommendation is not found
+      return res.status(404).json({ message: "Cannot find recommendation" });
     }
   } catch (err) {
+    // Handle any errors that occur during the fetch
     return res.status(500).json({ message: err.message });
   }
 
+  // Attach the fetched recommendation to the response object
   res.recommendation = recommendation;
   next();
 }
-
-module.exports = router;

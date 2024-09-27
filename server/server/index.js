@@ -5,7 +5,7 @@ require("dotenv").config();
 
 const connectToMongo = require("./db/connection");
 const attractionRoutes = require("./routes/attractionRoutes");
-
+const recommendationsRoutes = require("./routes/recommendationsroute");
 const app = express();
 const port =
   process.env.NODE_ENV === "test"
@@ -24,5 +24,5 @@ app.listen(port, () => {
 app.use("/api/admin", adminRoutes);
 app.use("/api/attractions", attractionRoutes);
 
-app.use("/api/recommendations" ,recommendationsroutes)
+app.use("/api/recommendations" ,recommendationsRoutes)
 module.exports = app;

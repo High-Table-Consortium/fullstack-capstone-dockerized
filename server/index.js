@@ -1,11 +1,11 @@
 const express = require("express");
 const cors = require("cors");
-const adminRoutes = require("./routes/adminRoutes");
+const adminRoutes = require("./server/routes/adminRoutes");
 require("dotenv").config();
 
-const connectToMongo = require("./db/connection");
-const attractionRoutes = require("./routes/attractionRoutes");
-const recommendationsRoutes = require("./routes/recommendationsroute");
+const connectToMongo = require("./server/db/connection");
+const attractionRoutes = require("./server/routes/attractionRoutes");
+const recommendationsRoutes = require("./server/routes/recommendationsroute");
 const app = express();
 const port =
   process.env.NODE_ENV === "test"

@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const adminRoutes = require("./routes/adminRoutes");
 require("dotenv").config();
-
+const commentRoutes = require("./routes/commentRoutes");
 const connectToMongo = require("./db/connection");
 const attractionRoutes = require("./routes/attractionRoutes");
 const recommendationsRoutes = require("./routes/recommendationsroute");
@@ -23,6 +23,6 @@ app.listen(port, () => {
 
 app.use("/api/admin", adminRoutes);
 app.use("/api/attractions", attractionRoutes);
-
+app.use("/api/comments", commentRoutes);
 app.use("/api/recommendations" ,recommendationsRoutes)
 module.exports = app;

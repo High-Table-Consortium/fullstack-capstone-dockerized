@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const adminRoutes = require("./routes/adminRoutes");
+const adminRoutes = require("./server/routes/adminRoutes");
 require("dotenv").config();
 const commentRoutes = require("./routes/commentRoutes");
 const connectToMongo = require("./db/connection");

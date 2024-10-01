@@ -3,10 +3,15 @@ const router = express.Router();
 const { registerUser, loginUser} = require('../controllers/userController');
 const passport = require('passport');
 
-// Route to handle user registration
+
+/**
+ * handles route to register user
+ */
 router.post('/register', registerUser);
 
-// Route to handle user login
+/**
+ * handles route to login user
+ */
 router.post('/login', loginUser);
 
 /**

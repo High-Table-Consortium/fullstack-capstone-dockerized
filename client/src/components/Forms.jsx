@@ -1,8 +1,8 @@
-"use client"; 
+"use client";
 
 import { useState } from 'react';
 
-const Forms = ({ fields, onSubmit, validationSchema, buttonText, buttonClassName }) => {
+const Forms = ({ fields, onSubmit, validationSchema, buttonText, buttonClassName, inputClassName }) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
 
@@ -47,12 +47,14 @@ const Forms = ({ fields, onSubmit, validationSchema, buttonText, buttonClassName
             value={formValues[field.name] || ''}
             onChange={handleInputChange}
             required={field.required}
-            className="w-full px-3 py-2 border-2 border-gray-300 rounded"
+            
+            // Applying the custom class passed down for inputs
+            className={`w-full px-4 py-3 mt-2 text-sm text-gray-900 bg-gray-200 rounded-full focus:bg-gray-300 focus:ring-0 focus:outline-none ${inputClassName}`}
           />
           {errors[field.name] && <span className="text-red-500 text-sm">{errors[field.name]}</span>}
         </div>
       ))}
-      <button type="submit" className={`bg-green-900 text-white py-2 ${buttonClassName}`}>
+      <button type="submit" className={`w-full py-4 mt-6 font-bold text-white rounded-full ${buttonClassName}`}>
         {buttonText}
       </button>
     </form>
@@ -60,4 +62,5 @@ const Forms = ({ fields, onSubmit, validationSchema, buttonText, buttonClassName
 };
 
 export default Forms;
+
 

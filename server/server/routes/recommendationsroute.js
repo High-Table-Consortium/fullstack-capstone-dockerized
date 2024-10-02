@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getRecommendations,getRecommendationById,createRecommendation,updateRecommendation,deleteRecommendation} = require('../controllers/recommendations');
+const {getRecommendations,getRecommendationById,createRecommendation,updateRecommendation,deleteRecommendation} = require('../../server/controllers/recommendations');
 
 // GET all recommendations
 router.get('/', getRecommendations);

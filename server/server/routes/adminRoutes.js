@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { registerAdmin, loginAdmin } = require('../controllers/adminController');
-const { authenticateToken, isAdmin } = require('../middleware/authMiddleware');
+const { registerAdmin, loginAdmin } = require('../../server/controllers/adminController');
+const { authenticateToken, isAdmin } = require('../../server/middleware/authMiddleware');
 
 // Route to handle admin registration
 router.post('/register', registerAdmin);

@@ -6,7 +6,7 @@ const {
   getCommentsByUser,
   deleteComment,
   updateComment,
-} = require("../controllers/commentController");
+} = require("../../server/controllers/commentController");
 
 router.post("/", createComment);
 router.get("/attraction/:attractionId", getCommentsByAttractionSite);

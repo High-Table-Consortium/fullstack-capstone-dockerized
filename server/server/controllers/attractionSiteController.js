@@ -1,4 +1,4 @@
-const AttractionSite = require("../models/tourist_attractionModel");
+const AttractionSite = require("../../server/models/tourist_attractionModel");
 
 exports.getAllAttractionSites = async (req, res) => {
   try {

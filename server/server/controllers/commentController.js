@@ -1,5 +1,5 @@
 const { body, param, validationResult } = require('express-validator'); // Import express-validator functions
-const Comment = require("../models/commentModel"); // Import the Comment model
+const Comment = require("../../server/models/commentModel"); // Import the Comment model
 
 /** 
  * Create Comment Controller

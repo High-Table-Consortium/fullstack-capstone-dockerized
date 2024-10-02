@@ -7,6 +7,7 @@ const connectToMongo = require("./server/db/connection");
 const attractionRoutes = require("./server/routes/attractionRoutes");
 const recommendationsRoutes = require("./server/routes/recommendationsroute");
 const authenticationRoutes = require("./server/routes/authenticationRoutes");
+const reviewRoutes = require("./server/routes/reviewRoutes");
 const app = express();
 const port =
   process.env.NODE_ENV === "test"
@@ -30,4 +31,5 @@ app.use("/api/attractions", attractionRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/recommendations", recommendationsRoutes);
 app.use("/api/auth", authenticationRoutes);
+app.use("/api/reviews", reviewRoutes);
 module.exports = app;

@@ -1,237 +1,295 @@
 'use client'
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { toast } from "@/hooks/use-toast";
 
-export default function SignUp() {
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [errors, setErrors] = useState({});
+import React from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "@/hooks/use-toast";
+import Forms from "@/components/forms"; 
+
+const SignUp = () => {
   const router = useRouter();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  // Form fields
+  const fields = [
+    { name: "firstName", label: "First Name", type: "text", placeholder: "Enter your first name", required: true },
+    { name: "lastName", label: "Last Name", type: "text", placeholder: "Enter your last name", required: true },
+    { name: "username", label: "Username", type: "text", placeholder: "Choose a username", required: true },
+    { name: "email", label: "Email address", type: "email", placeholder: "Enter your email", required: true },
+    { name: "password", label: "Password", type: "password", placeholder: "Enter your password", required: true },
+    { name: "confirmPassword", label: "Confirm Password", type: "password", placeholder: "Confirm your password", required: true },
+  ];
+
+  // Validation schema
+  const validationSchema = {
+    firstName: {
+      required: "First name is required",
+      pattern: /^[A-Z][a-z]{2,}$/,
+      message: "First name must start with a capital letter and be at least 3 characters long",
+    },
+    lastName: {
+      required: "Last name is required",
+      pattern: /^[A-Z][a-z]{2,}$/,
+      message: "Last name must start with a capital letter and be at least 3 characters long",
+    },
+    username: {
+      required: "Username is required",
+      pattern: /^\S+$/,
+      message: "Username must not contain spaces",
+    },
+    email: {
+      required: "Email is required",
+      pattern: /^\S+@\S+\.\S+$/,
+      message: "Please enter a valid email address",
+    },
+    password: {
+      required: "Password is required",
+      pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/,
+      message: "Password must be at least 8 characters long, contain a number, a capital letter, a special character, and a lowercase letter",
+    },
+    confirmPassword: {
+      required: "Confirm Password is required",
+      custom: (values) => values.password === values.confirmPassword || "Passwords do not match",
+    },
   };
 
-  const validateForm = () => {
-    let newErrors = {};
-
-    if (!/^[A-Z][a-z]{2,}$/.test(formData.firstName)) {
-      newErrors["firstName"] =
-        "First name must start with a capital letter and be at least 3 characters long";
-    }
-
-    if (!/^[A-Z][a-z]{2,}$/.test(formData.lastName)) {
-      newErrors["lastName"] =
-        "Last name must start with a capital letter and be at least 3 characters long";
-    }
-
-    if (!/^\S+$/.test(formData.username)) {
-      newErrors["username"] = "Username must not contain spaces";
-    }
-
-    if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors["email"] = "Please enter a valid email address";
-    }
-
-    if (
-      !/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/.test(
-        formData.password
-      )
-    ) {
-      newErrors["password"] =
-        "Password must be at least 8 characters long, contain a number, a capital letter, a special character, and a lowercase letter";
-    }
-
-    if (formData.password !== formData.confirmPassword) {
-      newErrors["confirmPassword"] = "Passwords do not match";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validateForm()) {
-      toast({
-        title: "Account created.",
-        description: "We've created your account for you.",
-      });
-      router.push("/signin");
-    }
+  // Handle form submission
+  const handleSubmit = (formData) => {
+    toast({
+      title: "Account created.",
+      description: "We've created your account for you.",
+    });
+    router.push("/signin");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-green-600">
-            Join us for an adventure
+    <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gray-100">
+      <div className="sm:mx-auto sm:w-full sm:max-w-lg"> {/* Adjusted max width */}
+        <div className="bg-white py-8 px-6 shadow sm:rounded-lg sm:px-10"> {/* Added px-6 for better horizontal padding */}
+          <h2 className="text-center text-4xl font-extrabold leading-9 tracking-tight text-gray-900 mb-8"> {/* Moved inside the container */}
+            Create your account
           </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <Label
-                htmlFor="firstName"
-                className="block text-sm font-medium text-gray-700"
-              >
-                First Name
-              </Label>
-              <Input
-                id="firstName"
-                name="firstName"
-                type="text"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                placeholder="Enter your first name"
-                value={formData.firstName}
-                onChange={handleChange}
-              />
-              {errors["firstName"] && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors["firstName"]}
-                </p>
-              )}
+
+          {/* Sign Up with Google Button */}
+          <a
+            className="flex items-center justify-center w-full py-4 text-sm font-medium text-gray-900 bg-gray-200 rounded-2xl hover:bg-gray-300"
+            href="#"
+          >
+            <img
+              className="h-5 mr-2"
+              src="https://raw.githubusercontent.com/Loopple/loopple-public-assets/main/motion-tailwind/img/logos/logo-google.png"
+              alt="Google logo"
+            />
+            Sign up with Google
+          </a>
+
+          <div className="flex items-center mt-4">
+            <hr className="flex-grow border-gray-300" />
+            <span className="mx-4 text-gray-500">or</span>
+            <hr className="flex-grow border-gray-300" />
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <label htmlFor="firstName" className="font-bold text-black">First Name</label>
+                <input
+                  id="firstName"
+                  name="firstName"
+                  type="text"
+                  placeholder="Enter your first name"
+                  className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl" 
+                  required
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="lastName" className="font-bold text-black">Last Name</label>
+                <input
+                  id="lastName"
+                  name="lastName"
+                  type="text"
+                  placeholder="Enter your last name"
+                  className="w-full px-4 py-2 bg-gray-200 rounded-xl" 
+                  required
+                />
+              </div>
             </div>
-            <div>
-              <Label
-                htmlFor="lastName"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Last Name
-              </Label>
-              <Input
-                id="lastName"
-                name="lastName"
-                type="text"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                placeholder="Enter your last name"
-                value={formData.lastName}
-                onChange={handleChange}
-              />
-              {errors["lastName"] && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors["lastName"]}
-                </p>
-              )}
+
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <label htmlFor="username" className="font-bold text-black">Username</label>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="Choose a username"
+                  className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl"
+                  required
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="email" className="font-bold text-black">Email Address</label>
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl" 
+                  required
+                />
+              </div>
             </div>
-            <div>
-              <Label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Username
-              </Label>
-              <Input
-                id="username"
-                name="username"
-                type="text"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                placeholder="Choose a username"
-                value={formData.username}
-                onChange={handleChange}
-              />
-              {errors["username"] && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors["username"]}
-                </p>
-              )}
-            </div>
-            <div>
-              <Label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Email address
-              </Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
-                placeholder="Enter your email address"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              {errors["email"] && (
-                <p className="text-red-500 text-xs mt-1">{errors["email"]}</p>
-              )}
-            </div>
-            <div>
-              <Label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Password
-              </Label>
-              <Input
+
+            <div className="space-y-2">
+              <label htmlFor="password" className="font-bold text-black">Password</label>
+              <input
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
                 placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
+                className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl" 
+                required
               />
-              {errors["password"] && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors["password"]}
-                </p>
-              )}
             </div>
-            <div>
-              <Label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-gray-700"
-              >
-                Confirm Password
-              </Label>
-              <Input
+            <div className="space-y-2">
+              <label htmlFor="confirmPassword" className="font-bold text-black">Confirm Password</label>
+              <input
                 id="confirmPassword"
                 name="confirmPassword"
                 type="password"
-                autoComplete="new-password"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-green-500 focus:border-green-500 focus:z-10 sm:text-sm mt-1"
                 placeholder="Confirm your password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
+                className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl" 
+                required
               />
-              {errors["confirmPassword"] && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors["confirmPassword"]}
-                </p>
-              )}
             </div>
-          </div>
 
-          <div>
-            <Button
-              type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-            >
+            <button type="submit" className="w-full px-6 py-3 mt-6 text-sm font-semibold leading-none text-white transition duration-300 rounded-lg bg-green-900 hover:bg-green-800 focus:ring-4 focus:ring-yellow-500">
               Sign Up
-            </Button>
-          </div>
-        </form>
+            </button>
+          </form>
+          <p className="mt-6 text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <a href="/auth/signin" className="font-medium text-yellow-500 hover:text-green-800">
+              Sign In
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
-}
+};
+
+export default SignUp;
+
+// 'use client'
+// import React from "react";
+// import { useRouter } from "next/navigation";
+// import { toast } from "@/hooks/use-toast";
+// import Forms from "@/components/forms"; // Import the Forms component
+
+// const SignUp = () => {
+//   const router = useRouter();
+
+//   // Form fields
+//   const fields = [
+//     { name: "firstName", label: "First Name", type: "text", placeholder: "Enter your first name", required: true },
+//     { name: "lastName", label: "Last Name", type: "text", placeholder: "Enter your last name", required: true },
+//     { name: "username", label: "Username", type: "text", placeholder: "Choose a username", required: true },
+//     { name: "email", label: "Email address", type: "email", placeholder: "Enter your email", required: true },
+//     { name: "password", label: "Password", type: "password", placeholder: "Enter your password", required: true },
+//     { name: "confirmPassword", label: "Confirm Password", type: "password", placeholder: "Confirm your password", required: true },
+//   ];
+
+//   // Validation schema
+//   const validationSchema = {
+//     firstName: {
+//       required: "First name is required",
+//       pattern: /^[A-Z][a-z]{2,}$/,
+//       message: "First name must start with a capital letter and be at least 3 characters long",
+//     },
+//     lastName: {
+//       required: "Last name is required",
+//       pattern: /^[A-Z][a-z]{2,}$/,
+//       message: "Last name must start with a capital letter and be at least 3 characters long",
+//     },
+//     username: {
+//       required: "Username is required",
+//       pattern: /^\S+$/,
+//       message: "Username must not contain spaces",
+//     },
+//     email: {
+//       required: "Email is required",
+//       pattern: /^\S+@\S+\.\S+$/,
+//       message: "Please enter a valid email address",
+//     },
+//     password: {
+//       required: "Password is required",
+//       pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[a-zA-Z]).{8,}$/,
+//       message: "Password must be at least 8 characters long, contain a number, a capital letter, a special character, and a lowercase letter",
+//     },
+//     confirmPassword: {
+//       required: "Confirm Password is required",
+//       custom: (values) => values.password === values.confirmPassword || "Passwords do not match",
+//     },
+//   };
+
+//   // Handle form submission
+//   const handleSubmit = (formData) => {
+//     toast({
+//       title: "Account created.",
+//       description: "We've created your account for you.",
+//     });
+//     router.push("/signin");
+//   };
+
+//   return (
+//     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gray-100">
+//       <div className="sm:mx-auto sm:w-full sm:max-w-lg">
+//         <div className="bg-white py-8 px-6 shadow sm:rounded-lg sm:px-10">
+//           <h2 className="text-center text-4xl font-extrabold leading-9 tracking-tight text-gray-900 mb-8">
+//             Create your account
+//           </h2>
+
+//           {/* Sign Up with Google Button */}
+//           <a
+//             className="flex items-center justify-center w-full py-4 text-sm font-medium text-gray-900 bg-gray-200 rounded-2xl hover:bg-gray-300"
+//             href="#"
+//           >
+//             <img
+//               className="h-5 mr-2"
+//               src="https://raw.githubusercontent.com/Loopple/loopple-public-assets/main/motion-tailwind/img/logos/logo-google.png"
+//               alt="Google logo"
+//             />
+//             Sign up with Google
+//           </a>
+
+//           <div className="flex items-center mt-4">
+//             <hr className="flex-grow border-gray-300" />
+//             <span className="mx-4 text-gray-500">or</span>
+//             <hr className="flex-grow border-gray-300" />
+//           </div>
+
+//           {/* Use the Forms component to generate the sign-up form */}
+//           <Forms
+//             fields={fields}
+//             onSubmit={handleSubmit}
+//             validationSchema={validationSchema}
+//             buttonText="Sign Up"
+//             buttonClassName="w-full px-6 py-3 mt-6 text-sm font-semibold leading-none text-white transition duration-300 rounded-lg bg-green-900 hover:bg-green-800 focus:ring-4 focus:ring-green-100"
+//             inputClassName="border-0 bg-gray-200 focus:ring-0 rounded-xl"
+//           />
+
+//           <p className="mt-6 text-center text-sm text-gray-500">
+//             Already have an account?{" "}
+//             <a href="/signin" className="font-medium text-yellow-500 hover:text-green-800">
+//               Sign In
+//             </a>
+//           </p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default SignUp;
+
+
+

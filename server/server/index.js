@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require('express-session')
 const cors = require("cors");
 const adminRoutes = require("./routes/adminRoutes");
 require("dotenv").config();
@@ -8,19 +9,27 @@ const attractionRoutes = require("./routes/attractionRoutes");
 const recommendationsRoutes = require("./routes/recommendationsroute");
 const authenticationRoutes = require("./routes/authenticationRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const passport = require('passport')
+require('./middleware/passportConfig')
+
 const app = express();
 const port =
   process.env.NODE_ENV === "test"
     ? process.env.NODE_LOCAL_TEST_PORT
     : process.env.NODE_LOCAL_PORT;
-
+app.use(session({
+  secret: process.env.EXPRESS_SESSION,
+  resave: false,
+  saveUninitialized: true
+}))
 app.use(cors({
   origin: "http://localhost:3000",
   credentials: true,
 }));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
+app.use(passport.initialize());
+app.use(passport.session())
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
   connectToMongo();

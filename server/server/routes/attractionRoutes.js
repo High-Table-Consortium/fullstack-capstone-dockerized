@@ -7,7 +7,7 @@ const {
   updateAttractionSite,
   deleteAttractionSite,
   searchAttractionSites,
-} = require("../../server/controllers/attractionSiteController");
+} = require("../controllers/attractionSiteController");
 router.get("/search", searchAttractionSites);
 router.get("/", getAllAttractionSites);
 router.post("/", createAttractionSite);

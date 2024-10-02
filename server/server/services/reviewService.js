@@ -1,4 +1,4 @@
-const Review = require('../../server/models/reviewModel');
+const Review = require('../models/reviewModel');
 
 /**
  * Create a new review

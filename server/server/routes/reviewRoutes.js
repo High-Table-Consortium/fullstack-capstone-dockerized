@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const { body, param } = require('express-validator'); // Import express-validator for validation
-const { createReview, getReviews, getReviewById, updateReview, deleteReview } = require('../../server/controllers/reviewController');
-const { authenticateToken } = require('../../server/middleware/authMiddleware');
-const handleValidationErrors = require('../../server/middleware/validationMiddleware');
+const { createReview, getReviews, getReviewById, updateReview, deleteReview } = require('../controllers/reviewController');
+const { authenticateToken } = require('../middleware/authMiddleware');
+const handleValidationErrors = require('../middleware/handleValidation');
 
 // Route to create a new review with validation
 router.post(

@@ -1,5 +1,5 @@
 // Import the review service module
-const reviewService = require('../../server/services/reviewService');
+const reviewService = require('../services/reviewService');
 
 // Centralized error handling function for consistency
 const handleServerError = (res, error, message = 'Server error') => {

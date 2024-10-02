@@ -1,4 +1,4 @@
-const Recommendation = require("../../server/models/recommendationModel"); // Assuming your model is in a 'models' folder
+const Recommendation = require("../models/recommendationModel"); // Assuming your model is in a 'models' folder
 
 // GET all recommendations
 exports.getRecommendations = async (req, res) => {

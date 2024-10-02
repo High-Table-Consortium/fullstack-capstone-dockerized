@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser, getUserProfile, updateUserProfile, deleteUser } = require('../../server/controllers/userController');
-const { authenticateToken } = require('../../server/middleware/authMiddleware');
+const { authenticateToken } = require('../middleware/authMiddleware');
 
 // Route to handle user registration
 router.post('/register', registerUser);

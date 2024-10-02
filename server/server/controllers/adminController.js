@@ -1,5 +1,5 @@
 // Import required modules
-const Admin = require("../../server/models/adminModel");
+const Admin = require("..//models/adminModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 

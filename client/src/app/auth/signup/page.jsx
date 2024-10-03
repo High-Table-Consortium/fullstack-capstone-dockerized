@@ -2,8 +2,7 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "@/hooks/use-toast";
-import Forms from "@/components/forms"; 
+import { toast } from "../../../hooks/use-toast";
 
 const SignUp = () => {
   const router = useRouter();

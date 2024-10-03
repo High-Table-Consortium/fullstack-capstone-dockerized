@@ -23,6 +23,9 @@ router.get('/api/search', async (req, res) => {
         { name: { $regex: q, $options: 'i' } },
         { location: { $regex: q, $options: 'i' } },
         { category: { $regex: q, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+        { rating: { $regex: q, $options: 'i' } },
+        
       ],
     };
 

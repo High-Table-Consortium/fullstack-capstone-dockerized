@@ -5,6 +5,7 @@ import HomeP from "./homepage/page";
 import SignInPage from "./auth/signin/page";
 import SignUp from "./auth/signup/page";
 import SearchComponent from "@/components/Searchbar";
+import Pagination from "@/components/Pagination";
 
 export default function Home() {
   return (
@@ -15,7 +16,8 @@ export default function Home() {
       {/* <HomeP/> */}
       {/* <SignInPage /> */}
       {/* <SignUp /> */}
-      <SearchComponent />
+      {/* <SearchComponent /> */}
+      <Pagination />
     </main>
   );
 }

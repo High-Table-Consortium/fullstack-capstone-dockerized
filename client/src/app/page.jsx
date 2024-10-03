@@ -12,10 +12,10 @@ export default function Home() {
       <div className=""></div>
       {/* <Navbar/>
       <FooterComponent /> */}
-      {/* <HomeP/> */}
+      <HomeP/>
       {/* <SignInPage /> */}
       {/* <SignUp /> */}
-      <SearchComponent />
+      {/* <SearchComponent /> */}
     </main>
   );
 }

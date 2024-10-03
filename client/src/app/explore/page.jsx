@@ -1,8 +1,8 @@
 import Image from "next/image"
 import Link from "next/link"
 import { ChevronRight, Compass, Utensils, Tent, Camera, Palmtree, Mountain } from "lucide-react"
-import Navbar from "@/components/Navbar"
-import FooterComponent from "@/components/Footer";
+import Navbar from "../../components/Navbar"
+import FooterComponent from "../../components/Footer";
 
 export default function ExplorePage() {
   return (

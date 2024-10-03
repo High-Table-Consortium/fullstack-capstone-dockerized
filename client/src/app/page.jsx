@@ -1,5 +1,5 @@
 // import Test from "./Components/Test";
-import Navbar from "@/components/Navbar";
+import Navbar from "../components/Navbar";
 import FooterComponent from "../components/Footer";
 import HomeP from "./homepage/page";
 import SignInPage from "./auth/signin/page";
@@ -12,10 +12,10 @@ export default function Home() {
       <div className=""></div>
       {/* <Navbar/>
       <FooterComponent /> */}
-      {/* <HomeP/> */}
+      <HomeP/>
       {/* <SignInPage /> */}
       {/* <SignUp /> */}
-      <SearchComponent />
+      {/* <SearchComponent /> */}
     </main>
   );
 }

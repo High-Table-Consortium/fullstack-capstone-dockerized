@@ -84,8 +84,9 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Forms from "@/components/Forms";
+import Forms from "../../../components/Forms";
 import Link from "next/link";
+import { googleLogin } from "../../API/api";
 
 const SignInPage = () => {
   const router = useRouter();
@@ -123,6 +124,15 @@ const SignInPage = () => {
     router.push("/");
   };
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const response = await googleLogin();
+      console.log("Google sign-in successful:", response);
+      router.push("/");
+    } catch (error) {
+      console.error("Error with Google sign-in:", error);
+    }
+  };
   return (
     // Main container: centers the form in the middle of the screen
     <div className="flex min-h-screen items-center justify-center bg-gray-100">
@@ -137,7 +147,7 @@ const SignInPage = () => {
         {/* Google Sign-In button */}
         <a
           className="flex items-center justify-center w-full py-4 text-sm font-medium text-gray-900 bg-gray-200 rounded-2xl hover:bg-gray-300"
-          href="#"
+          onClick={handleGoogleSignIn}
         >
           <img
             className="h-5 mr-2"

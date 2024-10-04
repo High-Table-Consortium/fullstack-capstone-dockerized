@@ -1,42 +1,104 @@
-const express = require('express');
-const router = express.Router();
-const { Attraction } = require('../models/tourist_attractionModel');
+const AttractionSite = require("../models/tourist_attractionModel");
 
-router.get('/api/search', async (req, res) => {
-  const { q, type } = req.query;
-
-  if (!q) {
-    return res.status(400).json({ error: 'Search query (q) is required' });
-  }
-
-  if (typeof q !== 'string') {
-    return res.status(400).json({ error: 'Search query (q) must be a string' });
-  }
-
-  if (type && typeof type !== 'string') {
-    return res.status(400).json({ error: 'Type must be a string' });
-  }
-
+exports.getAllAttractionSites = async (req, res) => {
   try {
-    const query = {
-      $or: [
-        { name: { $regex: q, $options: 'i' } },
-        { location: { $regex: q, $options: 'i' } },
-        { category: { $regex: q, $options: 'i' } },
-      ],
-    };
+    const attractionSites = await AttractionSite.find();
+    res.status(200).json(attractionSites);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
-    if (type) {
-      query.type = type.toLowerCase();
+exports.getAttractionSiteById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const attractionSite = await AttractionSite.findById(id);
+    if (!attractionSite) {
+      return res.status(404).json({ message: "Attraction site not found." });
     }
 
-    const results = await Attraction.find(query).limit(100); // Add pagination or limit results
-
-    res.json(results);
+    res.status(200).json(attractionSite);
   } catch (error) {
-    console.error('Error searching attractions:', error);
-    res.status(500).json({ error: 'Error searching attractions' });
+    res.status(500).json({ message: error.message });
   }
-});
+};
 
-module.exports = router;
+exports.createAttractionSite = async (req, res) => {
+  const { name, location, description, category, rating, hours, admission_price, image, nearby_restaurants, other_activities } = req.body;
+
+  try {
+    const newAttractionSite = new AttractionSite({
+      name,
+      location,
+      description,
+      category,
+      rating,
+      hours,
+      admission_price,
+      image,
+      nearby_restaurants,
+      other_activities
+    });
+
+    await newAttractionSite.save();
+
+    res.status(201).json(newAttractionSite);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.updateAttractionSite = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const updatedAttractionSite = await AttractionSite.findByIdAndUpdate(id, req.body, { new: true });
+    if (!updatedAttractionSite) {
+      return res.status(404).json({ message: "Attraction site not found." });
+    }
+
+    res.status(200).json(updatedAttractionSite);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.deleteAttractionSite = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedAttractionSite = await AttractionSite.findByIdAndDelete(id);
+    if (!deletedAttractionSite) {
+      return res.status(404).json({ message: "Attraction site not found." });
+    }
+
+    res.status(200).json({ message: "Attraction site deleted successfully." });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.searchAttractionSites = async (req, res) => {
+  const { name, category, location } = req.query;
+
+  try {
+    const queryConditions = {};
+    
+    if (name) {
+      queryConditions.name = { $regex: name.trim(), $options: "i" }; // Trimmed name
+    }
+    
+    if (category) {
+      queryConditions.category = { $regex: category.trim(), $options: "i" }; // Trimmed category
+    }
+    if (location) {
+      queryConditions.location = { $regex: location.trim(), $options: "i" }; // Trimmed location
+    }
+
+    const attractionSites = await AttractionSite.find(queryConditions);
+
+    res.status(200).json(attractionSites);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

@@ -1,34 +1,44 @@
 const express = require("express");
+const session = require('express-session')
 const cors = require("cors");
-const searchRoutes = require("../server/routes/searchRoutes");
-
-
+const adminRoutes = require("./routes/adminRoutes");
 require("dotenv").config();
-
+const commentRoutes = require("./routes/commentRoutes");
 const connectToMongo = require("./db/connection");
+const attractionRoutes = require("./routes/attractionRoutes");
+const recommendationsRoutes = require("./routes/recommendationsroute");
+const authenticationRoutes = require("./routes/authenticationRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
+const passport = require('passport')
+require('./middleware/passportConfig')
 
 const app = express();
 const port =
   process.env.NODE_ENV === "test"
     ? process.env.NODE_LOCAL_TEST_PORT
     : process.env.NODE_LOCAL_PORT;
-
-app.use(cors());
+app.use(session({
+  secret: process.env.EXPRESS_SESSION,
+  resave: false,
+  saveUninitialized: true
+}))
+app.use(cors({
+  origin: "http://localhost:3000",
+  credentials: true,
+}));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-
+app.use(passport.initialize());
+app.use(passport.session())
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
   connectToMongo();
 });
 
-app.get("/test", (req, res) => {
-  res.json(
-    "Server connection to client works!!  Good Luck with your capstones :D"
-  );
-});
-
-app.use('/api', searchRoutes)
-app.use('/api/attraction', searchRoutes)
-
+app.use("/api/admin", adminRoutes);
+app.use("/api/attractions", attractionRoutes);
+app.use("/api/comments", commentRoutes);
+app.use("/api/recommendations", recommendationsRoutes);
+app.use("/api/auth", authenticationRoutes);
+app.use("/api/reviews", reviewRoutes);
 module.exports = app;

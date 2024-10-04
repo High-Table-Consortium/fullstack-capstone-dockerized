@@ -1,5 +1,5 @@
 // Import required modules
-const Admin = require("../models/adminModel");
+const Admin = require("..//models/adminModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
@@ -37,6 +37,7 @@ exports.registerAdmin = async (req, res) => {
     const admin = new Admin({ email, password, isAdmin: true });
     // Save admin to database
     await admin.save();
+
 
     // Generate JWT token for new admin
     const token = generateToken(admin);

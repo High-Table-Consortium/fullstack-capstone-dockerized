@@ -41,4 +41,5 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/recommendations", recommendationsRoutes);
 app.use("/api/auth", authenticationRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.sue("/api/searchRoutes", searchRoutes);
 module.exports = app;

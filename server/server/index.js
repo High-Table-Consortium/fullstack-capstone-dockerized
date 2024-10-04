@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const searchRoutes = require("../routes/searchRoutes");
+const searchRoutes = require("../server/routes/searchRoutes");
 
 
 require("dotenv").config();
@@ -28,6 +28,7 @@ app.get("/test", (req, res) => {
   );
 });
 
-app.use('/api/search', searchRoutes)
+app.use('/api', searchRoutes)
+app.use('/api/attraction', searchRoutes)
 
 module.exports = app;

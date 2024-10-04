@@ -1,11 +1,22 @@
 'use client'
 
-import React from "react";
+import { React, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "../../../hooks/use-toast";
+import { register } from "../../API/api"
 
 const SignUp = () => {
   const router = useRouter();
+  const [formData, setFormData] = useState({
+    // firstName: "",
+    // lastName: "",
+    // username: "",
+    email: "",
+    password: "",
+    // confirmPassword: "",
+  });
+  const [email, setEmail] = useState()
+  const [password, setPassword] = useState()
 
   // Form fields
   const fields = [
@@ -50,14 +61,36 @@ const SignUp = () => {
     },
   };
 
-  // Handle form submission
-  const handleSubmit = (formData) => {
-    toast({
-      title: "Account created.",
-      description: "We've created your account for you.",
-    });
-    router.push("/signin");
-  };
+
+  // const validateForm = (data) => {
+  //   const newErrors = {};
+  //   Object.keys(validationSchema).forEach((field) => {
+  //     if (!data[field]) {
+  //       newErrors[field] = validationSchema[field].required;
+  //     } else if (validationSchema[field].pattern &&!validationSchema[field].pattern.test(data[field])) {
+  //       newErrors[field] = validationSchema[field].message;
+  //     } else if (validationSchema[field].custom && typeof validationSchema[field].custom === "function") {
+  //       const error = validationSchema[field].custom(data);
+  //       if (error) {
+  //         newErrors[field] = error;
+  //       }
+  //     }
+  //   });
+  //   return newErrors;
+  // };
+
+
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    try {
+      register(email, password)
+      router.push('/')
+      console.log('user registered successful')
+    } catch (error) {
+      console.log('something went wrong', error)
+    }
+  }
 
   return (
     <div className="flex min-h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8 bg-gray-100">
@@ -95,8 +128,9 @@ const SignUp = () => {
                   name="firstName"
                   type="text"
                   placeholder="Enter your first name"
-                  className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl" 
+                  className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl"
                   required
+
                 />
               </div>
               <div className="flex-1">
@@ -106,7 +140,7 @@ const SignUp = () => {
                   name="lastName"
                   type="text"
                   placeholder="Enter your last name"
-                  className="w-full px-4 py-2 bg-gray-200 rounded-xl" 
+                  className="w-full px-4 py-2 bg-gray-200 rounded-xl"
                   required
                 />
               </div>
@@ -131,8 +165,14 @@ const SignUp = () => {
                   name="email"
                   type="email"
                   placeholder="Enter your email"
-                  className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl" 
+                  className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl"
                   required
+                  onChange={
+                    event => {
+                      setEmail(event.target.value);
+                    }
+                  }
+                  value={email}
                 />
               </div>
             </div>
@@ -144,8 +184,14 @@ const SignUp = () => {
                 name="password"
                 type="password"
                 placeholder="Enter your password"
-                className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl" 
+                className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl"
                 required
+                onChange={
+                  event => {
+                    setPassword(event.target.value);
+                  }
+                }
+                value={password}
               />
             </div>
             <div className="space-y-2">
@@ -155,8 +201,9 @@ const SignUp = () => {
                 name="confirmPassword"
                 type="password"
                 placeholder="Confirm your password"
-                className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl" 
+                className="w-full px-4 py-2 border-0 bg-gray-200 focus:ring-0 rounded-xl"
                 required
+              // onChange={onChange}
               />
             </div>
 

@@ -23,7 +23,7 @@ export const login = async (email: string, password: string) => {
 };
 
 export const register = async (email: string, password: string) => {
-    const response = await axios.post(`${baseURL}/register`, { email, password });
+    const response = await axios.post(`${baseURL}/admin/register`, { email, password });
     return response.data;
 };
 

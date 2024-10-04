@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const searchRouter = require("../routes/searchRoutes");
+const searchRoutes = require("../routes/searchRoutes");
 
 
 require("dotenv").config();

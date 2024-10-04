@@ -8,6 +8,7 @@ const connectToMongo = require("./db/connection");
 const attractionRoutes = require("./routes/attractionRoutes");
 const recommendationsRoutes = require("./routes/recommendationsroute");
 const authenticationRoutes = require("./routes/authenticationRoutes");
+const userRoutes = require('./routes/userRoutes')
 const reviewRoutes = require("./routes/reviewRoutes");
 const passport = require('passport')
 require('./middleware/passportConfig')
@@ -29,7 +30,12 @@ app.use(cors({
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(passport.initialize());
-app.use(passport.session())
+app.use(passport.session({
+  secret: process.env.EXPRESS_SESSION,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }  // for development environment, set to true for production environment to enable secure cookies (https)
+}))
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
   connectToMongo();
@@ -41,4 +47,5 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/recommendations", recommendationsRoutes);
 app.use("/api/auth", authenticationRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/user", userRoutes)
 module.exports = app;

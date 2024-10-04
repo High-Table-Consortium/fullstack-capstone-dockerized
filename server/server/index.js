@@ -29,6 +29,6 @@ app.get("/test", (req, res) => {
 });
 
 app.use('/api', searchRoutes)
-app.use('/api/attraction', searchRoutes)
+
 
 module.exports = app;

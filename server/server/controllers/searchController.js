@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { Attraction } = require('../models/tourist_attractionModel');
 
-router.get('/api/search', async (req, res) => {
+exports.searchAttractionSites =async(req, res) => {
   const { q, type } = req.query;
 
   if (!q) {
@@ -23,6 +23,9 @@ router.get('/api/search', async (req, res) => {
         { name: { $regex: q, $options: 'i' } },
         { location: { $regex: q, $options: 'i' } },
         { category: { $regex: q, $options: 'i' } },
+        { description: { $regex: query, $options: 'i' } },
+        { rating: { $regex: q, $options: 'i' } },
+        
       ],
     };
 
@@ -30,13 +33,12 @@ router.get('/api/search', async (req, res) => {
       query.type = type.toLowerCase();
     }
 
-    const results = await Attraction.find(query).limit(100); // Add pagination or limit results
+    const results = await Attraction.find().limit(100); // Add pagination or limit results
 
     res.json(results);
   } catch (error) {
     console.error('Error searching attractions:', error);
     res.status(500).json({ error: 'Error searching attractions' });
   }
-});
+};
 
-module.exports = router;

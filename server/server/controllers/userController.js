@@ -20,8 +20,14 @@ const logger = winston.createLogger({
     ]
 });
 
-// Helper function to generate a JWT
+/*
+
+*/
 function generateToken(user) {
+    if (!JWT_SECRET) {
+        logger.error('JWT_SECRET is not defined. Please check your environment variables.');
+        throw new Error('JWT_SECRET is not defined.');
+    }
     return jwt.sign({ id: user._id }, JWT_SECRET, {
         expiresIn: "24h", // Token expires in 24 hours
     });
@@ -40,32 +46,50 @@ exports.registerUser = [
     // Validation middleware
     body('email').isEmail().withMessage('Please provide a valid email.'),
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long.'),
+
     async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return sendResponse(res, 400, 'Validation failed', errors.array());
         }
 
-        const { email, password } = req.body;
+        const { email, password, firstName, lastName, image } = req.body;
 
         try {
+            // Check if user already exists
             const existingUser = await User.findOne({ email });
             if (existingUser) {
                 return sendResponse(res, 400, "User already exists.");
             }
 
+            // Hash the password
             const hashedPassword = await bcrypt.hash(password, 10);
-            const user = new User({ email, password: hashedPassword });
+
+            // Create and save the user
+            const user = new User({ firstName, lastName, image, email, password: hashedPassword });
             await user.save();
 
+            // Generate token for the user
             const token = generateToken(user);
+
+            // Set the JWT token as a cookie
+            res.cookie('token', token, {
+                httpOnly: true,  // Prevents access by JavaScript on the client side
+                secure: process.env.NODE_ENV === 'production',  // Ensures the cookie is sent only over HTTPS in production
+                maxAge: 24 * 60 * 60 * 1000 // Expires in 24 hours
+            });
+
+            // Send a successful response
             sendResponse(res, 201, "User registered successfully.", { token });
+
         } catch (error) {
-            logger.error('Registration error: ', error.message);
+            // Log the full error stack for better debugging
+            logger.error('Registration error: ', error);
             sendResponse(res, 500, "An error occurred during registration.");
         }
     }
 ];
+
 
 /**
  * User Login Controller
@@ -86,7 +110,7 @@ exports.loginUser = [
         try {
             const user = await User.findOne({ email });
             if (!user) {
-                return sendResponse(res, 400, "Invalid email or password.");
+                return sendResponse(res, 400, "Could not find email");
             }
 
             const isMatch = await bcrypt.compare(password, user.password);
@@ -102,6 +126,7 @@ exports.loginUser = [
         }
     }
 ];
+
 
 /**
  * Get User Profile Controller

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseURL = process.env.NEXT_PUBLIC_API_URL ;
-
+const ModelURL = "http://127.0.0.1:8000"
 
 export const getAttractions = async () => {
     const response = await axios.get(`${baseURL}/attractions`);
@@ -89,7 +89,14 @@ export const updateReview = async (review_id: string, comment: string) => {
     return response.data
 }
 
-
+// New function to generate a day route
+export const generateDayRoute = async (attractionData) => {
+    const response = await axios.post(`${ModelURL}/generate-routine`, {
+        attraction: attractionData,
+        days: 7
+    });
+    return response.data;
+};
 
 
 

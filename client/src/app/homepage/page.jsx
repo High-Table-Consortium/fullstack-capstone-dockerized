@@ -90,3 +90,4 @@ const HomeP = () => {
 }
 
 export default HomeP
+// ../components/ui/button../components/ui/card../components/ui/input../components/Navbar../components/Footer

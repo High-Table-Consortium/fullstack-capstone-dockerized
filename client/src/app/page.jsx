@@ -234,33 +234,36 @@ export default function Home() {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {destinations.map((destination, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                    <CardHeader className="p-0">
-                      <div className="relative h-48">
-                        <Image src={destination.image} alt={destination.name} layout="fill" objectFit="cover" />
-                      </div>
-                    </CardHeader>
-                    <CardContent className="p-4">
-                      <CardTitle className="text-lg mb-2">{destination.name}</CardTitle>
-                      <p className="text-sm text-gray-600 mb-4">{destination.description}</p>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-1">
-                          <MapPin className="h-4 w-4 text-gray-400" />
-                          <span className="text-sm text-gray-600">{destination.location}</span>
+                <Link href={`/destination/${destination._id}`}>
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                      <CardHeader className="p-0">
+                        <div className="relative h-48">
+                          <Image src={destination.image} alt={destination.name} layout="fill" objectFit="cover" />
                         </div>
-                      </div>
-                      <div className="mt-4 flex items-center justify-end">
-                        <Button variant="outline" className="text-yellow-500 border-yellow-600 hover:bg-blue-50 transition-colors">Explore</Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                      </CardHeader>
+                      <CardContent className="p-4">
+                        <CardTitle className="text-lg mb-2">{destination.name}</CardTitle>
+                        <p className="text-sm text-gray-600 mb-4">{destination.description}</p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-1">
+                            <MapPin className="h-4 w-4 text-gray-400" />
+                            <span className="text-sm text-gray-600">{destination.location}</span>
+                          </div>
+                        </div>
+                        <div className="mt-4 flex items-center justify-end">
+                          <Button variant="outline" className="text-yellow-500 border-yellow-600 hover:bg-blue-50 transition-colors">Explore</Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </Link>
+
               ))}
             </div>
           </div>

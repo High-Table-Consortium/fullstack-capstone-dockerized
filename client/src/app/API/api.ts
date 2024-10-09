@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
-
+const baseURL = process.env.NEXT_PUBLIC_API_URL ;
+const ModelURL = "http://127.0.0.1:8000"
 
 export const getAttractions = async () => {
     const response = await axios.get(`${baseURL}/attractions`);
@@ -51,8 +51,8 @@ export const login = async (email: string, password: string) => {
  * handle user registration
  * POST request to /auth/register
 */
-export const register = async (email: string, password: string) => {
-    const response = await axios.post(`${baseURL}/auth/register`, { email, password });
+export const register = async (firstName: string, lastName:string, email: string, password: string, ) => {
+    const response = await axios.post(`${baseURL}/auth/register`, { firstName, lastName, email, password });
     return response.data;
 };
 
@@ -69,6 +69,36 @@ export const logout = async () => {
 export const googleLogin = async () => {
     window.location.href = `${baseURL}/auth/google`;
 };
+
+export const getReviews = async (attraction_id: string) => {
+    const response = await axios.get(`${baseURL}/reviews/${attraction_id}`);
+    return response.data;
+};
+export const createReview = async (user_id: string, comment: string, attraction_id: string ) => {
+    const response = await axios.post(`${baseURL}/reviews`, {user_id, comment, attraction_id})
+    return response.data
+}
+
+export const deleteReview = async (review_id: string) => {
+    const response = await axios.delete(`${baseURL}/reviews/${review_id}`)
+    return response.data
+}
+
+export const updateReview = async (review_id: string, comment: string) => {
+    const response = await axios.put(`${baseURL}/reviews/${review_id}`, {comment})
+    return response.data
+}
+
+// New function to generate a day route
+export const generateDayRoute = async (attractionData) => {
+    const response = await axios.post(`${ModelURL}/generate-routine`, {
+        attraction: attractionData,
+        days: 7
+    });
+    return response.data;
+};
+
+
 
 
 

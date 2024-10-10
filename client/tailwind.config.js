@@ -17,8 +17,12 @@ module.exports = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+		  boxShadow: {
+			neumorphic: "10px 10px 30px #d1d9e6, -10px -10px 30px #ffffff",
+			"neumorphic-inner": "inset 10px 10px 20px #d1d9e6, inset -10px -10px 20px #ffffff",
+		},
   		colors: {
-  			background: 'hsl(var(--background))',
+  			background: '#fcf3cf',
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
@@ -61,5 +65,19 @@ module.exports = {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+//   plugins: [require("tailwindcss-animate")],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hide': {
+          /* For Firefox */
+          'scrollbar-width': 'none',
+          /* For Chrome, Safari, and Edge */
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+        },
+      });
+    },
+  ],
 };

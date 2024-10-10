@@ -52,4 +52,5 @@ app.use("/api/recommendations", recommendationsRoutes);
 app.use("/api/auth", authenticationRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRoutes)
+app.use("/api/searchRoutes", searchRoutes);
 module.exports = app;

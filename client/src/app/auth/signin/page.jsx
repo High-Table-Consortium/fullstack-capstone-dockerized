@@ -87,10 +87,11 @@ import { useRouter } from "next/navigation";
 import Forms from "../../../components/Forms";
 import Link from "next/link";
 import { googleLogin } from "../../API/api";
+import { useAuth } from "../../../context/authContent";
 
 const SignInPage = () => {
   const router = useRouter();
-
+  const { login } = useAuth();
   const signInFields = [
     {
       name: "email",
@@ -119,9 +120,13 @@ const SignInPage = () => {
     },
   };
 
-  const handleSignIn = (formData) => {
-    console.log("Signing in with:", formData);
-    router.push("/");
+  const handleSignIn = async (formData) => {
+    try {
+      await login(formData.email, formData.password);
+      router.push("/");
+    } catch (error) {
+      console.error("Sign-in error:", error);
+    }
   };
 
   const handleGoogleSignIn = async () => {

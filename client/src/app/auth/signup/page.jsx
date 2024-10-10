@@ -4,9 +4,11 @@ import { React, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "../../../hooks/use-toast";
 import { register } from "../../API/api"
+import { useAuth } from "../../../context/authContent";
 
 const SignUp = () => {
   const router = useRouter();
+  const { register } = useAuth();
   const [formData, setFormData] = useState({
     // firstName: "",
     // lastName: "",
@@ -85,7 +87,7 @@ const SignUp = () => {
     e.preventDefault();
     try {
       register(email, password)
-      router.push('/')
+      // router.push('/')
       console.log('user registered successful')
     } catch (error) {
       console.log('something went wrong', error)

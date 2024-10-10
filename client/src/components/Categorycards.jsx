@@ -3,15 +3,15 @@ import Image from "next/image"
 const categories = [
   {
     name: "Adventure",
-    image: "https://www.pexels.com/photo/horma-canyon-in-kure-mountains-national-park-21915611/"
+    image: "https://www.andbeyond.com/wp-content/uploads/sites/5/South-Africa-Phinda-Private-Game-Reserve-E-Bike-Sand-Forest_1.jpg"
   },
   {
     name: "Historical",
-    image: "https://images.unsplash.com/photo-1608889825103-eb5ed706fc64?w=500&h=350&fit=crop"
+    image: "https://museumexplorer.co.za/wp-content/uploads/2023/03/Voortrekker-Monument.jpg"
   },
   {
     name: "Nature & Wildlife",
-    image: "https://images.unsplash.com/photo-1566490595448-b2e473d7a25e?w=500&h=350&fit=crop"
+    image: "https://www.lukimbi.com/wp-content/uploads/2020/08/IMG_1859.jpg"
   },
   {
     name: "Entertainment",

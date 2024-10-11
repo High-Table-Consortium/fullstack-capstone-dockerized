@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { registerUser, loginUser} = require('../controllers/userController');
+const { registerUser, loginUser, verifyEmail, resetPassword, forgotPassword, logout, checkAuth} = require('../controllers/userController');
 const passport = require('passport');
+const { verifyToken } = require('../middleware/authMiddleware');
 
 
 /**
@@ -33,10 +34,11 @@ router.get('/google/callback',
 /**
  * handles route to log out user
  */
-router.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
-});
+router.get('/logout', logout);
 
+router.post("/verify-email", verifyEmail);
+router.post("/forgot-password", forgotPassword);
 
+router.post("/reset-password/:token", resetPassword);
+router.get("/check-auth", verifyToken, checkAuth);
 module.exports = router;

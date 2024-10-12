@@ -94,33 +94,18 @@ export default function Home() {
               <span className="text-yellow-600">Wonderful Journey</span> with us
             </h1>
             <p className="text-white text-lg md:text-xl mb-8 max-w-2xl">Explore South Africa's wild and beautiful landscapes for a once-in-a-lifetime trip for you</p>
-            <div className="bg-white rounded-lg p-4 shadow-lg max-w-4xl">
-              <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                <div className="w-full md:w-auto flex-grow flex items-center space-x-2 border-b md:border-b-0 md:border-r pb-4 md:pb-0 md:pr-4">
-                  <Calendar className="text-gray-400" />
-                  <input type="text" className="flex-grow p-2" placeholder="Choose a date" />
-                </div>
-                <div className="w-full md:w-auto flex-grow flex items-center space-x-2 border-b md:border-b-0 md:border-r pb-4 md:pb-0 md:pr-4">
-                  <Users className="text-gray-400" />
-                  <select className="flex-grow p-2 bg-white">
-                    <option>Select Passengers</option>
-                  </select>
-                </div>
-                <Button className="w-full md:w-auto bg-yellow-500 hover:bg-yellow-600 text-white px-8 transition-colors">Check Availability</Button>
-              </div>
+            <div className="max-w-md mx-auto mb-8">
+                <Searchbar />  
             </div>
           </motion.div>
         </section>
         
-        <section className="py-2">
+        <section className="py-10">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-semibold text-center mb-2">
               Recommended <span className="text-yellow-500">Destinations</span>
             </h2>
             <p className="text-center text-gray-600 mb-8">Discover South Africa's Most Popular Tourist Attractions</p>
-            <div className="max-w-md mx-auto mb-8">
-                <Searchbar />  
-            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-[55px]">
               {destinations.map((destination, index) => (
                 <Link href={`/destination/${destination._id}`} key={index} className="h-full">

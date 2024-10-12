@@ -4,6 +4,7 @@ import Navbar from "../../components/Navbar"
 import FooterComponent from "../../components/Footer";
 import Cities from "../../components/Cities";
 import Categories from "../../components/Categorycards";
+import Provinces from "../../components/Provinces";
 
 export default function ExplorePage() {
 
@@ -14,10 +15,11 @@ export default function ExplorePage() {
 
         {/* Explore Categories Section */}
         <section className="mb-12">
-        <h2 className="text-3xl font-semibold text-center mb-2">
-                        Explore <span className="text-yellow-500">Categories</span>
-                    </h2>
           <Categories />
+        </section>
+
+        <section>
+          <Provinces />
         </section>
 
         {/* Cities in South Africa Section */}

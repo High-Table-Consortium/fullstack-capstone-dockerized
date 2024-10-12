@@ -15,25 +15,25 @@ const categories = [
   },
   {
     name: "Entertainment",
-    image: "https://images.unsplash.com/photo-1603190287605-e6ade32fa852?w=500&h=350&fit=crop"
+    image: "https://www.gauteng.net/wp-content/uploads/2022/04/GRC_Gal18-1.jpg"
   },
   {
     name: "Scenic View",
-    image: "https://images.unsplash.com/photo-1494783367193-149034c05e8f?w=500&h=350&fit=crop"
+    image: "https://www.fodors.com/wp-content/uploads/2019/11/TableMountain101__HERO_shutterstock_165749363.jpg"
   },
   {
     name: "Cuisine",
-    image: "https://images.unsplash.com/photo-1551918120-9739cb430c6d?w=500&h=350&fit=crop"
+    image: "https://nomadparadise.com/wp-content/uploads/2020/04/sa-food-005-1024x640.jpg"
   },
 ]
 
 export default function Categories() {
   return (
-    <section className="w-full py-12 bg-background">
-      <div className="container mx-auto px-4">
+    <section className="w-full rounded-2xl py-10 bg-background">
+      <div className="container mx-auto px-4 mt=[50px]">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <div key={category.name} className="overflow-hidden rounded-lg shadow-lg">
+            <div key={category.name} className="overflow-hidden rounded-lg shadow-2xl shadow-yellow-100">
               <div className="relative aspect-[3/2]">
                 <Image
                   src={category.image}

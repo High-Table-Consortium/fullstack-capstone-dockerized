@@ -46,7 +46,6 @@ const cities = [
   { name: "Nelspruit", coordinates: [-25.4653, 30.9785], province: "Mpumalanga" },
   { name: "Kimberley", coordinates: [-28.7282, 24.7499], province: "Northern Cape" },
   { name: "Polokwane", coordinates: [-23.9045, 29.4688], province: "Limpopo" },
-  { name: "Mahikeng", coordinates: [-25.8560, 25.6403], province: "North West" },
 ]
 
 export default function Map() {
@@ -58,7 +57,11 @@ export default function Map() {
 
   return (
     <div>
-      <div style={{ width: "60%", height: "600px", border: "2px solid #ddd", borderRadius: "8px", overflow: "hidden", zIndex: 0 }}>
+      <h2 className="text-3xl font-semibold text-center py-9">
+          Our <span className="text-yellow-500">Provinces</span>
+      </h2>
+    <div className='flex  justify-center'>
+      <div style={{ alignItems:"center", width: "50%", height: "400px", border: "2px solid #f1c40f", borderRadius: "8px", overflow: "hidden", zIndex: 0 }}>
         <MapContainer
           center={[-29.0, 25.0]}  // Center on South Africa
           zoom={5}
@@ -98,6 +101,7 @@ export default function Map() {
         </MapContainer>
       </div>
     </div>
+   </div>
   )
 }
 

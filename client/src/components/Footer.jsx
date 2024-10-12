@@ -1,15 +1,26 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+import Link from "next/link"
+import Image from "next/image";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 export default function FooterComponent() {
   return (
-    <footer className="bg-gray-100 border-t w-full">
+    <footer className="bg-yellow-100 border-t w-full">
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Policies */}
+          {/* <Link href="/" className="flex items-center">
+              <Image
+                src="/house.png"
+                alt="MeeGuide Logo"
+                width={54}
+                height={54}
+                className="mr-2"
+              />
+              <span className="font-bold text-xl">MeeGuide</span>
+            </Link> */}
           <div>
             <h3 className="text-lg font-semibold mb-4">Policies</h3>
             <ul className="space-y-2">

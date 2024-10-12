@@ -121,38 +121,44 @@ export default function Home() {
             <div className="max-w-md mx-auto mb-8">
                 <Searchbar />  
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-[55px]">
               {destinations.map((destination, index) => (
-                <Link href={`/destination/${destination._id}`}>
+                <Link href={`/destination/${destination._id}`} key={index} className="h-full">
                   <motion.div
-                    key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="h-full"
                   >
-                    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <Card className="flex flex-col h-full overflow-hidden hover:shadow-lg transition-shadow duration-300">
                       <CardHeader className="p-0">
                         <div className="relative h-48">
-                          <Image src={destination.image} alt={destination.name} layout="fill" objectFit="cover" />
+                          <Image 
+                            src={destination.image} 
+                            alt={destination.name} 
+                            layout="fill" 
+                            objectFit="cover" 
+                          />
                         </div>
                       </CardHeader>
-                      <CardContent className="p-4">
+                      <CardContent className="p-4 flex flex-col flex-grow">
                         <CardTitle className="text-lg mb-2">{destination.name}</CardTitle>
-                        <p className="text-sm text-gray-600 mb-4">{destination.description}</p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-1">
+                        <p className="text-sm text-gray-600 mb-4 overflow-hidden line-clamp-3">{destination.description}</p>
+                        <div className="mt-auto">
+                          <div className="flex items-center space-x-1 mb-4">
                             <MapPin className="h-4 w-4 text-gray-400" />
                             <span className="text-sm text-gray-600">{destination.location}</span>
                           </div>
-                        </div>
-                        <div className="mt-4 flex items-center justify-end">
-                          <Button variant="outline" className="text-yellow-500 border-yellow-600 hover:bg-blue-50 transition-colors">Explore</Button>
+                          <div className="flex items-center justify-end">
+                            <Button variant="outline" className="text-yellow-500 border-yellow-600 hover:bg-blue-50 transition-colors">
+                              Explore
+                            </Button>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
                   </motion.div>
                 </Link>
-
               ))}
             </div>
           </div>

@@ -29,7 +29,7 @@ const categories = [
 
 export default function Categories() {
   return (
-    <section className="w-full rounded-2xl py-10 bg-background">
+    <section className="w-full rounded-2xl py-5 bg-background">
       <div className="container mx-auto px-4 mt=[50px]">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (

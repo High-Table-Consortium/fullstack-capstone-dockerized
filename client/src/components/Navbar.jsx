@@ -64,13 +64,13 @@ export default function Navbar() {
         <div className="flex items-center space-x-2">
           <Link href="/" className="flex items-center">
             <Image
-              src="/vuvuzela.png"
+              src="/logo.svg"
               alt="MeeGuide Logo"
-              width={54}
-              height={54}
+              width={236}
+              height={236}
               className="mr-2"
             />
-            <span className="font-bold text-yellow-500 text-xl">MeeGuide</span>
+            {/* <span className="font-bold text-yellow-500 text-xl">MeeGuide</span> */}
           </Link>
         </div>
 

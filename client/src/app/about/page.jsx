@@ -9,28 +9,28 @@ export default function AboutUs() {
     {
       id: 1,
       name: "Ntokozo Nkosi",
-      email: "alice@example.com",
-      photo: "/placeholder.svg?height=200&width=200",
-      github: "https://github.com/alicej",
-      linkedin: "https://linkedin.com/in/alicej",
+      email: "nkosintokozot@gmail.com",
+      photo: "/ntokozo.jpg",
+      github: "https://github.com/NtokozoMitchell",
+      linkedin: "https://www.linkedin.com/in/ntokozo-nkosi-966150298/",
       jobTitle: "Full Stack  Developer",
     },
     {
       id: 2,
       name: "Tumelo Selepe",
-      email: "carol@example.com",
-      photo: "/placeholder.svg?height=200&width=200",
-      github: "https://github.com/carolw",
-      linkedin: "https://linkedin.com/in/carolw",
+      email: "tumelothinane13@gmail.com",
+      photo: "/.jpg",
+      github: "https://github.com/Tumelo2748",
+      linkedin: "https://www.linkedin.com/in/selepe-thinane/",
       jobTitle: "Full Stack Developer",
     },
     {
       id: 3,
       name: "Phamela Mhlaba",
-      email: "carol@example.com",
-      photo: "/placeholder.svg?height=200&width=200",
-      github: "https://github.com/carolw",
-      linkedin: "https://linkedin.com/in/carolw",
+      email: "phamelamhlaba@gmail.com",
+      photo: "/pham.jpg",
+      github: "https://github.com/PhamelaMhlaba",
+      linkedin: "https://www.linkedin.com/in/phamela-mhlaba-a115961aa/",
       jobTitle: "Full Stack Developer",
     },
     {
@@ -39,14 +39,14 @@ export default function AboutUs() {
       email: "wesleymutyambizi@gmail.com",
       photo: "/wesley.jpg",
       github: "https://github.com/thewesss",
-      linkedin: "www.linkedin.com/in/wesley-mutyambizi",
+      linkedin: "https://www.linkedin.com/in/wesley-mutyambizi",
       jobTitle: "Full Stack Developer",
     },
     {
       id: 5,
       name: "Sharon Matjila",
-      email: "emma@example.com",
-      photo: "/placeholder.svg?height=200&width=200",
+      email: "Kelebogilematjila23@gmail.com",
+      photo: "/sharon.jpg",
       github: "https://github.com/emmag",
       linkedin: "https://linkedin.com/in/emmag",
       jobTitle: "Full Stack Developer",
@@ -55,15 +55,12 @@ export default function AboutUs() {
 
   return (
     <div>
-      <Head>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <Navbar />
       <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
         <div className="relative h-[400px] mb-12">
           <Image
-            src="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=800&q=80"
+            src="https://assets.kerzner.com/api/public/content/394cbb45600c4c6999971173696aca80?v=26230fe8&t=w2880"
             alt="Beautiful tourist destination"
             layout="fill"
             objectFit="cover"
@@ -142,7 +139,7 @@ export default function AboutUs() {
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-6 md:mb-0 md:pr-8">
               <Image
-                src="/house.png"
+                src="/mg.svg"
                 alt="Founders on a trip"
                 width={400}
                 height={300}
@@ -183,11 +180,11 @@ export default function AboutUs() {
 
         {/* Call to Action */}
         <section className="mb-12 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to <span className='text-yellow-500'>Explore?</span></h2>
+          <h2 className="text-3xl text-green-900 font-bold mb-4">Ready to <span className='text-yellow-500'>Explore?</span></h2>
           <p className="text-xl text-black mb-6">
             Start your journey with MeeGuide and discover amazing attractions tailored just for you.
           </p>
-          <Link href="/explore" className="bg-yellow-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300">
+          <Link href="/explore" className="bg-yellow-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-green-900 transition duration-300">
             Get Started
           </Link>
         </section>

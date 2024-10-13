@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = process.env.NEXT_PUBLIC_API_URL ;
+const baseURL = "http://localhost:3001/api";
 const ModelURL = "http://127.0.0.1:8000"
 
 export const getAttractions = async () => {
@@ -13,6 +13,10 @@ export const getAttractionById = async (id: string) => {
     return response.data;
 };
 
+export const searchAttraction = async (category: string, name: string, location: string,) => {
+    const response = await axios.get(`${baseURL}/attractions/search`, { params: { category, name, location } });
+    return response.data;
+}
 
 /*
  * handle user profile retrieval
@@ -51,7 +55,7 @@ export const login = async (email: string, password: string) => {
  * handle user registration
  * POST request to /auth/register
 */
-export const register = async (firstName: string, lastName:string, email: string, password: string, ) => {
+export const register = async (firstName: string, lastName: string, email: string, password: string,) => {
     const response = await axios.post(`${baseURL}/auth/register`, { firstName, lastName, email, password });
     return response.data;
 };
@@ -74,33 +78,45 @@ export const getReviews = async (attraction_id: string) => {
     const response = await axios.get(`${baseURL}/reviews/${attraction_id}`);
     return response.data;
 };
-export const createReview = async (user_id: string, comment: string, attraction_id: string ) => {
-    const response = await axios.post(`${baseURL}/reviews`, {user_id, comment, attraction_id})
+export const createReview = async (user_id: string, comment: string, attraction_id: string) => {
+    const response = await axios.post(`${baseURL}/reviews`, { user_id, comment, attraction_id })
     return response.data
 }
 
+export const addComment = async (userId: string, attractionSiteId: string, content: string) => {
+    const response = await axios.post(`${baseURL}/comments/`, {
+        userId, attractionSiteId, content
+    })
+    return response.data
+}
 export const deleteReview = async (review_id: string) => {
     const response = await axios.delete(`${baseURL}/reviews/${review_id}`)
     return response.data
 }
 
 export const updateReview = async (review_id: string, comment: string) => {
-    const response = await axios.put(`${baseURL}/reviews/${review_id}`, {comment})
+    const response = await axios.put(`${baseURL}/reviews/${review_id}`, { comment })
     return response.data
 }
 
 // New function to generate a day route
-export const generateDayRoute = async (attractionData) => {
+export const generateDayRoute = async (attractionData: {
+    name: string,
+    location: string,
+    description: string,
+    category: string,
+    rating: number,
+    hours: number,
+    admission_price: number,
+    image: string,
+    nearby_restaurants: [],
+    other_activities: [],
+}) => {
     const response = await axios.post(`${ModelURL}/generate-routine`, {
         attraction: attractionData,
         days: 7
     });
     return response.data;
 };
-
-
-
-
-
 
 

@@ -99,10 +99,52 @@ export default function Navbar() {
             <button
               onClick={handleSignInClick}
               className="text-yellow-500 hover:text-yellow-500 neumorphic-button hover:py-1 hover:px-1 flex items-center hover:ring-4 hover:ring-yellow-100 transition duration-300 ease-in-out"
-            >
+          
+              About Us
+            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="text-yellow-500 border-yellow-500 hover:bg-green-800 hover:text-yellow-300"
+                >
+                  More <ChevronDown className="ml-1 h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="bg-green-700 border border-yellow-500">
+                <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
+                  <Link href="/favourites" className="w-full">
+                    Favourites
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
+                  <Link href="/review" className="w-full">
+                    Review
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
+                  <Link href="/wishlist" className="w-full">
+                    Wishlist
+                  </Link>
+                </DropdownMenuItem>
+                {isLoggedIn && (
+                  <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
+                    <Button
+                      onClick={handleSignOut}
+                      className="w-full text-left"
+                    >
+                      Sign Out
+                    </Button>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+=======
               <LogIn className="mr-2 h-4 w-4 text-yellow-500" />
               Sign In / Create Account
             </button>
+
 
           )}
           {/* Search icon */}

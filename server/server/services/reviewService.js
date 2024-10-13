@@ -1,4 +1,5 @@
 const Review = require('../models/reviewModel');
+const User = require('../models/usersModel'); // Make sure to require the User model
 
 /**
  * Create a new review
@@ -38,6 +39,39 @@ const getAllReviews = async () => {
   } catch (error) {
     console.error('Error fetching reviews:', error);
     throw new Error('Unable to fetch reviews');
+  }
+};
+/**
+ * Get reviews by destination
+ * @param {String} attractionId - The ID of the destination
+ * @returns {Promise<Array>} - List of reviews for the destination
+ */
+/**
+ * Get reviews by destination
+ * @param {String} attractionId - The ID of the destination
+ * @returns {Promise<Array>} - List of reviews for the destination, including user and destination details
+ */
+const getReviewsByDestination = async (attractionId) => {
+  try {
+    // Find reviews for the specified attraction
+    const reviews = await Review.find({ attraction_id: attractionId })
+      .populate('attraction_id', 'name location'); // Populate attraction fields for display
+    
+    // For each review, retrieve the user details based on user_id
+    const reviewsWithUserDetails = await Promise.all(
+      reviews.map(async (review) => {
+        const user = await User.findById(review.user_id).select('firstName image');
+        return {
+          ...review.toObject(),
+          user: user || null, // Add user details or null if user not found
+        };
+      })
+    );
+
+    return reviewsWithUserDetails;
+  } catch (error) {
+    console.error('Error fetching reviews by destination:', error);
+    throw new Error('Unable to fetch reviews by destination');
   }
 };
 
@@ -115,6 +149,7 @@ const deleteReview = async (reviewId) => {
 module.exports = {
   createReview,
   getAllReviews,
+  getReviewsByDestination,
   getReviewById,
   updateReview,
   deleteReview,

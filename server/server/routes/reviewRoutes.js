@@ -4,6 +4,7 @@ const { body, param } = require('express-validator'); // Import express-validato
 const {
   createReview,
   getReviews,
+  getReviewByDestination,
   getReviewById,
   updateReview,
   deleteReview
@@ -21,6 +22,8 @@ router.post(
 
 // Route to get all reviews (no validation needed)
 router.get('/', getReviews);
+
+router.get('/destination/:attractionId', getReviewByDestination);
 
 // Route to get a single review by its ID with validation
 router.get(

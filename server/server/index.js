@@ -10,6 +10,7 @@ const attractionRoutes = require("./routes/attractionRoutes");
 const recommendationsRoutes = require("./routes/recommendationsroute");
 const authenticationRoutes = require("./routes/authenticationRoutes");
 const userRoutes = require('./routes/userRoutes')
+const searchRoutes = require('./routes/searchRoutes')
 const reviewRoutes = require("./routes/reviewRoutes");
 const passport = require('passport')
 require('./middleware/passportConfig')

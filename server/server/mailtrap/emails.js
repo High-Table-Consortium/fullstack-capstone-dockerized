@@ -26,7 +26,7 @@ exports.sendWelcomeEmail = async (email, name) => {
 	const mailOptions = {
 		from: `"${sender.name}" <${sender.email}>`,
 		to: email,
-		subject: "Welcome to Auth Company!",
+		subject: "Welcome to Meeguide!",
 		html: `<p>Welcome, ${name}!</p><p>Thank you for joining Meeguide.</p>`, // Use template HTML if available
 	};
 

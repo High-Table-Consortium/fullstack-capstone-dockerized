@@ -8,14 +8,21 @@ const Review = require('../models/reviewModel');
  * @param {String} attractionId - The ID of the attraction being reviewed
  * @returns {Object} The created review
  */
-const createReview = async (content, rating, userId, attractionId) => {
-  const review = new Review({
-    content,
-    rating,
-    user_id: userId,
-    attraction_id: attractionId,
-  });
-  return await review.save();
+const createReview = async (comment, rating, userId, attractionId) => {
+  try {
+    const review = new Review({
+      comment,
+      rating,
+      user_id: userId,
+      attraction_id: attractionId,
+    });
+
+    // Save the new review and return it
+    return await review.save();
+  } catch (error) {
+    console.error('Error creating review:', error);
+    throw new Error('Unable to create review');
+  }
 };
 
 /**
@@ -23,7 +30,15 @@ const createReview = async (content, rating, userId, attractionId) => {
  * @returns {Array} List of all reviews
  */
 const getAllReviews = async () => {
-  return await Review.find().populate('user_id').populate('attraction_id');
+  try {
+    // Populate user_id and attraction_id fields to get details about the user and attraction
+    return await Review.find()
+      .populate('user_id', 'name avatar') // populate user fields for display
+      .populate('attraction_id', 'name location'); // populate attraction fields for display
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    throw new Error('Unable to fetch reviews');
+  }
 };
 
 /**
@@ -32,28 +47,69 @@ const getAllReviews = async () => {
  * @returns {Object} The fetched review
  */
 const getReviewById = async (reviewId) => {
-  return await Review.findById(reviewId).populate('user_id').populate('attraction_id');
+  try {
+    const review = await Review.findById(reviewId)
+      .populate('user_id', 'name avatar') // populate user fields for display
+      .populate('attraction_id', 'name location'); // populate attraction fields for display
+
+    if (!review) {
+      throw new Error('Review not found');
+    }
+    
+    return review;
+  } catch (error) {
+    console.error(`Error fetching review with ID ${reviewId}:`, error);
+    throw new Error('Unable to fetch review');
+  }
 };
 
 /**
  * Update a review
- * @param {Object} review - The review object to update
+ * @param {String} reviewId - The ID of the review to update
  * @param {String} content - The new content of the review
  * @param {Number} rating - The new rating of the review
  * @returns {Object} The updated review
  */
-const updateReview = async (review, content, rating) => {
-  review.content = content;
-  review.rating = rating;
-  return await review.save();
+const updateReview = async (reviewId, content, rating) => {
+  try {
+    // Find the review by its ID
+    const review = await Review.findById(reviewId);
+
+    if (!review) {
+      throw new Error('Review not found');
+    }
+
+    // Update fields
+    review.content = content;
+    review.rating = rating;
+
+    // Save and return the updated review
+    return await review.save();
+  } catch (error) {
+    console.error(`Error updating review with ID ${reviewId}:`, error);
+    throw new Error('Unable to update review');
+  }
 };
 
 /**
  * Delete a review
- * @param {Object} review - The review object to delete
+ * @param {String} reviewId - The ID of the review to delete
  */
-const deleteReview = async (review) => {
-  await review.remove();
+const deleteReview = async (reviewId) => {
+  try {
+    // Find the review by its ID
+    const review = await Review.findById(reviewId);
+
+    if (!review) {
+      throw new Error('Review not found');
+    }
+
+    // Remove the review
+    await review.remove();
+  } catch (error) {
+    console.error(`Error deleting review with ID ${reviewId}:`, error);
+    throw new Error('Unable to delete review');
+  }
 };
 
 module.exports = {

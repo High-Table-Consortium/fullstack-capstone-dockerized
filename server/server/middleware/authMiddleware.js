@@ -24,6 +24,7 @@ function verifyToken (req, res, next) {
 		if (!decoded) return res.status(401).json({ success: false, message: "Unauthorized - invalid token" });
 
 		req.userId = decoded.userId;
+    console.log('Decoded Token:', decoded); // Log to verify token payload
 		next();
 	} catch (error) {
 		console.log("Error in verifyToken ", error);

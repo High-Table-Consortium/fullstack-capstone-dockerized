@@ -81,7 +81,15 @@ export default function Home() {
         {/* Carousal section */}
         
         {/* carousal end */}
-        <section className="relative h-[60vh] md:h-[80vh] bg-cover bg-center" style={{ backgroundImage: "url('https://images.squarespace-cdn.com/content/v1/57b9b98a29687f1ef5c622df/1478273230409-FGHP1T1WJR1OAMAHG6AB/00.jpg?format=1500w')" }}>
+        <section className="relative h-[60vh] md:h-[80vh] bg-cover bg-center">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        >
+          <source src="/video.mp4" type="video/mp4" />
+        </video>
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}

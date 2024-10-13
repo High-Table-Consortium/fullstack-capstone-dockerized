@@ -89,8 +89,8 @@ export default function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent className="bg-green-700 border border-yellow-500">
                 <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
-                  <Link href="/favorites" className="w-full">
-                    Favorites
+                  <Link href="/favourites" className="w-full">
+                    Favourites
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">

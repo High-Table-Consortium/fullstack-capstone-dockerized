@@ -162,7 +162,7 @@ exports.loginUser = async (req, res) => {
 			return res.status(400).json({ success: false, message: "Invalid credentials" });
 		}
 
-		generateTokenAndSetCookie(res, user._id);
+		const token = generateTokenAndSetCookie(res, user._id);
 
 		user.lastLogin = new Date();
 		await user.save();
@@ -170,6 +170,7 @@ exports.loginUser = async (req, res) => {
 		res.status(200).json({
 			success: true,
 			message: "Logged in successfully",
+      token,
 			user: {
 				...user._doc,
 				password: undefined,

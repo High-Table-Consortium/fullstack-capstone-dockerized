@@ -12,16 +12,13 @@ const handleServerError = (res, error, message = 'Server error') => {
  * Handles the creation of a new review.
  */
 exports.createReview = async (req, res) => {
-  const { content, rating } = req.body; 
-
   try {
-    // Call service to create a new review
-    const newReview = await reviewService.createReview(content, rating, req.user._id); 
-    // Return success response with the created review
+    const { comment, rating, attractionId } = req.body;
+    const userId = req.userId;
+    const newReview = await reviewService.createReview(comment, rating, userId, attractionId);
     res.status(201).json(newReview);
   } catch (error) {
-    // Return error response if review creation fails
-    return handleServerError(res, error, 'Error while creating review');
+    res.status(500).json({ error: error.message });
   }
 };
 

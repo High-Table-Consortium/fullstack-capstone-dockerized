@@ -1,16 +1,19 @@
-"use client"
+'use client'
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { login, register, logout, getUserProfile } from '../app/API/api';
+import Cookies from 'js-cookie';
+
+import { login, register, logout, getUserProfile } from '../app/api/api';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+    // const cookies = useCookies()
     const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
+        const storedToken = Cookies.get('token');
         if (storedToken) {
             setToken(storedToken);
             fetchUserProfile(storedToken);
@@ -23,9 +26,10 @@ export const AuthProvider = ({ children }) => {
         try {
             const profile = await getUserProfile(token);
             setUser(profile);
+            console.log("Fetched user profile:", profile);
         } catch (error) {
             console.error('Error fetching user profile:', error);
-            localStorage.removeItem('token');
+            Cookies.remove('token'); // Clear token if there's an error
             setToken(null);
             setUser(null);
         } finally {
@@ -36,8 +40,9 @@ export const AuthProvider = ({ children }) => {
     const handleLogin = async (email, password) => {
         try {
             const data = await login(email, password);
-            setToken(data.token);
-            localStorage.setItem('token', data.token);
+            Cookies.set('token', data.token);
+            console.log("Token stored in cookies:", Cookies.get('token'));
+            console.log("successfully logged in");
             await fetchUserProfile(data.token);
         } catch (error) {
             console.error('Login failed:', error);
@@ -48,8 +53,8 @@ export const AuthProvider = ({ children }) => {
         try {
             const data = await register(firstName, lastName, email, password);
             setToken(data.token);
-            localStorage.setItem('token', data.token);
-            await fetchUserProfile(data.token);
+            Cookies.set('token', data.token);
+            console.log("successfully registered");
         } catch (error) {
             console.error('Registration failed:', error);
         }
@@ -58,7 +63,7 @@ export const AuthProvider = ({ children }) => {
     const handleLogout = async () => {
         try {
             await logout();
-            localStorage.removeItem('token');
+            Cookies.remove('token');
             setToken(null);
             setUser(null);
         } catch (error) {

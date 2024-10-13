@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import React from 'react';
-import Image from 'next/image'
+import Image from "next/legacy/image"
 import Link from 'next/link'
 import { Button } from "../components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
@@ -11,7 +11,7 @@ import { Input } from "../components/ui/input"
 import { ChevronRight, Calendar, Users, MapPin, Search } from 'lucide-react'
 import { motion } from 'framer-motion'
 import Navbar from "../components/Navbar";
-import { getAttractions } from './API/api'
+import { getAttractions } from './api/api'
 import FooterComponent from '../components/Footer'
 import Categories from '../components/Categorycards';
 import Map from '../components/Map'

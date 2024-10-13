@@ -12,7 +12,7 @@ import {
 } from "./ui/dialog"
 import { Textarea } from "./ui/textarea"
 import { Label } from "./ui/label"
-import { createReview, getReviews } from '../app/API/api'
+import { createReview, getReviews } from '../app/api/api'
 
 // StarRating Component
 function StarRating({ rating, onRatingChange }) {

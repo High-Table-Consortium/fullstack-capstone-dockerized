@@ -11,6 +11,7 @@ const recommendationsRoutes = require("./routes/recommendationsroute");
 const authenticationRoutes = require("./routes/authenticationRoutes");
 const userRoutes = require('./routes/userRoutes')
 const reviewRoutes = require("./routes/reviewRoutes");
+const favourites = require("./routes/favouritesroute");
 const passport = require('passport')
 require('./middleware/passportConfig')
 
@@ -53,4 +54,5 @@ app.use("/api/auth", authenticationRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRoutes)
 app.use("/api/searchRoutes", searchRoutes);
+app.use("/api/favorites" ,favourites);
 module.exports = app;

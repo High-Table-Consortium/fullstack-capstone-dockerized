@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { Compass, Heart, User, LogOut, Info, LogIn, Menu, Search, ChevronDown } from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
 import Image from "next/image";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '../components/ui/dropdown-menu';
+import { Button } from '../components/ui/button';
 
 export default function Navbar() {
   const [isSignedIn, setIsSignedIn] = useState(false)
@@ -43,17 +45,16 @@ export default function Navbar() {
         Explore
         <span className="absolute bottom-[-3px] left-0 w-full h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
       </Link>
-      <Link href="/wishlist" className="relative text-yellow-500 neumorphic-button flex items-center group">
+      {/* <Link href="/wishlist" className="relative text-yellow-500 neumorphic-button flex items-center group">
         <Heart className="mr-2 h-4 w-4" />
         Wishlist
         <span className="absolute bottom-[-3px] left-0 w-full h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
-      </Link>
+      </Link> */}
       <Link href="/about" className="relative text-yellow-500 neumorphic-button flex items-center group">
         <Info className="mr-2 h-4 w-4" />
         About Us
         <span className="absolute bottom-[-3px] left-0 w-full h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
       </Link>
-
     </>
   )
 
@@ -70,13 +71,46 @@ export default function Navbar() {
               height={236}
               className="mr-2"
             />
-            {/* <span className="font-bold text-yellow-500 text-xl">MeeGuide</span> */}
           </Link>
         </div>
 
         {/* Middle: Navigation buttons (static, no change based on sign-in state) */}
         <div className="hidden md:flex space-x-4 text-yellow-500">
           <NavItems />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                className="text-yellow-500 border-yellow-500 hover:bg-green-800 hover:text-yellow-300 neumorphic-button"
+              >
+                More <ChevronDown className="ml-1 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="bg-green-700 border border-yellow-500">
+              <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
+                <Link href="/favourites" className="w-full">
+                  Favourites
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
+                <Link href="/review" className="w-full">
+                  Review
+                </Link>
+              </DropdownMenuItem>
+              {/* <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
+                <Link href="/wishlist" className="w-full">
+                  Wishlist
+                </Link>
+              </DropdownMenuItem> */}
+              {isSignedIn && (
+                <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
+                  <button onClick={handleSignOut} className="w-full text-left">
+                    Sign Out
+                  </button>
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Right side: Sign in/Profile and Search icon */}
@@ -99,53 +133,10 @@ export default function Navbar() {
             <button
               onClick={handleSignInClick}
               className="text-yellow-500 hover:text-yellow-500 neumorphic-button hover:py-1 hover:px-1 flex items-center hover:ring-4 hover:ring-yellow-100 transition duration-300 ease-in-out"
-          
-              About Us
-            </Link>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="text-yellow-500 border-yellow-500 hover:bg-green-800 hover:text-yellow-300"
-                >
-                  More <ChevronDown className="ml-1 h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-green-700 border border-yellow-500">
-                <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
-                  <Link href="/favourites" className="w-full">
-                    Favourites
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
-                  <Link href="/review" className="w-full">
-                    Review
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
-                  <Link href="/wishlist" className="w-full">
-                    Wishlist
-                  </Link>
-                </DropdownMenuItem>
-                {isLoggedIn && (
-                  <DropdownMenuItem className="text-yellow-500 hover:text-yellow-300 hover:bg-green-800 focus:bg-green-800 focus:text-yellow-300">
-                    <Button
-                      onClick={handleSignOut}
-                      className="w-full text-left"
-                    >
-                      Sign Out
-                    </Button>
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-=======
+            >
               <LogIn className="mr-2 h-4 w-4 text-yellow-500" />
               Sign In / Create Account
             </button>
-
-
           )}
           {/* Search icon */}
           <button
@@ -178,67 +169,56 @@ export default function Navbar() {
 
       {/* Mobile menu dropdown */}
       {isMobileMenuOpen && (
-  <div className="md:hidden flex flex-col mt-2 space-y-1 bg-emerald-800 rounded-lg py-2">
-    
-    {/* Search Input */}
-    <div className="px-4">
-      <form className="flex items-center">
-        <label htmlFor="mobile-search" className="sr-only">Search</label>
-        <div className="relative w-full">
-          <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-            <svg
-              aria-hidden="true"
-              className="w-5 h-5 text-gray-500 dark:text-gray-400"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fillRule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clipRule="evenodd"
-              />
-            </svg>
+        <div className="md:hidden flex flex-col mt-2 space-y-1 bg-emerald-800 rounded-lg py-2">
+          {/* Search Input */}
+          <div className="px-4">
+            <form className="flex items-center">
+              <label htmlFor="mobile-search" className="sr-only">Search</label>
+              <div className="relative w-full">
+                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  id="mobile-search"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="Search..."
+                />
+              </div>
+            </form>
           </div>
-          <input
-            type="text"
-            id="mobile-search"
-            className="bg-yellow-50 border border-yellow-300 text-gray-900 text-sm block w-full pl-10 p-2.5 dark:bg-yellow-500 dark:border-yellow-500 dark:placeholder-gray-400 dark:text-white"
-            placeholder="Search..."
-            required
-          />
-        </div>
-      </form>
-    </div>
 
-    {/* Menu Links */}
-    <Link href="/explore" className="px-4 py-2 hover:bg-green-950 hover:text-yellow-500">
-      Explore
-    </Link>
-    <Link href="/about" className="px-4 py-2 hover:bg-green-950 hover:text-yellow-500">
-      About Us
-    </Link>
-    <Link href="/wishlist" className="px-4 py-2 hover:bg-green-950 hover:text-yellow-500">
-      Wishlist
-    </Link>
-    <Link href="/auth/signin" className="px-4 py-2 hover:bg-green-950 hover:text-yellow-500">
-      Sign in/ Create an account
-    </Link>
-    {isSignedIn && (
-      <>
-        <Link href="/account" className="px-4 py-2 hover:bg-emerald-700 hover:text-yellow-500">
-          Account Info
-        </Link>
-        <button
-          onClick={handleSignOut}
-          className="px-4 py-2 hover:bg-emerald-700 hover:text-yellow-500 w-full text-left"
-        >
-          Sign Out
-        </button>
-      </>
-    )}
-  </div>
-)}
+          {/* Nav items */}
+          <NavItems />
+
+          {isSignedIn ? (
+            <>
+              <Link href="/profile" className="block px-4 py-2 text-yellow-500">
+                Profile
+              </Link>
+              <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 text-yellow-500">
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <button onClick={handleSignInClick} className="block w-full text-left px-4 py-2 text-yellow-500">
+              Sign In / Create Account
+            </button>
+          )}
+        </div>
+      )}
     </nav>
   )
 }

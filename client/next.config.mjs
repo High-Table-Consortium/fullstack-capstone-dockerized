@@ -7,6 +7,12 @@ const nextConfig = {
     , "images.unsplash.com","www.andbeyond.com" ,"www.andbeyond.com" ,"museumexplorer.co.za","museumexplorer.co.za","www.lukimbi.com" ,"www.lukimbi.com" ,"www.pexels.com"
 
     ],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ]
   },
 };
 

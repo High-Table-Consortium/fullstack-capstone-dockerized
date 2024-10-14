@@ -81,7 +81,15 @@ export default function Home() {
         {/* Carousal section */}
         
         {/* carousal end */}
-        <section className="relative h-[60vh] md:h-[80vh] bg-cover bg-center" style={{ backgroundImage: "url('https://images.squarespace-cdn.com/content/v1/57b9b98a29687f1ef5c622df/1478273230409-FGHP1T1WJR1OAMAHG6AB/00.jpg?format=1500w')" }}>
+        <section className="relative h-[60vh] md:h-[80vh] bg-cover bg-center">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        >
+          <source src="/video.mp4" type="video/mp4" />
+        </video>
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -94,65 +102,56 @@ export default function Home() {
               <span className="text-yellow-600">Wonderful Journey</span> with us
             </h1>
             <p className="text-white text-lg md:text-xl mb-8 max-w-2xl">Explore South Africa's wild and beautiful landscapes for a once-in-a-lifetime trip for you</p>
-            <div className="bg-white rounded-lg p-4 shadow-lg max-w-4xl">
-              <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                <div className="w-full md:w-auto flex-grow flex items-center space-x-2 border-b md:border-b-0 md:border-r pb-4 md:pb-0 md:pr-4">
-                  <Calendar className="text-gray-400" />
-                  <input type="text" className="flex-grow p-2" placeholder="Choose a date" />
-                </div>
-                <div className="w-full md:w-auto flex-grow flex items-center space-x-2 border-b md:border-b-0 md:border-r pb-4 md:pb-0 md:pr-4">
-                  <Users className="text-gray-400" />
-                  <select className="flex-grow p-2 bg-white">
-                    <option>Select Passengers</option>
-                  </select>
-                </div>
-                <Button className="w-full md:w-auto bg-yellow-500 hover:bg-yellow-600 text-white px-8 transition-colors">Check Availability</Button>
-              </div>
+            <div className="max-w-md mx-auto mb-8">
+                <Searchbar />  
             </div>
           </motion.div>
         </section>
         
-        <section className="py-2">
+        <section className="py-10">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-semibold text-center mb-2">
               Recommended <span className="text-yellow-500">Destinations</span>
             </h2>
             <p className="text-center text-gray-600 mb-8">Discover South Africa's Most Popular Tourist Attractions</p>
-            <div className="max-w-md mx-auto mb-8">
-                <Searchbar />  
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-[55px]">
               {destinations.map((destination, index) => (
-                <Link href={`/destination/${destination._id}`}>
+                <Link href={`/destination/${destination._id}`} key={index} className="h-full">
                   <motion.div
-                    key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="h-full"
                   >
-                    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                    <Card className="flex flex-col h-full overflow-hidden hover:shadow-lg transition-shadow duration-300">
                       <CardHeader className="p-0">
                         <div className="relative h-48">
-                          <Image src={destination.image} alt={destination.name} layout="fill" objectFit="cover" />
+                          <Image 
+                            src={destination.image} 
+                            alt={destination.name} 
+                            layout="fill" 
+                            objectFit="cover" 
+                          />
                         </div>
                       </CardHeader>
-                      <CardContent className="p-4">
+                      <CardContent className="p-4 flex flex-col flex-grow">
                         <CardTitle className="text-lg mb-2">{destination.name}</CardTitle>
-                        <p className="text-sm text-gray-600 mb-4">{destination.description}</p>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-1">
+                        <p className="text-sm text-gray-600 mb-4 overflow-hidden line-clamp-3">{destination.description}</p>
+                        <div className="mt-auto">
+                          <div className="flex items-center space-x-1 mb-4">
                             <MapPin className="h-4 w-4 text-gray-400" />
                             <span className="text-sm text-gray-600">{destination.location}</span>
                           </div>
-                        </div>
-                        <div className="mt-4 flex items-center justify-end">
-                          <Button variant="outline" className="text-yellow-500 border-yellow-600 hover:bg-blue-50 transition-colors">Explore</Button>
+                          <div className="flex items-center justify-end">
+                            <Button variant="outline" className="text-yellow-500 border-yellow-600 hover:bg-blue-50 transition-colors">
+                              Explore
+                            </Button>
+                          </div>
                         </div>
                       </CardContent>
                     </Card>
                   </motion.div>
                 </Link>
-
               ))}
             </div>
           </div>

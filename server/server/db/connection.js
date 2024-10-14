@@ -10,6 +10,9 @@ const {
 // MongoDB Atlas connection string with dynamic user, password, and database
 const url = `mongodb+srv://${MONGODB_ATLAS_USER}:${MONGODB_ATLAS_PASSWORD}@cluster0.4mlkv.mongodb.net/${MONGODB_ATLAS_DATABASE}?retryWrites=true&w=majority`;
 
+mongoose.set('strictQuery', false);  
+
+
 const connectionParams = {
   useNewUrlParser: true,
 };

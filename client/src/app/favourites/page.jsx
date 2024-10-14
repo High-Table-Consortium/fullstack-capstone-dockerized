@@ -1,100 +1,90 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { MapPin, Heart, Calendar, Search, Trash2 } from 'lucide-react'
-import { Button } from "../../components/ui/button"
-import { Card, CardContent, CardFooter } from "../../components/ui/card"
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { MapPin, Heart, Calendar, Search, Trash2 } from 'lucide-react';
+import { Button } from '../../components/ui/button';
+import { Card, CardContent, CardFooter } from '../../components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select"
-import { Input } from "../../components/ui/input"
+} from '../../components/ui/select';
+import { Input } from '../../components/ui/input';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu"
-import { toast } from "../../hooks/use-toast"
-
-useEffect(() => {
-  setIsVisible(true)
-
-  const fetchDestinations = async () => {
-    try {
-      const data = await getAttractions();
-      setDestinations(data);
-      console.log(data)
-    } catch (error) {
-      console.error('Error fetching destinations:', error);
-    }
-  };
-
-  fetchDestinations();
-}, [])
+} from '../../components/ui/dropdown-menu';
+import { toast } from '../../hooks/use-toast';
 
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState([])
-  const [filteredFavorites, setFilteredFavorites] = useState([])
-  const [sortOption, setSortOption] = useState('name')
-  const [filterCategory, setFilterCategory] = useState('All')
-  const [searchQuery, setSearchQuery] = useState('')
-  const [viewMode, setViewMode] = useState('grid')
+  const [favorites, setFavorites] = useState([]);
+  const [filteredFavorites, setFilteredFavorites] = useState([]);
+  const [sortOption, setSortOption] = useState('name');
+  const [filterCategory, setFilterCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState('grid');
 
+  // Fetch data from an API endpoint (or database)
   useEffect(() => {
-    const loadFavorites = async () => {
-      const data = await fetchFavorites()
-      setFavorites(data)
-      setFilteredFavorites(data)
-    }
-    loadFavorites()
-  }, [])
+    const fetchFavorites = async () => {
+      try {
+        const response = await fetch('/api/favorites'); //API route
+        const data = await response.json();
+        setFavorites(data);
+        setFilteredFavorites(data);
+      } catch (error) {
+        console.error('Error fetching favorites:', error);
+      }
+    };
+    fetchFavorites();
+  }, []);
 
+  // Filtering and sorting
   useEffect(() => {
-    let result = [...favorites]
-    
-    // Apply category filter
+    let result = [...favorites];
+
     if (filterCategory !== 'All') {
-      result = result.filter(fav => fav.category === filterCategory)
+      result = result.filter((fav) => fav.category === filterCategory);
     }
-    
-    // Apply search query
+
     if (searchQuery) {
-      result = result.filter(fav => 
-        fav.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        fav.location.toLowerCase().includes(searchQuery.toLowerCase())
-      )
+      result = result.filter(
+        (fav) =>
+          fav.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          fav.location.toLowerCase().includes(searchQuery.toLowerCase())
+      );
     }
-    
-    // Apply sorting
+
     result.sort((a, b) => {
-      if (sortOption === 'name') return a.name.localeCompare(b.name)
-      if (sortOption === 'rating') return b.rating - a.rating
-      return 0
-    })
-    
-    setFilteredFavorites(result)
-  }, [favorites, filterCategory, searchQuery, sortOption])
+      if (sortOption === 'name') return a.name.localeCompare(b.name);
+      if (sortOption === 'rating') return b.rating - a.rating;
+      return 0;
+    });
+
+    setFilteredFavorites(result);
+  }, [favorites, filterCategory, searchQuery, sortOption]);
 
   const removeFavorite = (id) => {
-    // In a real application, you would also update this on the server
-    setFavorites(prevFavorites => prevFavorites.filter(fav => fav.id !== id))
+    setFavorites((prevFavorites) => prevFavorites.filter((fav) => fav.id !== id));
     toast({
-      title: "Removed from favorites",
-      description: "The attraction has been removed from your favorites list.",
-    })
-  }
+      title: 'Removed from favorites',
+      description: 'The attraction has been removed from your favorites list.',
+    });
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-2">My Favorites</h1>
-      <p className="text-xl text-muted-foreground mb-6">Hello, Ntokozo! Here are your saved attractions.</p>
-      
+      <p className="text-xl text-muted-foreground mb-6">
+        Hello, Ntokozo! Here are your saved attractions.
+      </p>
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
         <div className="flex items-center space-x-4">
           <Select onValueChange={setSortOption} defaultValue={sortOption}>
@@ -128,7 +118,9 @@ export default function FavoritesPage() {
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline"><Search className="mr-2 h-4 w-4" /> View</Button>
+              <Button variant="outline">
+                <Search className="mr-2 h-4 w-4" /> View
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem onSelect={() => setViewMode('grid')}>Grid View</DropdownMenuItem>
@@ -171,8 +163,8 @@ export default function FavoritesPage() {
                   </Link>
                 </Button>
                 <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={() => removeFavorite(favorite.id)}
                     className="text-red-500 hover:text-red-700 hover:bg-red-100"
                   >
@@ -199,5 +191,5 @@ export default function FavoritesPage() {
         </Button>
       </div>
     </div>
-  )
+  );
 }

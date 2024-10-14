@@ -1,17 +1,18 @@
-const Favourite = require("../models/tourist_attractionModel"); 
-const User = require("../models/userModel");
+const favourites = require("../models/favourites"); 
+const User = require("../models/usersModel");
+
 
 // GET all favourites
 exports.getFavourites = async (req, res) => {
   try {
     // Fetch all favourites and populate the 'attraction_id' field
-    const favourites = await Favourite.find().populate(
+    const favourites = await favourites.find({ user: req.user._id }).populate(
       "attraction_id"
     ); // Populate the 'attraction_id' field
     res.json(favourites);
   } catch (err) {
     // Handle any errors that occur during the fetch
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ message: 'server error'});
   }
 };
 
@@ -67,6 +68,6 @@ exports.deleteFavourite = async (req, res) => {
       res.json({ message: "Favourite deleted" });
     } catch (err) {
       // Handle any errors that occur during the delete
-      res.status(500).json({ message: err.message });
+      res.status(500).json({ message:"fav not deleted try again" });
     }
   };

@@ -11,7 +11,7 @@ const { authenticateToken } = require('../middleware/authMiddleware');
 const { handleValidationErrors } = require('../middleware/handleValidation');
 
 // Get all favourites
-router.get('/', authenticateToken, getFavourites);
+router.get('/', getFavourites);
 
 // Get a specific favourite by ID
 router.get('/:id', authenticateToken, getFavouriteById);

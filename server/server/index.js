@@ -9,10 +9,10 @@ const connectToMongo = require("./db/connection");
 const attractionRoutes = require("./routes/attractionRoutes");
 const recommendationsRoutes = require("./routes/recommendationsroute");
 const authenticationRoutes = require("./routes/authenticationRoutes");
-const userRoutes = require('./routes/userRoutes')
-const searchRoutes = require('./routes/searchRoutes')
+const userRoutes = require('./routes/userRoutes');
+const searchRoutes = require("./routes/searchRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
-const favourites = require("./routes/favouritesroute");
+const favourites = require("./routes/favourites");
 const passport = require('passport')
 require('./middleware/passportConfig')
 
@@ -55,5 +55,5 @@ app.use("/api/auth", authenticationRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/user", userRoutes)
 app.use("/api/searchRoutes", searchRoutes);
-app.use("/api/favorites" ,favourites);
+app.use("/api/favourites" ,favourites);
 module.exports = app;

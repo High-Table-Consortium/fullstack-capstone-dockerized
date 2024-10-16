@@ -1,25 +1,48 @@
+'use client'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { Facebook, Instagram, Twitter, Mail, Github, Linkedin } from 'lucide-react'
 import Navbar from '../../components/Navbar'
 import FooterComponent from '../../components/Footer'
+import { motion } from 'framer-motion'
+import { useState, useEffect } from "react";
 
 export default function AboutUs() {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+
+    const fetchDestinations = async () => {
+      try {
+        const data = await getAttractions();
+        setDestinations(data);
+        console.log(data)
+      } catch (error) {
+        console.error('Error fetching destinations:', error);
+      }
+    };
+
+    fetchDestinations();
+  }, [])
+
+
   const members = [
     {
       id: 1,
       name: "Ntokozo Nkosi",
       email: "nkosintokozot@gmail.com",
-      photo: "/ntokozo.jpg",
+      photo: "/nto.JPG",
       github: "https://github.com/NtokozoMitchell",
       linkedin: "https://www.linkedin.com/in/ntokozo-nkosi-966150298/",
       jobTitle: "Full Stack  Developer",
     },
     {
       id: 2,
-      name: "Tumelo Selepe",
+      name: "Tumelo Thinane",
       email: "tumelothinane13@gmail.com",
-      photo: "/.jpg",
+      photo: "/Tum.JPG",
       github: "https://github.com/Tumelo2748",
       linkedin: "https://www.linkedin.com/in/selepe-thinane/",
       jobTitle: "Full Stack Developer",
@@ -37,7 +60,7 @@ export default function AboutUs() {
       id: 4,
       name: "Wesley Mutyambizi",
       email: "wesleymutyambizi@gmail.com",
-      photo: "/wesley.jpg",
+      photo: "/wes.JPG",
       github: "https://github.com/thewesss",
       linkedin: "https://www.linkedin.com/in/wesley-mutyambizi",
       jobTitle: "Full Stack Developer",
@@ -56,24 +79,35 @@ export default function AboutUs() {
   return (
     <div>
       <Navbar />
-      <div className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <div className="relative h-[400px] mb-12">
-          <Image
-            src="https://assets.kerzner.com/api/public/content/394cbb45600c4c6999971173696aca80?v=26230fe8&t=w2880"
-            alt="Beautiful tourist destination"
-            layout="fill"
-            objectFit="cover"
-            className="rounded-lg"
-          />
-          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-white text-center">Discover the <span className=' text-green-900'>World</span> with <span className='text-yellow-500'>MeeGuide</span></h1>
-          </div>
-        </div>
+      <section className="relative h-[60vh] md:h-[80vh] bg-cover bg-center">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        >
+          <source src="/ct.mp4" type="video/mp4" />
+        </video>
+          <div className="absolute inset-0 bg-black bg-opacity-30"></div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : 20 }}
+            transition={{ duration: 0.8 }}
+            className="container mx-auto px-4 h-full flex flex-col justify-center relative z-10"
+          >
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 font-serif">
+              About <span className='text-yellow-500'>us</span>.
+            </h1>
+            <p className="text-white text-lg md:text-xl mb-8 max-w-2xl">JOURNEY WITH US AND TOGETHER WE'LL LEAVE OUR WORLD A BETTER PLACE</p>
+            <div className="max-w-md mx-auto mb-8"> 
+            </div>
+          </motion.div>
+        </section>
 
+      <div className="container mx-auto px-4 py-8">
         {/* Mission Statement */}
         <section className="mb-12 text-center">
-          <h2 className="text-3xl text-green-900 font-bold mb-4">Our Mission</h2>
+          <h2 className="text-3xl text-green-900 font-bold mb-4 font-mono">Our Mission</h2>
           <p className="text-xl text-black">
             We aim to make travel planning easy by providing detailed and personalized recommendations for tourist attractions,
             empowering travelers to create unforgettable experiences.
@@ -82,7 +116,7 @@ export default function AboutUs() {
 
         {/* Who We Are */}
         <section className="container mx-auto py-8">
-          <h1 className="text-3xl text-green-900 font-bold mb-6 text-center">The Team</h1>
+          <h1 className="text-3xl text-green-900 font-bold mb-6 text-center font-mono">The Team</h1>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {members.map((member) => (
               <div key={member.id} className="flex bg-yellow-50 flex-col p-12 rounded-lg shadow-md">
@@ -135,7 +169,7 @@ export default function AboutUs() {
 
         {/* Our Story */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center">Our Story</h2>
+          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center font-mono">Our Story</h2>
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-6 md:mb-0 md:pr-8">
               <Image
@@ -162,7 +196,7 @@ export default function AboutUs() {
 
         {/* Core Values */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center">Our Core Values</h2>
+          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center font-mono">Our Core Values</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
               { value: "Adventure", description: "Encouraging exploration and new experiences" },
@@ -180,7 +214,7 @@ export default function AboutUs() {
 
         {/* Call to Action */}
         <section className="mb-12 text-center">
-          <h2 className="text-3xl text-green-900 font-bold mb-4">Ready to <span className='text-yellow-500'>Explore?</span></h2>
+          <h2 className="text-3xl text-green-900 font-bold mb-4 font-mono">Ready to <span className='text-yellow-500'>Explore?</span></h2>
           <p className="text-xl text-black mb-6">
             Start your journey with MeeGuide and discover amazing attractions tailored just for you.
           </p>
@@ -191,7 +225,7 @@ export default function AboutUs() {
 
         {/* Contact Information */}
         <section className="text-center">
-          <h2 className="text-3xl font-bold mb-6">Get in Touch</h2>
+          <h2 className="text-3xl font-bold mb-6 font-mono">Get in Touch</h2>
           <p className="text-xl text-gray-600 mb-4">We'd love to hear from you!</p>
           <div className="flex justify-center space-x-6">
             <Link href="mailto:info@meeguide.com" className="text-gray-600 hover:text-red-600">

@@ -4,11 +4,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icons from lucide-react
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Cities = () => {
     const [isVisible, setIsVisible] = useState(false);
     const carouselRef = useRef(null); // Ref to the carousel div
-
+    const router = useRouter(); 
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(true);
@@ -31,11 +33,14 @@ const Cities = () => {
         }
     };
 
+    const handleGoToCity = (city) => {
+        router.push(``,);
+    }
     return (
         <div>
             <section className="pt-5 rounded-2xl bg-background relative">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-semibold text-center mb-2">
+                    <h2 className="text-3xl font-semibold text-center mb-2 font-mono">
                         Escape to Our <span className="text-yellow-500">Favorite Cities</span>
                     </h2>
                     <p className="text-center text-gray-600 mb-12">
@@ -73,6 +78,8 @@ const Cities = () => {
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
                                     className="flex-shrink-0 w-64"
                                 >
+                                    <Link href={`/destinationlist/city/${city.name}`}>
+                                    
                                     <div className="overflow-hidden rounded-lg shadow-lg">
                                         <div className="relative aspect-[3/2]">
                                             <Image
@@ -81,12 +88,13 @@ const Cities = () => {
                                                 layout="fill"
                                                 objectFit="cover"
                                                 className="transition-transform duration-300 hover:scale-105"
-                                            />
+                                                />
                                             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-opacity duration-300 hover:bg-opacity-30">
-                                                <h3 className="text-white text-2xl font-bold text-center px-4">{city.name}</h3>
+                                                <h3 className="text-white text-2xl font-bold text-center px-4 font-serif">{city.name}</h3>
                                             </div>
                                         </div>
                                     </div>
+                                                </Link>
                                 </motion.div>
                             ))}
                         </div>

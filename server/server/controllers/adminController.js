@@ -1,10 +1,31 @@
 // Import required modules
 const Admin = require("..//models/adminModel");
+const { body, validationResult } = require("express-validator");
+const { generateAdminTokenAndSetCookie } = require("../utils/generateTokenAndSetCookie");
+
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = "your-session-secret";
 
+const winston = require("winston");
+
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console(),
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+    new winston.transports.File({ filename: "combined.log" }),
+  ],
+});
+
+const sendResponse = (res, status, message, data = null) => {
+  res.status(status).json({ success: status < 400, message, data });
+};
 // Helper function to generate a JWT
 /**
  * Generates a JSON Web Token for the given admin.
@@ -21,63 +42,95 @@ function generateToken(admin) {
  * Admin Registration Controller
  * Handles admin registration.
  */
-exports.registerAdmin = async (req, res) => {
-  // Extract email and password from request body
-  const { email, password } = req.body;
+exports.registerAdmin = [
+  // Validation middleware
+  body("email").isEmail().withMessage("Please provide a valid email"),
+  body("password")
+    .isLength({ min: 6 })
+    .withMessage("Password must be at least 6 characters long"),
 
-  try {
-    // Check if admin with given email already exists
-    const existingAdmin = await Admin.findOne({ email });
-    if (existingAdmin) {
-      // Return error if admin already exists
-      return res.status(400).json({ message: "Admin already exists." });
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return sendResponse(res, 400, "Validation failed", errors.array());
     }
 
-    // Create new admin
-    const admin = new Admin({ email, password, isAdmin: true });
-    // Save admin to database
-    await admin.save();
+    const { email, password } = req.body;
 
+    try {
+      const existingAdmin = await Admin.findOne({ email });
+      if (existingAdmin) {
+        return sendResponse(res, 400, "Admin already exists.");
+      }
 
-    // Generate JWT token for new admin
-    const token = generateToken(admin);
-    // Return success response with JWT token
-    res.status(201).json({ token, message: "Admin registered successfully." });
-  } catch (error) {
-    // Return error response if registration fails
-    res.status(500).json({ error: error.message });
-  }
-};
+      const admin = new Admin({ email, password, isAdmin: true });
+      await admin.save();
+
+      logger.info(`Admin ${admin.email} registered successfully.`);
+      sendResponse(res, 201, "Admin registered successfully.", {
+        admin: {
+          id: admin._id,
+          email: admin.email,
+        },
+      });
+    } catch (error) {
+      logger.error("Register admin error: ", error.message);
+      sendResponse(res, 500, "An error occurred while registering the admin.");
+    }
+  },
+];
 
 /** 
  * Admin Login Controller
  * Handles admin login.
 */
 exports.loginAdmin = async (req, res) => {
-  // Extract email and password from request body
   const { email, password } = req.body;
 
   try {
-    // Find admin with given email
     const admin = await Admin.findOne({ email });
-    if (!admin) {
-      // Return error if admin not found
-      return res.status(400).json({ message: "Invalid email or password." });
+    if (!admin || !admin.isAdmin) {
+      return sendResponse(res, 400, "Invalid credentials or not an admin account.");
     }
 
-    // Compare provided password with stored password
-    const isMatch = await bcrypt.compare(password, admin.password);
-    if (!isMatch) {
-      // Return error if passwords do not match
-      return res.status(400).json({ message: "Invalid email or password." });
+    const isPasswordValid = await admin.comparePassword(password);
+    if (!isPasswordValid) {
+      return sendResponse(res, 400, "Invalid credentials.");
     }
 
-    // Generate JWT token for admin
-    const token = generateToken(admin);
-    // Return success response with JWT token
-    res.status(200).json({ token, message: "Login successful." });
+    const token = generateAdminTokenAndSetCookie(res, admin._id); // Assumes a function to generate token and set it as a cookie
+
+    sendResponse(res, 200, "Admin logged in successfully", {
+      token,
+      admin: {
+        id: admin._id,
+        email: admin.email,
+      },
+    });
   } catch (error) {
-    // Return error response if login fails
-    res.status(500).json({ error: error.message });
+    console.error("Admin login error:", error.message);
+    sendResponse(res, 500, "An error occurred while logging in.");
   }
+};
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.adminId).select("-password");
+    if (!admin) {
+      return sendResponse(res, 404, "Admin not found.");
+    }
+    sendResponse(res, 200, "Admin profile retrieved successfully.", admin);
+  } catch (error) {
+    logger.error("Fetch user profile error: ", error.message);
+    sendResponse(
+      res,
+      500,
+      "An error occurred while fetching the user profile."
+    );
+  }
+};
+
+exports.logout = async (req, res) => {
+	res.clearCookie("token");
+	res.status(200).json({ success: true, message: "Logged out successfully" });
 };

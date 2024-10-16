@@ -16,7 +16,8 @@ function authenticateToken(req, res, next) {
   }
 }
 function verifyToken (req, res, next) {
-	const token = req.cookies.token;
+	const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 	if (!token) return res.status(401).json({ success: false, message: "Unauthorized - no token provided" });
 	try {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -24,7 +25,7 @@ function verifyToken (req, res, next) {
 		if (!decoded) return res.status(401).json({ success: false, message: "Unauthorized - invalid token" });
 
 		req.userId = decoded.userId;
-    console.log('Decoded Token:', decoded); // Log to verify token payload
+    // console.log('Decoded Token:', decoded); // Log to verify token payload
 		next();
 	} catch (error) {
 		console.log("Error in verifyToken ", error);

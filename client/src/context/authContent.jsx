@@ -1,86 +1,135 @@
-'use client'
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
-
-import { login, register, logout, getUserProfile } from '../app/api/api';
+'use client';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { loginAction, registerAction, logoutAction, getUserProfileAction } from '../app/actions/auth';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    // const cookies = useCookies()
+    const router = useRouter();
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [token, setToken] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('token') : ""));
+    const [isLoading, setIsLoading] = useState(!!token);
+    const [message, setMessage] = useState("");
 
-    useEffect(() => {
-        const storedToken = Cookies.get('token');
-        if (storedToken) {
-            setToken(storedToken);
-            fetchUserProfile(storedToken);
-        } else {
-            setIsLoading(false);
+    // Function to store token and immediately fetch user profile
+    const storeToken = async (newToken) => {
+        setToken(newToken);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('token', newToken);
         }
-    }, []);
+        await fetchUserProfile(newToken); // Fetch user profile immediately after storing token
+    };
 
-    const fetchUserProfile = async (token) => {
+    const clearToken = () => {
+        setToken("");
+        setUser(null);
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('token');
+        }
+    };
+
+    const fetchUserProfile = useCallback(async () => {
+        if (!token) return;
+        setIsLoading(true);
         try {
-            const profile = await getUserProfile(token);
-            setUser(profile);
-            console.log("Fetched user profile:", profile);
+            const response = await getUserProfileAction(token);
+            if (response.success && response.user) {
+                setUser(response.user);
+            } else {
+                throw new Error('Failed to fetch user profile');
+            }
         } catch (error) {
             console.error('Error fetching user profile:', error);
-            Cookies.remove('token'); // Clear token if there's an error
-            setToken(null);
             setUser(null);
+            setToken("");
+            localStorage.removeItem('token');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        fetchUserProfile();
+    }, [fetchUserProfile]);
+
+    const handleLogin = async (email, password, redirectPath = "/") => {
+        setIsLoading(true);
+        try {
+            const data = await loginAction(email, password);
+            if (data.success) {
+                await storeToken(data.token); // Store token and fetch user profile
+                setMessage("Login successful! Redirecting...");
+                router.push(redirectPath);
+            } else {
+                setMessage(data.message || "Login failed. Please try again.");
+            }
+        } catch (error) {
+            console.error('Login failed:', error);
+            setMessage("An error occurred during login. Please try again.");
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleLogin = async (email, password) => {
+    const handleRegister = async (firstName, lastName, email, password, redirectPath = "/auth/verify-email") => {
+        setIsLoading(true);
         try {
-            const data = await login(email, password);
-            Cookies.set('token', data.token);
-            console.log("Token stored in cookies:", Cookies.get('token'));
-            console.log("successfully logged in");
-            await fetchUserProfile(data.token);
-        } catch (error) {
-            console.error('Login failed:', error);
-        }
-    };
-
-    const handleRegister = async (firstName, lastName, email, password) => {
-        try {
-            const data = await register(firstName, lastName, email, password);
-            setToken(data.token);
-            Cookies.set('token', data.token);
-            console.log("successfully registered");
+            const data = await registerAction(firstName, lastName, email, password);
+            if (data.success) {
+                await storeToken(data.token); // Store token and fetch user profile
+                setMessage("Registration successful! Redirecting...");
+                router.push(redirectPath);
+            } else {
+                setMessage(data.message || "Registration failed. Please try again.");
+            }
         } catch (error) {
             console.error('Registration failed:', error);
+            setMessage("An error occurred during registration. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const handleLogout = async () => {
+    const handleLogout = async (redirectPath = "/auth/signin") => {
+        setIsLoading(true);
         try {
-            await logout();
-            Cookies.remove('token');
-            setToken(null);
-            setUser(null);
+            const result = await logoutAction();
+            if (result.success) {
+                clearToken();
+                setMessage("Successfully logged out.");
+                router.push(redirectPath);
+            } else {
+                setMessage("Logout failed. Please try again.");
+            }
         } catch (error) {
             console.error('Logout failed:', error);
+            setMessage("An error occurred during logout. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    const checkAuth = useCallback(() => {
+        if (token && !user) {
+            fetchUserProfile();
+        }
+    }, [token, user, fetchUserProfile]);
 
     return (
         <AuthContext.Provider
             value={{
                 user,
+                setUser,
                 token,
                 login: handleLogin,
                 register: handleRegister,
                 logout: handleLogout,
                 isLoading,
                 isAuthenticated: !!token,
+                message,
+                setMessage,
+                checkAuth,
             }}
         >
             {children}
@@ -90,7 +139,7 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;

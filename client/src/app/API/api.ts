@@ -9,7 +9,7 @@ const api = axios.create({
 
 // Add an interceptor to include the token in all requests
 api.interceptors.request.use((config) => {
-    const token = document.cookie.replace(/(?:(?:^|.*;\s*)token\s*\=\s*([^;]*).*$)|^.*$/, "$1");
+    const token = localStorage.getItem('token');
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -123,10 +123,37 @@ export const getReviews = async (attraction_id: string) => {
     const response = await api.get(`/reviews/${attraction_id}`);
     return response.data;
 };
-export const createReview = async (user_id: string, comment: string, attraction_id: string) => {
-    const response = await api.post(`$/reviews`, { user_id, comment, attraction_id })
-    return response.data
-}
+
+
+// Fetch reviews by destination
+export const getReviewsByDestination = async (attractionId: string) => {
+    const response = await api.get(`/reviews/destination/${attractionId}`);
+    return response.data;
+};
+
+export const createReview = async (comment: string, attraction_id: string, rating: number) => {
+    try {
+        // Prepare the review data object
+        const reviewData = {
+            comment,
+            attraction_id,
+            rating,
+        };
+
+        // Send the review data as a JSON string
+        const response = await api.post(`/reviews`, JSON.stringify(reviewData), {
+            headers: {
+                'Content-Type': 'application/json' // Ensure the content type is set to JSON
+            }
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error creating review:', error);
+        throw error; // Re-throw the error for further handling
+    }
+};
+
 
 export const addComment = async (userId: string, attractionSiteId: string, content: string) => {
     const response = await api.post(`/comments/`, {
@@ -158,9 +185,24 @@ export const generateDayRoute = async (attractionData: {
 }) => {
     const response = await api.post(`${ModelURL}/generate-routine`, {
         attraction: attractionData,
-        days: 7
+        days: 3
     });
+    console.log(response)
     return response.data;
 };
 
+
+
+export const generateDestinationInfo = async (name: string, location: string) => {
+    try {
+        const response = await api.post(`${ModelURL}/generate-destination-info`, {
+            name,
+            location
+        }, { withCredentials: true });
+        return response.data;
+    } catch (error) {
+        console.error('Error generating destination info:', error);
+        throw error; // Re-throw the error for further handling
+    }
+};
 

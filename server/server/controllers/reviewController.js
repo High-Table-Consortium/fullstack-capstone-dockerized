@@ -39,6 +39,30 @@ exports.getReviews = async (req, res) => {
 };
 
 /**
+ * Review Fetching by Destination Controller
+ * Fetches all reviews associated with a specific destination (attractionId).
+ */
+exports.getReviewByDestination = async (req, res) => {
+  try {
+    const { attractionId } = req.params;  // Extract attractionId from route params
+    
+    // Call the review service to get reviews by destination
+    const reviews = await reviewService.getReviewsByDestination(attractionId);
+    
+    // Check if reviews exist for the provided destination
+    if (!reviews || reviews.length === 0) {
+      return res.status(404).json({ message: 'No reviews found for this destination.' });
+    }
+
+    // Return success response with the reviews
+    res.status(200).json(reviews);
+  } catch (error) {
+    // Return error response if fetching reviews fails
+    return handleServerError(res, error, 'Error while fetching reviews by destination');
+  }
+};
+
+/**
  * Single Review Fetching Controller
  * Fetches a single review by ID.
  */

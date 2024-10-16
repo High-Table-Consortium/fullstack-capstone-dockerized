@@ -12,7 +12,8 @@ import {
 } from "./ui/dialog"
 import { Textarea } from "./ui/textarea"
 import { Label } from "./ui/label"
-import { createReview, getReviews } from '../app/api/api'
+import { createReview, getReviewsByDestination } from '../app/api/api'
+import { useAuth } from '../context/authContent'
 
 // StarRating Component
 function StarRating({ rating, onRatingChange }) {
@@ -31,24 +32,28 @@ function StarRating({ rating, onRatingChange }) {
 
 // ReviewCard Component
 function ReviewCard({ review }) {
+  const authorName = review.user?.firstName || 'Anonymous User'; // Access first name directly
+  const avatarSrc = review.user?.avatar || ''; // Assuming you have avatar info in user object
+  const rating = review.rating || 0; // Default to 0 if rating is not provided
+
   return (
     <div className="border-b border-gray-200 py-4">
       <div className="flex items-start space-x-4">
         <Avatar className="w-10 h-10">
-          <AvatarImage src={review.author.avatar} alt={review.author.name} />
-          <AvatarFallback>{review.author.name[0]}</AvatarFallback>
+          <AvatarImage src={avatarSrc} alt={authorName} />
+          <AvatarFallback>{authorName[0]}</AvatarFallback>
         </Avatar>
         <div className="flex-1">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold">{review.author.name}</h3>
-            <span className="text-sm text-gray-500">{review.date}</span>
+            <h3 className="font-semibold">{authorName}</h3>
+            <span className="text-sm text-gray-500">{review.date ? new Date(review.date).toLocaleDateString() : 'Date not available'}</span>
           </div>
-          <StarRating rating={review.rating} />
-          <p className="mt-2 text-sm text-gray-700">{review.content}</p>
+          <StarRating rating={rating} />
+          <p className="mt-2 text-sm text-gray-700">{review.comment}</p>
           <div className="mt-2 flex items-center space-x-2">
             <Button variant="ghost" size="sm" className="text-gray-500 hover:text-gray-700">
               <ThumbsUp className="w-4 h-4 mr-1" />
-              <span className="text-xs">{review.likes}</span>
+              <span className="text-xs">{review.likes || 0}</span>
             </Button>
           </div>
           {review.ownerResponse && (
@@ -64,21 +69,46 @@ function ReviewCard({ review }) {
 }
 
 // AddReviewModal Component
-function AddReviewModal({ onAddReview }) {
+function AddReviewModal({ onAddReview, attraction_id }) {
   const [rating, setRating] = useState(0)
   const [review, setReview] = useState('')
+  const { user } = useAuth()
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+    if (!user) {
+      console.error('User is not authenticated.');
+      // show a user-friendly message here
+      // For example: setError('Please log in to submit a review');
+      return;
+    }
+    
+    if (!rating) {
+      console.error('Rating is required.');
+      
+      return;
+    }
+  
     try {
-      const newReview = await createReview(/* Pass necessary parameters here */)
-      onAddReview(newReview)
-      setRating(0)
-      setReview('')
+      const newReview = await createReview({
+        // user_id: user.id,
+        comment: review,
+        attraction_id: attraction_id,
+        rating: rating,
+      });
+      
+      onAddReview(newReview);
+      setRating(0);
+      setReview('');
+      // add a success message here
+      // For example: setSuccessMessage('Review submitted successfully!');
+
     } catch (error) {
       console.error('Error submitting review:', error);
+      // show a user-friendly error message here
+      // For example: setError('Failed to submit review. Please try again.');
     }
-  }
+  };
 
   return (
     <Dialog>
@@ -89,7 +119,7 @@ function AddReviewModal({ onAddReview }) {
         <DialogHeader>
           <DialogTitle>Write a Review</DialogTitle>
           <DialogDescription>
-            Share your experience with Charley Grey. Your feedback helps others make informed decisions.
+            Share your experience with the attraction. Your feedback helps others make informed decisions.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -113,14 +143,13 @@ function AddReviewModal({ onAddReview }) {
   )
 }
 
-// Main ReviewSection Component
-export default function ReviewSection({ attractionId, attractionName, address }) {
+export default function ReviewSection({ attraction_id, attractionName, address }) {
   const [reviews, setReviews] = useState([])
 
   const calculateAverageRating = () => {
-    if (reviews.length === 0) return 0;
-    const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
-    return (totalRating / reviews.length).toFixed(1);
+    if (reviews.length === 0) return 0
+    const totalRating = reviews.reduce((acc, review) => acc + (review.rating || 0), 0)
+    return (totalRating / reviews.length).toFixed(1)
   }
   const overallRating = calculateAverageRating()
   const totalReviews = reviews.length
@@ -129,18 +158,17 @@ export default function ReviewSection({ attractionId, attractionName, address })
     setReviews(prevReviews => [newReview, ...prevReviews])
   }
 
-  // Fetch reviews
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const data = await getReviews(attractionId)
+        const data = await getReviewsByDestination(attraction_id)
         setReviews(data)
       } catch (error) {
         console.error('Error fetching reviews:', error)
       }
     }
     fetchReviews()
-  }, [attractionId])
+  }, [attraction_id])
 
   return (
     <div className="w-full bg-white">
@@ -155,11 +183,11 @@ export default function ReviewSection({ attractionId, attractionName, address })
               <span className="ml-2 text-sm text-gray-500">{totalReviews} reviews</span>
             </div>
           </div>
-          <AddReviewModal onAddReview={handleAddReview} />
+          <AddReviewModal onAddReview={handleAddReview} attraction_id={attraction_id} />
         </div>
         <div className="space-y-4">
           {reviews.map(review => (
-            <ReviewCard key={review.id} review={review} />
+            <ReviewCard key={review._id} review={review} />
           ))}
         </div>
       </div>

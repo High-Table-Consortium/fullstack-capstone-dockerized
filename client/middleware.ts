@@ -1,29 +1,26 @@
 // middleware.ts
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 
-export function middleware(req: NextRequest) {
-    const token = req.cookies.get('token')?.value;
+export function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+  
+  const isAuthPage = pathname.startsWith('/auth')
+  const isApiRoute = pathname.startsWith('/api')
 
-    if (token) {
-        // Clone the request headers to modify them
-        const headers = new Headers(req.headers);
-        headers.set('Authorization', `Bearer ${token}`);
+  // For API routes, we don't need to do anything here now
+  if (isApiRoute) {
+    return NextResponse.next()
+  }
 
-        // Rebuild the request with the modified headers
-        const requestWithAuth = new Request(req.url, {
-            method: req.method,
-            headers,
-            body: req.body,
-            redirect: req.redirect,
-        });
+  // We can't check for authentication here anymore since the token is in localStorage
+  // You might want to handle this check client-side in your components or pages
 
-        return NextResponse.next({ request: requestWithAuth });
-    }
-
-    return NextResponse.next();
+  return NextResponse.next()
 }
 
-// Specify routes to apply this middleware to (optional)
 export const config = {
-    matcher: ['/auth/:path*'],
-};
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+}

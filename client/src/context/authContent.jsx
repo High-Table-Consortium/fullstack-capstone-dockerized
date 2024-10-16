@@ -1,159 +1,135 @@
-'use client'
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import Cookies from 'js-cookie';
+'use client';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-
-import { login, register, logout, getUserProfile, forgotPassword, verifyEmail, resetPassword } from '../app/api/api';
+import { loginAction, registerAction, logoutAction, getUserProfileAction } from '../app/actions/auth';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const router = useRouter();
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [message, setMessage] = useState(""); // Message for feedback
+    const [token, setToken] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('token') : ""));
+    const [isLoading, setIsLoading] = useState(!!token);
+    const [message, setMessage] = useState("");
 
-    // On initial load, check for the stored token in cookies
-    useEffect(() => {
-        const storedToken = Cookies.get('token');
-        if (storedToken) {
-            setToken(storedToken);
-            fetchUserProfile(storedToken);
-        } else {
-            setIsLoading(false);
+    // Function to store token and immediately fetch user profile
+    const storeToken = async (newToken) => {
+        setToken(newToken);
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('token', newToken);
         }
-    }, []);
+        await fetchUserProfile(newToken); // Fetch user profile immediately after storing token
+    };
 
-    // Clear message on route change
-    useEffect(() => {
-        if (typeof window !== "undefined" && router.events) {
-            const clearMessage = () => setMessage("");
-            router.events.on("routeChangeComplete", clearMessage);
-
-            return () => {
-                router.events.off("routeChangeComplete", clearMessage);
-            };
-        }
-    }, [router]);
-
-    // Function to fetch user profile
-    const fetchUserProfile = async (token) => {
-        setIsLoading(true);
-        try {
-            const profile = await getUserProfile(token);
-            setUser(profile);
-            // console.log(profile)
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-            handleLogout(); // Automatically logs out if token is invalid
-        } finally {
-            setIsLoading(false);
+    const clearToken = () => {
+        setToken("");
+        setUser(null);
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('token');
         }
     };
 
-    // Login function
+    const fetchUserProfile = useCallback(async () => {
+        if (!token) return;
+        setIsLoading(true);
+        try {
+            const response = await getUserProfileAction(token);
+            if (response.success && response.user) {
+                setUser(response.user);
+            } else {
+                throw new Error('Failed to fetch user profile');
+            }
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+            setUser(null);
+            setToken("");
+            localStorage.removeItem('token');
+        } finally {
+            setIsLoading(false);
+        }
+    }, [token]);
+
+    useEffect(() => {
+        fetchUserProfile();
+    }, [fetchUserProfile]);
+
     const handleLogin = async (email, password, redirectPath = "/") => {
         setIsLoading(true);
         try {
-            const data = await login(email, password);
-            if (data.success == true) {
-                Cookies.set('token', data.token, { secure: true, sameSite: 'strict' });
-                setToken(data.token);
+            const data = await loginAction(email, password);
+            if (data.success) {
+                await storeToken(data.token); // Store token and fetch user profile
                 setMessage("Login successful! Redirecting...");
-                await fetchUserProfile(data.token);
-                console.log(data)
-                // router.push(redirectPath);
+                router.push(redirectPath);
             } else {
                 setMessage(data.message || "Login failed. Please try again.");
             }
         } catch (error) {
-            setMessage("An error occurred during login. Please try again.");
             console.error('Login failed:', error);
+            setMessage("An error occurred during login. Please try again.");
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Registration function
     const handleRegister = async (firstName, lastName, email, password, redirectPath = "/auth/verify-email") => {
         setIsLoading(true);
         try {
-            const data = await register(firstName, lastName, email, password);
-            if (data.success == true) {
-                Cookies.set('token', data.token, { secure: true, sameSite: 'strict' });
-                setToken(data.token);
+            const data = await registerAction(firstName, lastName, email, password);
+            if (data.success) {
+                await storeToken(data.token); // Store token and fetch user profile
                 setMessage("Registration successful! Redirecting...");
-                await fetchUserProfile(data.token);
                 router.push(redirectPath);
             } else {
                 setMessage(data.message || "Registration failed. Please try again.");
             }
         } catch (error) {
-            setMessage("An error occurred during registration. Please try again.");
             console.error('Registration failed:', error);
+            setMessage("An error occurred during registration. Please try again.");
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Logout function
     const handleLogout = async (redirectPath = "/auth/signin") => {
+        setIsLoading(true);
         try {
-            await logout();
+            const result = await logoutAction();
+            if (result.success) {
+                clearToken();
+                setMessage("Successfully logged out.");
+                router.push(redirectPath);
+            } else {
+                setMessage("Logout failed. Please try again.");
+            }
         } catch (error) {
             console.error('Logout failed:', error);
+            setMessage("An error occurred during logout. Please try again.");
         } finally {
-            Cookies.remove('token');
-            setToken(null);
-            setUser(null);
-            setMessage("Successfully logged out.");
-            router.push(redirectPath);
+            setIsLoading(false);
         }
     };
 
-    const handleForgotPassword = async (email) => {
-        try {
-            await forgotPassword(email); // Call forgot password API
-            setMessage("Password reset email sent"); // Set success message
-        } catch (error) {
-            setError(error.response?.data?.message || "Failed to send password reset email"); // Handle error
+    const checkAuth = useCallback(() => {
+        if (token && !user) {
+            fetchUserProfile();
         }
-    };
-
-    const handleVerifyEmail = async (code) => {
-        try {
-            await verifyEmail(code); // Call verify email API
-            setMessage("Email verified successfully"); // Set success message
-        } catch (error) {
-            setError(error.response?.data?.message || "Email verification failed"); // Handle error
-        }
-    };
-
-    const handleResetPassword = async (token, password) => {
-        try {
-            await resetPassword(token, password); // Call reset password API
-            setMessage("Password reset successful"); // Set success message
-        } catch (error) {
-            setError(error.response?.data?.message || "Password reset failed"); // Handle error
-        }
-    };
+    }, [token, user, fetchUserProfile]);
 
     return (
         <AuthContext.Provider
             value={{
                 user,
+                setUser,
                 token,
                 login: handleLogin,
                 register: handleRegister,
                 logout: handleLogout,
                 isLoading,
                 isAuthenticated: !!token,
-                forgotPassword: handleForgotPassword,
-                verifyEmail: handleVerifyEmail,
-                resetPassword: handleResetPassword,
                 message,
-                setMessage, // Pass setMessage to allow updating messages
+                setMessage,
+                checkAuth,
             }}
         >
             {children}
@@ -163,7 +139,7 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-    if (context === undefined) {
+    if (!context) {
         throw new Error('useAuth must be used within an AuthProvider');
     }
     return context;

@@ -16,6 +16,7 @@ import FooterComponent from '../components/Footer'
 import Categories from '../components/Categorycards';
 import Map from '../components/Map'
 import Cities from '../components/Cities'
+import Facts from '../components/Facts'
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -78,9 +79,7 @@ export default function Home() {
       <Navbar />
 
       <main className="flex-grow">
-        {/* Carousal section */}
-        
-        {/* carousal end */}
+ 
         <section className="relative h-[60vh] md:h-[80vh] bg-cover bg-center">
         <video 
           autoPlay 
@@ -97,7 +96,7 @@ export default function Home() {
             transition={{ duration: 0.8 }}
             className="container mx-auto px-4 h-full flex flex-col justify-center relative z-10"
           >
-            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
+            <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 font-serif">
               Ready to start your <span className="text-yellow-500">South African</span><br />
               <span className="text-yellow-600">Wonderful Journey</span> with us
             </h1>
@@ -110,7 +109,7 @@ export default function Home() {
         
         <section className="py-10">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-semibold text-center mb-2">
+            <h2 className="text-3xl font-semibold text-center mb-2 font-mono">
               Recommended <span className="text-yellow-500">Destinations</span>
             </h2>
             <p className="text-center text-gray-600 mb-8">Discover South Africa's Most Popular Tourist Attractions</p>
@@ -166,19 +165,24 @@ export default function Home() {
         </section>
 
         <section>
+          <Facts />
+        </section>
+
+        <section>
           <Map />
         </section>
 
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-semibold text-center mb-12">
-              Why should Trip <span className="text-yellow-500">With Us?</span>
+            <h2 className="text-3xl font-semibold text-center mb-4 text-green-900 font-mono">
+            You have to <span className='text-yellow-500'>spend time to make time</span>
             </h2>
+            <p className='mb-8 ml-10 font-semibold text-gray-600'>A journey starts with a dream…and a plan. You're just 3 easy (and fun) steps away from creating your ideal Travel Dream Board.</p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                // { title: "Best Price Guarantee", description: "We offer competitive prices for all our South African adventures." },
-                // { title: "Easy & Quick Booking", description: "Our streamlined process makes booking your trip a breeze." },
-                { title: "Customer Care 24/7", description: "Our support team is always available to assist you.", image: "https://cdn-icons-png.flaticon.com/512/10342/10342464.png" }
+                { title: "Step 1:", description: "Choose a city or province in South Africa to explore.", image: "/green-city.png" },
+                { title: "Step 2:", description: "Decide who are your travel companions.", image: "/family.png" },
+                { title: "Step 3:", description: "Tick off your bucket list must-dos.", image: "/task-list.png" }
               ].map((reason, index) => (
                 <motion.div
                   key={index}

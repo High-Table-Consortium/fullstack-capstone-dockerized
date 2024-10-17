@@ -3,28 +3,28 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icons from lucide-react
+import { ChevronLeft, ChevronRight } from 'lucide-react'; 
+import Router from 'next/navigation';
+import Link from 'next/link';
 
 const Provinces = () => {
     const [isVisible, setIsVisible] = useState(false);
-    const carouselRef = useRef(null); // Ref to the carousel div
+    const carouselRef = useRef(null); 
 
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(true);
-        }, 500); // Adjust this delay as necessary
+        }, 500); 
 
-        return () => clearTimeout(timer); // Clean up the timeout on unmount
+        return () => clearTimeout(timer);
     }, []);
 
-    // Function to scroll left
     const scrollLeft = () => {
         if (carouselRef.current) {
             carouselRef.current.scrollBy({ left: -300, behavior: 'smooth' });
         }
     };
 
-    // Function to scroll right
     const scrollRight = () => {
         if (carouselRef.current) {
             carouselRef.current.scrollBy({ left: 300, behavior: 'smooth' });
@@ -35,7 +35,7 @@ const Provinces = () => {
         <div>
             <section className="rounded-2xl bg-background relative">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-semibold text-center mb-2">
+                    <h2 className="text-3xl font-semibold text-center mb-2 font-mono">
                         Escape to Our <span className="text-yellow-500">Provinces</span>
                     </h2>
                     <p className="text-center text-gray-600 mb-12">
@@ -75,6 +75,8 @@ const Provinces = () => {
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
                                     className="flex-shrink-0 w-64"
                                 >
+                                    <Link href={`/destinationlist/province/${province.name}`}>
+                                    
                                     <div className="overflow-hidden rounded-lg shadow-lg">
                                         <div className="relative aspect-[3/2]">
                                             <Image
@@ -85,10 +87,11 @@ const Provinces = () => {
                                                 className="transition-transform duration-300 hover:scale-105"
                                             />
                                             <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-opacity duration-300 hover:bg-opacity-30">
-                                                <h3 className="text-white text-2xl font-bold text-center px-4">{province.name}</h3>
+                                                <h3 className="text-white text-2xl font-bold text-center px-4 font-serif">{province.name}</h3>
                                             </div>
                                         </div>
                                     </div>
+                                    </Link>
                                 </motion.div>
                             ))}
                         </div>

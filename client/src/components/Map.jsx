@@ -57,7 +57,7 @@ export default function Map() {
 
   return (
     <div>
-      <h2 className="text-3xl font-semibold text-center py-9">
+      <h2 className="text-3xl font-semibold text-center py-9 font-mono">
           Our <span className="text-yellow-500">Provinces</span>
       </h2>
       <div className='flex justify-center'>

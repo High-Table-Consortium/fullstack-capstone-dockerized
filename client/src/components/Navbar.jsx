@@ -31,7 +31,7 @@ export default function Navbar() {
         Explore
         <span className="absolute bottom-[-3px] left-0 w-full h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
       </Link>
-      <Link href="/wishlist" className="relative text-yellow-500 neumorphic-button flex items-center group">
+      <Link href="/favourites" className="relative text-yellow-500 neumorphic-button flex items-center group">
         <Heart className="mr-2 h-4 w-4" />
         Wishlist
         <span className="absolute bottom-[-3px] left-0 w-full h-0.5 bg-yellow-500 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
@@ -94,6 +94,7 @@ export default function Navbar() {
               <LogIn className="mr-2 h-4 w-4 text-yellow-500" />
               Sign In / Create Account
             </button>
+
           )}
           <button
             onClick={() => setIsSearchOpen(!isSearchOpen)}
@@ -177,3 +178,4 @@ export default function Navbar() {
     </nav>
   );
 }
+

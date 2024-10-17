@@ -53,7 +53,24 @@ export const updateUserProfile = async (token: string, data: any) => {
 
 
 export const getAttractionByCategory = async (category: string) => {
-    const response = await api.get(`/attractions/category/${category}`);
+    const response = await api.get(`/attractions/search`, {
+        params: { category }
+    });
+    console.log(response)
+    return response.data;
+};
+export const getAttractionByCity = async (city: string) => {
+    const response = await api.get(`/attractions/search`, {
+        params: { location: city }
+    });
+    console.log(response)
+    return response.data;
+};
+export const getAttractionByProvince = async (province: string) => {
+    const response = await api.get(`/attractions/search`, {
+        params: { location: province }
+    });
+    console.log(response)
     return response.data;
 };
 

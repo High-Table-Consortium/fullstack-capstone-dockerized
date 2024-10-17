@@ -1,4 +1,7 @@
-import Image from "next/image"
+'use client'
+
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const categories = [
   {
@@ -28,12 +31,22 @@ const categories = [
 ]
 
 export default function Categories() {
+  const router = useRouter(); 
+  
+  const handleCategoryClick = (category) => {
+    router.push(`/destinationlist/category/${category}`); 
+  }
+
   return (
     <section className="w-full rounded-2xl py-5 bg-background">
       <div className="container mx-auto px-4 mt=[50px]">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {categories.map((category) => (
-            <div key={category.name} className="overflow-hidden rounded-lg shadow-2xl shadow-yellow-100">
+            <div 
+              key={category.name} 
+              className="overflow-hidden rounded-lg shadow-2xl shadow-yellow-100 cursor-pointer"
+              onClick={() => handleCategoryClick(category.name)}
+            >
               <div className="relative aspect-[3/2]">
                 <Image
                   src={category.image}
@@ -43,7 +56,7 @@ export default function Categories() {
                   className="transition-transform duration-300 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-opacity duration-300 hover:bg-opacity-30">
-                  <h3 className="text-white text-2xl font-bold text-center px-4">{category.name}</h3>
+                  <h3 className="text-white text-2xl font-bold text-center px-4 font-serif">{category.name}</h3>
                 </div>
               </div>
             </div>
@@ -51,5 +64,6 @@ export default function Categories() {
         </div>
       </div>
     </section>
-  )
+  );
 }
+

@@ -22,3 +22,7 @@ The **Travel Itinerary Generator API** is a FastAPI application that generates f
 ## Installation
 
 1. pip install -r requirements.txt
+
+
+## Environment (.env)
+GEMINI_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

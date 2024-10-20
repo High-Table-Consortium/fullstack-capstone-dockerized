@@ -3,16 +3,10 @@ const JWT_SECRET = process.env.JWT_SECRET;  // Use an environment variable in pr
 
 // Middleware to verify JWT token
 function authenticateToken(req, res, next) {
-  const token = req.cookies.token;
-  if (!token) return res.status(401).json({ message: 'Access denied, token missing!' });
-
-  try {
-    const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded;
+  if (req.session.userId) {
     next();
-  } catch (error) {
-    console.error('Token verification error:', error);
-    res.status(403).json({ message: 'Invalid or expired token.' });
+  } else {
+    res.status(401).json({ success: false, message: "Unauthorized access" });
   }
 }
 function verifyToken (req, res, next) {
@@ -33,13 +27,30 @@ function verifyToken (req, res, next) {
 	}
 };
 
-
-// Middleware to ensure user is an admin
-function isAdmin(req, res, next) {
-  if (!req.user.isAdmin) {
-    return res.status(403).json({ message: 'Access denied, admin only!' });
+// Middleware for authentication and admin check
+// Middleware for session-based authentication
+function authenticateSession(req, res, next) {
+  console.log("Session Data:", req.session); // Log session data
+  if (!req.session || !req.session.adminId) {
+    return res.status(401).json({ message: "Access denied. Not authenticated." });
   }
   next();
 }
 
-module.exports = { authenticateToken, isAdmin, verifyToken };
+// Middleware for admin authorization
+function isAdmin(req, res, next) {
+  if (!req.session.isAdmin) {
+    return res.status(403).json({ message: "Admin access only." });
+  }
+  next();
+}
+
+// // Middleware to ensure user is an admin
+// function isAdmin(req, res, next) {
+//   if (!req.user.isAdmin) {
+//     return res.status(403).json({ message: 'Access denied, admin only!' });
+//   }
+//   next();
+// }
+
+module.exports = { authenticateToken, isAdmin, verifyToken, authenticateSession };

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseURL = "http://localhost:3001/api";
-const ModelURL = "http://127.0.0.1:8000"
+const ModelURL = "https://fullstack-capstone-dockerized-ai.onrender.com"
 const api = axios.create({
     baseURL,
     withCredentials: true, // This ensures cookies are sent with requests
@@ -37,8 +37,9 @@ export const searchAttraction = async (category: string, name: string, location:
  * handle user profile retrieval
  * GET request to /user/profile
 */
-export const getUserProfile = async (token: string) => {
+export const getUserProfile = async () => {
     const response = await api.get(`/auth/check-auth`);
+    // console.log(response)
     return response.data;
 };
 
@@ -46,8 +47,8 @@ export const getUserProfile = async (token: string) => {
  * handle user profile update
  * PUT request to /user/profile
 */
-export const updateUserProfile = async (token: string, data: any) => {
-    const response = await api.put(`/user/profile`, data, { headers: { Authorization: `Bearer ${token}` } });
+export const updateUserProfile = async (data: any) => {
+    const response = await api.put(`/user/profile`, data);
     return response.data;
 };
 
@@ -56,21 +57,21 @@ export const getAttractionByCategory = async (category: string) => {
     const response = await api.get(`/attractions/search`, {
         params: { category }
     });
-    console.log(response)
+    // console.log(response)
     return response.data;
 };
 export const getAttractionByCity = async (city: string) => {
     const response = await api.get(`/attractions/search`, {
         params: { location: city }
     });
-    console.log(response)
+    // console.log(response)
     return response.data;
 };
 export const getAttractionByProvince = async (province: string) => {
     const response = await api.get(`/attractions/search`, {
         params: { location: province }
     });
-    console.log(response)
+    // console.log(response)
     return response.data;
 };
 
@@ -100,7 +101,7 @@ export const logout = async () => {
     const response = await api.post(`/auth/logout`);
     return response.data;
 };
-export const verifyEmail = async (code) => {
+export const verifyEmail = async (code: number) => {
     const response = await api.post(`/auth/verify-email`, { code });
     return response.data;
 };

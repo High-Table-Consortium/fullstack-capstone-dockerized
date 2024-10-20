@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { registerUser, loginUser, verifyEmail, resetPassword, forgotPassword, logout, checkAuth} = require('../controllers/userController');
 const passport = require('passport');
-const { verifyToken } = require('../middleware/authMiddleware');
+const { verifyToken, authenticateToken } = require('../middleware/authMiddleware');
 
 
 /**
@@ -25,7 +25,7 @@ router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
  * callback route for google to redirect to
  */
 router.get('/google/callback', 
-  passport.authenticate('google', { failureRedirect: '/' }),
+  passport.authenticate('google', { failureRedirect: 'http://localhost:3000/auth/signin' }),
   (req, res) => {
     // Successful authentication, redirect home.
     res.redirect('http://localhost:3000/');
@@ -40,5 +40,5 @@ router.post("/verify-email", verifyEmail);
 router.post("/forgot-password", forgotPassword);
 
 router.post("/reset-password/:token", resetPassword);
-router.get("/check-auth", verifyToken, checkAuth);
+router.get("/check-auth", authenticateToken, checkAuth);
 module.exports = router;

@@ -1,13 +1,7 @@
 // Import required modules
-const Admin = require("..//models/adminModel");
+const Admin = require("../models/adminModel");
 const { body, validationResult } = require("express-validator");
-const { generateAdminTokenAndSetCookie } = require("../utils/generateTokenAndSetCookie");
-
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
-const JWT_SECRET = "your-session-secret";
-
 const winston = require("winston");
 
 const logger = winston.createLogger({
@@ -23,20 +17,12 @@ const logger = winston.createLogger({
   ],
 });
 
+// Utility function to send responses
 const sendResponse = (res, status, message, data = null) => {
-  res.status(status).json({ success: status < 400, message, data });
+  const responsePayload = { success: status < 400, message, data };
+  logger.info(`Response: ${JSON.stringify(responsePayload)}`); // Log the response
+  res.status(status).json(responsePayload);
 };
-// Helper function to generate a JWT
-/**
- * Generates a JSON Web Token for the given admin.
- * @param {Object} admin - Admin object
- * @returns {String} JWT token
- */
-function generateToken(admin) {
-  return jwt.sign({ id: admin._id, isAdmin: admin.isAdmin }, JWT_SECRET, {
-    expiresIn: "24h", // Token expires in 24 hours
-  });
-}
 
 /**
  * Admin Registration Controller
@@ -63,7 +49,12 @@ exports.registerAdmin = [
         return sendResponse(res, 400, "Admin already exists.");
       }
 
-      const admin = new Admin({ email, password, isAdmin: true });
+      const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
+      const admin = new Admin({
+        email,
+        password: hashedPassword,
+        isAdmin: true,
+      });
       await admin.save();
 
       logger.info(`Admin ${admin.email} registered successfully.`);
@@ -80,45 +71,64 @@ exports.registerAdmin = [
   },
 ];
 
-/** 
+/**
  * Admin Login Controller
- * Handles admin login.
-*/
+ * Handles admin login and sets session data.
+ */
 exports.loginAdmin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
     const admin = await Admin.findOne({ email });
     if (!admin || !admin.isAdmin) {
-      return sendResponse(res, 400, "Invalid credentials or not an admin account.");
+      return sendResponse(
+        res,
+        400,
+        "Invalid credentials or not an admin account."
+      );
     }
 
-    const isPasswordValid = await admin.comparePassword(password);
+    const isPasswordValid = await bcrypt.compare(password, admin.password);
     if (!isPasswordValid) {
       return sendResponse(res, 400, "Invalid credentials.");
     }
 
-    const token = generateAdminTokenAndSetCookie(res, admin._id); // Assumes a function to generate token and set it as a cookie
+    req.session.adminId = admin._id.toString();
+    req.session.isAdmin = true;
+
+    // Log session information
+    logger.info(`Admin ${admin.email} logged in successfully. Session ID: ${req.sessionID}`);
 
     sendResponse(res, 200, "Admin logged in successfully", {
-      token,
       admin: {
         id: admin._id,
         email: admin.email,
       },
     });
   } catch (error) {
-    console.error("Admin login error:", error.message);
+    logger.error("Admin login error:", error.message);
     sendResponse(res, 500, "An error occurred while logging in.");
   }
 };
 
+/**
+ * Admin Profile Retrieval
+ * Retrieves the logged-in admin's profile using session data.
+ */
 exports.getUserProfile = async (req, res) => {
   try {
-    const admin = await Admin.findById(req.adminId).select("-password");
+    if (!req.session.adminId) {
+      return sendResponse(res, 401, "Not authenticated.");
+    }
+
+    const admin = await Admin.findById(req.session.adminId).select("-password");
     if (!admin) {
       return sendResponse(res, 404, "Admin not found.");
     }
+
+    // Log admin profile retrieval
+    logger.info(`Admin profile retrieved for ${admin.email}. Session ID: ${req.sessionID}`);
+
     sendResponse(res, 200, "Admin profile retrieved successfully.", admin);
   } catch (error) {
     logger.error("Fetch user profile error: ", error.message);
@@ -130,7 +140,21 @@ exports.getUserProfile = async (req, res) => {
   }
 };
 
+/**
+ * Admin Logout Controller
+ * Logs out the admin by destroying the session.
+ */
 exports.logout = async (req, res) => {
-	res.clearCookie("token");
-	res.status(200).json({ success: true, message: "Logged out successfully" });
+  req.session.destroy((err) => {
+    if (err) {
+      logger.error("Session destruction error: ", err.message);
+      return sendResponse(res, 500, "An error occurred while logging out.");
+    }
+    res.clearCookie("connect.sid"); // Remove the session cookie from client
+    
+    // Log the logout event
+    logger.info(`Admin logged out successfully. Session ID: ${req.sessionID}`);
+    
+    sendResponse(res, 200, "Logged out successfully.");
+  });
 };

@@ -17,6 +17,7 @@ import Categories from '../components/Categorycards';
 import Map from '../components/Map'
 import Cities from '../components/Cities'
 import Facts from '../components/Facts'
+import {Chatbot} from "../components/Chatbot"
 export default function Home() {
   const [isVisible, setIsVisible] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -201,7 +202,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        
+       <Chatbot/>
       </main>
       <FooterComponent />
     </div>

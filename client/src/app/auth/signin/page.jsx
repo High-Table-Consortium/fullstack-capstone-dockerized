@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 const SignInPage = () => {
   const router = useRouter();
-  const { login, message, setMessage } = useAuth();
+  const { login, message, setError, error } = useAuth();
   const [errorMessage, setErrorMessage] = useState(message || '');
   const [showPassword, setShowPassword] = useState(false);
   // const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -44,10 +44,11 @@ const SignInPage = () => {
   const handleSignIn = async (formData) => {
     try {
       await login(formData.email, formData.password);
-      setMessage(''); // Clear messages
+      setError(''); // Clear messages
+      router.push('/');
     } catch (error) {
       console.error('Sign-in error:', error);
-      setMessage('An error occurred during sign-in. Please try again later.');
+      setError('An error occurred during sign-in. Please try again later.');
     }
   };
 
@@ -58,11 +59,11 @@ const SignInPage = () => {
       if (response?.data?.success) {
         router.push('/');
       } else {
-        setMessage('Google sign-in failed. Please try again.');
+        setError('Google sign-in failed. Please try again.');
       }
     } catch (error) {
       console.error('Error with Google sign-in:', error);
-      setMessage('An error occurred during Google sign-in. Please try again later.');
+      setError('An error occurred during Google sign-in. Please try again later.');
     }
   };
 
@@ -72,7 +73,7 @@ const SignInPage = () => {
         <h2 className="text-4xl font-extrabold text-center text-gray-900">Sign In</h2>
         <p className="text-center text-gray-600">Enter your email and password</p>
 
-        {errorMessage && <p className="text-sm text-red-500 text-center mt-2">{errorMessage}</p>}
+        {error && <p className="text-sm text-red-500 text-center mt-2">{error}</p>}
 
         <button
           className="flex items-center justify-center w-full py-4 text-sm font-medium text-gray-900 bg-gray-200 rounded-2xl hover:bg-gray-300"

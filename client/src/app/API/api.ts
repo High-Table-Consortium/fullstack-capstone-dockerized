@@ -132,26 +132,20 @@ export const getReviewsByDestination = async (attractionId: string) => {
     return response.data;
 };
 
-export const createReview = async (comment: string, attraction_id: string, rating: number) => {
+export const createReview = async (user_id: string, attraction_id: string, comment: string, rating: number) => {
     try {
-        // Prepare the review data object
-        const reviewData = {
-            comment,
+        console.log('Sending review data:', { user_id, attraction_id, comment, rating });
+        const response = await api.post('/reviews', {
+            user_id,
             attraction_id,
-            rating,
-        };
-
-        // Send the review data as a JSON string
-        const response = await api.post(`/reviews`, JSON.stringify(reviewData), {
-            headers: {
-                'Content-Type': 'application/json' // Ensure the content type is set to JSON
-            }
+            comment,
+            rating
         });
-
+        console.log('Server response:', response.data);
         return response.data;
     } catch (error) {
-        console.error('Error creating review:', error);
-        throw error; // Re-throw the error for further handling
+        console.error('Error in createReview:', error.response ? error.response.data : error);
+        throw error;
     }
 };
 

@@ -22,6 +22,7 @@ export const AuthProvider = ({ children }) => {
                 
                 if (response.user.email && response.user.firstName && response.user.lastName) {
                     const userData = {
+                        id: response.user._id,
                         email: response.user.email,
                         firstName: response.user.firstName,
                         lastName: response.user.lastName

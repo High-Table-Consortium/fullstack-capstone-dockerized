@@ -32,10 +32,26 @@ function StarRating({ rating, onRatingChange }) {
 
 // ReviewCard Component
 function ReviewCard({ review }) {
-  const authorName = review.user?.firstName || 'Anonymous User'; // Access first name directly
+  const authorName = review.user_id?.firstName || 'Anonymous User'; // Access first name directly
   const avatarSrc = review.user?.avatar || ''; // Assuming you have avatar info in user object
   const rating = review.rating || 0; // Default to 0 if rating is not provided
 
+  // Format the date
+  const formatDate = (dateString) => {
+    if (!dateString) return 'Date not available';
+    
+    const date = new Date(dateString);
+    const options = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    
+    return date.toLocaleDateString('en-US', options);
+  };
+  
   return (
     <div className="border-b border-gray-200 py-4">
       <div className="flex items-start space-x-4">
@@ -46,7 +62,7 @@ function ReviewCard({ review }) {
         <div className="flex-1">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold">{authorName}</h3>
-            <span className="text-sm text-gray-500">{review.date ? new Date(review.date).toLocaleDateString() : 'Date not available'}</span>
+            <span className="text-sm text-gray-500">{formatDate(review.createdAt ) || 'Date not available' }</span>
           </div>
           <StarRating rating={rating} />
           <p className="mt-2 text-sm text-gray-700">{review.comment}</p>
@@ -71,42 +87,44 @@ function ReviewCard({ review }) {
 // AddReviewModal Component
 function AddReviewModal({ onAddReview, attraction_id }) {
   const [rating, setRating] = useState(0)
-  const [review, setReview] = useState('')
+  const [comment, setComment] = useState('');
   const { user } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!user) {
       console.error('User is not authenticated.');
-      // show a user-friendly message here
-      // For example: setError('Please log in to submit a review');
+      // Show a user-friendly message here
       return;
     }
-    
+
     if (!rating) {
       console.error('Rating is required.');
-      
+      // Show a user-friendly message here
       return;
     }
-  
+
+    // const reviewData = {
+    //   user_id: user.id,
+    //   attraction_id,
+    //   comment,
+    //   rating
+    // };
+
+    // console.log('Submitting review:', reviewData);
+
     try {
-      const newReview = await createReview({
-        // user_id: user.id,
-        comment: review,
-        attraction_id: attraction_id,
-        rating: rating,
-      });
-      
+      const newReview = await createReview(user.id, attraction_id, comment, rating);
+
+      console.log('Review submitted successfully:', newReview);
       onAddReview(newReview);
       setRating(0);
-      setReview('');
-      // add a success message here
-      // For example: setSuccessMessage('Review submitted successfully!');
+      setComment('');
+      // Add a success message here
 
     } catch (error) {
-      console.error('Error submitting review:', error);
-      // show a user-friendly error message here
-      // For example: setError('Failed to submit review. Please try again.');
+      console.error('Error submitting review:', error.response ? error.response.data : error);
+      // Show a user-friendly error message here
     }
   };
 
@@ -128,11 +146,11 @@ function AddReviewModal({ onAddReview, attraction_id }) {
             <StarRating rating={rating} onRatingChange={setRating} />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="review">Your Review</Label>
+            <Label htmlFor="comment">Your Review</Label>
             <Textarea
-              id="review"
-              value={review}
-              onChange={(e) => setReview(e.target.value)}
+              id="comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
               placeholder="Write your review here..."
             />
           </div>

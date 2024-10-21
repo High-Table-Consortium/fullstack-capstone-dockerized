@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Star, MapPin, Clock, Utensils, Heart  } from 'lucide-react';
+import { Star, MapPin, Clock, Utensils, Heart } from 'lucide-react';
 import { getAttractionById, createReview, addComment, generateDayRoute, generateDestinationInfo } from '../../api/api';
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
@@ -11,9 +11,11 @@ import Navbar from '../../../components/Navbar';
 import DestinationDetailSkeleton from "../../../components/DetailedPageSkeleton";
 import Image from 'next/image';
 import FooterComponent from '../../../components/Footer';
+import { useAuth } from '../../../context/authContent';
 
 export default function DestinationDetail({ params }) {
   const { id } = params;
+  const { user } = useAuth();
   const [destination, setDestination] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [newComment, setNewComment] = useState('');
@@ -112,15 +114,11 @@ export default function DestinationDetail({ params }) {
     return <DestinationDetailSkeleton />;
   }
 
-  const handleAddReview = async (review) => {
-    try {
-      const userId = user.id; // Ensure you have access to the user object
-      const addedReview = await createReview(userId, review.comment, id);
-      setReviews((prevReviews) => [...prevReviews, addedReview]);
-      console.log('Review added successfully');
-    } catch (error) {
-      console.error('Error adding review:', error);
-    }
+  const handleAddReview = async (newReview) => {
+    const handleAddReview = (newReview) => {
+      setReviews(prevReviews => [newReview, ...prevReviews]);
+      // You might also want to update the overall rating here
+    };
   };
 
   const handleAddComment = async (reviewId) => {

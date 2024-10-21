@@ -109,7 +109,7 @@ export default function AccountInfo() {
     );
   }
 
-  if (!isAuthenticated || !user) {
+  if (!user) {
     return (
       showLoginMessage && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">

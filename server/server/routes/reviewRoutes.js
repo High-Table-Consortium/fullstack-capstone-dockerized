@@ -15,7 +15,7 @@ const handleValidationErrors = require('../middleware/handleValidation');
 // Route to create a new review with validation
 router.post(
   '/',
-  verifyToken, // Ensures the user is authenticated
+  authenticateToken, // Ensures the user is authenticated
   handleValidationErrors, // Middleware to handle validation errors
   createReview // Controller to create a review
 );

@@ -13,12 +13,19 @@ const handleServerError = (res, error, message = 'Server error') => {
  */
 exports.createReview = async (req, res) => {
   try {
-    const { comment, rating, attractionId } = req.body;
-    const userId = req.userId;
-    const newReview = await reviewService.createReview(comment, rating, userId, attractionId);
+    const { user_id, attraction_id, comment, rating } = req.body;
+    console.log('Received review data:', { user_id, attraction_id, comment, rating });
+
+    if (!user_id || !attraction_id || !comment || rating === undefined) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+
+    const newReview = await reviewService.createReview(user_id, attraction_id, comment, rating);
+    console.log('New review created:', newReview);
     res.status(201).json(newReview);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error creating review:', error);
+    res.status(500).json({ message: 'Failed to create review', error: error.message });
   }
 };
 

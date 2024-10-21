@@ -9,20 +9,31 @@ const User = require('../models/usersModel'); // Make sure to require the User m
  * @param {String} attractionId - The ID of the attraction being reviewed
  * @returns {Object} The created review
  */
-const createReview = async (comment, rating, userId, attractionId) => {
+const createReview = async (user_id, attraction_id, comment, rating) => {
   try {
-    const review = new Review({
+    // First, check if the user exists and get their firstName
+    const user = await User.findById(user_id).select('firstName');
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const newReview = new Review({
+      user_id,
+      attraction_id,
       comment,
       rating,
-      user_id: userId,
-      attraction_id: attractionId,
+      userFirstName: user.firstName // Add the firstName to the review
     });
 
-    // Save the new review and return it
-    return await review.save();
+    const savedReview = await newReview.save();
+
+    // Populate the user field with only the firstName
+    await savedReview.populate('user_id', 'firstName');
+
+    return savedReview;
   } catch (error) {
-    console.error('Error creating review:', error);
-    throw new Error('Unable to create review');
+    console.error('Error in createReview service:', error);
+    throw error;
   }
 };
 

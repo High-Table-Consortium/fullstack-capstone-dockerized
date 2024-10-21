@@ -1,137 +1,124 @@
 'use client';
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/navigation';
-import { loginAction, registerAction, logoutAction, getUserProfileAction } from '../app/actions/auth';
+import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
+import { login as apiLogin, register as apiRegister, logout as apiLogout, getUserProfile as apiGetUserProfile } from '../app/api/api';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const router = useRouter();
     const [user, setUser] = useState(null);
-    const [token, setToken] = useState(() => (typeof window !== 'undefined' ? localStorage.getItem('token') : ""));
-    const [isLoading, setIsLoading] = useState(!!token);
-    const [message, setMessage] = useState("");
-
-    // Function to store token and immediately fetch user profile
-    const storeToken = async (newToken) => {
-        setToken(newToken);
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('token', newToken);
-        }
-        await fetchUserProfile(newToken); // Fetch user profile immediately after storing token
-    };
-
-    const clearToken = () => {
-        setToken("");
-        setUser(null);
-        if (typeof window !== 'undefined') {
-            localStorage.removeItem('token');
-        }
-    };
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const initialFetchDone = useRef(false);
 
     const fetchUserProfile = useCallback(async () => {
-        if (!token) return;
         setIsLoading(true);
+        console.log('Fetching user profile...');
         try {
-            const response = await getUserProfileAction(token);
+            const response = await apiGetUserProfile();
+            // console.log('API Response:', response);
+            
             if (response.success && response.user) {
-                setUser(response.user);
+                // console.log('Response user data:', response.user);
+                
+                if (response.user.email && response.user.firstName && response.user.lastName) {
+                    const userData = {
+                        email: response.user.email,
+                        firstName: response.user.firstName,
+                        lastName: response.user.lastName
+                    };
+                    console.log('Setting user state to:', userData);
+                    setUser(userData);
+                } else {
+                    // console.error('Response user data is missing required fields:', response.user);
+                    throw new Error("User data is incomplete in the response.");
+                }
             } else {
-                throw new Error('Failed to fetch user profile');
+                // console.error('Response is not successful or user data is missing:', response);
+                throw new Error("User data is missing in response.");
             }
         } catch (error) {
-            console.error('Error fetching user profile:', error);
-            setUser(null);
-            setToken("");
-            localStorage.removeItem('token');
+            console.error('Failed to fetch user profile:', error);
+            setError(error.message || "An error occurred while fetching user data.");
         } finally {
             setIsLoading(false);
         }
-    }, [token]);
+    }, []);
 
     useEffect(() => {
-        fetchUserProfile();
+        if (!initialFetchDone.current) {
+            console.log('Initial fetch of user profile...');
+            fetchUserProfile();
+            initialFetchDone.current = true;
+        }
     }, [fetchUserProfile]);
 
-    const handleLogin = async (email, password, redirectPath = "/") => {
+    useEffect(() => {
+        console.log('User state changed:', user);
+    }, [user]);
+
+    const login = async (email, password) => {
         setIsLoading(true);
+        setError(null);
         try {
-            const data = await loginAction(email, password);
-            if (data.success) {
-                await storeToken(data.token); // Store token and fetch user profile
-                setMessage("Login successful! Redirecting...");
-                router.push(redirectPath);
+            const response = await apiLogin(email, password);
+            // console.log('Login API Response:', response);
+            if (response.success) {
+                await fetchUserProfile(); // Fetch user profile after successful login
+                return true;
             } else {
-                setMessage(data.message || "Login failed. Please try again.");
+                throw new Error(response.message || "Login failed.");
             }
         } catch (error) {
-            console.error('Login failed:', error);
-            setMessage("An error occurred during login. Please try again.");
+            const errorMessage = error.message || "Login failed.";
+            setError(errorMessage);
+            console.error('Login failed:', errorMessage);
+            return false;
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleRegister = async (firstName, lastName, email, password, redirectPath = "/auth/verify-email") => {
+    const register = async (firstName, lastName, email, password) => {
         setIsLoading(true);
+        setError(null);
         try {
-            const data = await registerAction(firstName, lastName, email, password);
-            if (data.success) {
-                await storeToken(data.token); // Store token and fetch user profile
-                setMessage("Registration successful! Redirecting...");
-                router.push(redirectPath);
+            const response = await apiRegister(firstName, lastName, email, password);
+            // console.log('Register API Response:', response);
+            if (response.success) {
+                await fetchUserProfile(); // Fetch user profile after successful registration
+                return true;
             } else {
-                setMessage(data.message || "Registration failed. Please try again.");
+                throw new Error(response.message || "Registration failed.");
             }
         } catch (error) {
-            console.error('Registration failed:', error);
-            setMessage("An error occurred during registration. Please try again.");
+            const errorMessage = error.message || "Registration failed.";
+            setError(errorMessage);
+            console.error('Registration failed:', errorMessage);
+            return false;
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleLogout = async (redirectPath = "/auth/signin") => {
+    const logout = async () => {
         setIsLoading(true);
         try {
-            const result = await logoutAction();
-            if (result.success) {
-                clearToken();
-                setMessage("Successfully logged out.");
-                router.push(redirectPath);
+            const response = await apiLogout();
+            if (response.success) {
+                setUser(null);
             } else {
-                setMessage("Logout failed. Please try again.");
-            }
+                throw ne            }
         } catch (error) {
             console.error('Logout failed:', error);
-            setMessage("An error occurred during logout. Please try again.");
+            setError(error.message || "Logout failed.");
+            throw error;
         } finally {
             setIsLoading(false);
         }
     };
 
-    const checkAuth = useCallback(() => {
-        if (token && !user) {
-            fetchUserProfile();
-        }
-    }, [token, user, fetchUserProfile]);
-
     return (
-        <AuthContext.Provider
-            value={{
-                user,
-                setUser,
-                token,
-                login: handleLogin,
-                register: handleRegister,
-                logout: handleLogout,
-                isLoading,
-                isAuthenticated: !!token,
-                message,
-                setMessage,
-                checkAuth,
-            }}
-        >
+        <AuthContext.Provider value={{ user, isLoading, error, setError, login, register, logout, fetchUserProfile }}>
             {children}
         </AuthContext.Provider>
     );
@@ -139,8 +126,8 @@ export const AuthProvider = ({ children }) => {
 
 export const useAuth = () => {
     const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth must be used within an AuthProvider');
+    if (context === undefined) {
+        throw new Error("useAuth must be used within an AuthProvider");
     }
     return context;
 };

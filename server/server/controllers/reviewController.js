@@ -152,3 +152,36 @@ exports.findReviewById = async (req, res, next) => {
     return handleServerError(res, error, 'Error while fetching review');
   }
 };
+
+/**
+ * Add a comment to a review
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+exports.addComment = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const { userId, text } = req.body;
+    const newComment = await reviewService.addCommentToReview(reviewId, userId, text);
+    res.status(201).json(newComment);
+  } catch (error) {
+    console.error('Error adding comment:', error);
+    res.status(500).json({ message: 'Error adding comment', error: error.message });
+  }
+};
+
+/**
+ * Get comments for a review
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ */
+exports.getComments = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const comments = await reviewService.getCommentsForReview(reviewId);
+    res.json(comments);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    res.status(500).json({ message: 'Error fetching comments', error: error.message });
+  }
+};

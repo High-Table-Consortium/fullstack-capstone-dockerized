@@ -134,14 +134,14 @@ export const getReviewsByDestination = async (attractionId: string) => {
 
 export const createReview = async (user_id: string, attraction_id: string, comment: string, rating: number) => {
     try {
-        console.log('Sending review data:', { user_id, attraction_id, comment, rating });
+        // console.log('Sending review data:', { user_id, attraction_id, comment, rating });
         const response = await api.post('/reviews', {
             user_id,
             attraction_id,
             comment,
             rating
         });
-        console.log('Server response:', response.data);
+        // console.log('Server response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error in createReview:', error.response ? error.response.data : error);
@@ -149,13 +149,22 @@ export const createReview = async (user_id: string, attraction_id: string, comme
     }
 };
 
+// Fetch comments by review ID
+export const getCommentsByReviewId = async (reviewId: string) => {
+    // Replace with actual API call
+    const response = await api.get(`/reviews/${reviewId}/comments`);
+    return response.data;
+};
 
-export const addComment = async (userId: string, attractionSiteId: string, content: string) => {
-    const response = await api.post(`/comments/`, {
-        userId, attractionSiteId, content
-    })
-    return response.data
-}
+export const addComment = async (reviewId: string, userId: string, text: string) => {
+    try {
+        const response = await api.post(`/api/reviews/${reviewId}/comments`, { userId, text });
+        return response.data;
+    } catch (error) {
+        console.error('Error adding comment:', error);
+        throw error;
+    }
+};
 export const deleteReview = async (review_id: string) => {
     const response = await api.delete(`/reviews/${review_id}`)
     return response.data

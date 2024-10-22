@@ -64,22 +64,12 @@ const getAllReviews = async () => {
  */
 const getReviewsByDestination = async (attractionId) => {
   try {
-    // Find reviews for the specified attraction
     const reviews = await Review.find({ attraction_id: attractionId })
-      .populate('attraction_id', 'name location'); // Populate attraction fields for display
+      .populate('attraction_id', 'name location')
+      .populate('user_id', 'firstName image')
+      .populate('comments.user', 'firstName image');
     
-    // For each review, retrieve the user details based on user_id
-    const reviewsWithUserDetails = await Promise.all(
-      reviews.map(async (review) => {
-        const user = await User.findById(review.user_id).select('firstName image');
-        return {
-          ...review.toObject(),
-          user: user || null, // Add user details or null if user not found
-        };
-      })
-    );
-
-    return reviewsWithUserDetails;
+    return reviews;
   } catch (error) {
     console.error('Error fetching reviews by destination:', error);
     throw new Error('Unable to fetch reviews by destination');
@@ -157,6 +147,68 @@ const deleteReview = async (reviewId) => {
   }
 };
 
+/**
+ * Add a comment to a review
+ * @param {String} reviewId - The ID of the review
+ * @param {String} userId - The ID of the user adding the comment
+ * @param {String} text - The comment text
+ * @returns {Object} The updated review
+ */
+const addCommentToReview = async (reviewId, userId, text) => {
+  try {
+    const review = await Review.findById(reviewId);
+    if (!review) {
+      throw new Error('Review not found');
+    }
+
+    const user = await User.findById(userId).select('firstName image');
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const newComment = {
+      user: userId,
+      text: text,
+      createdAt: new Date()
+    };
+
+    review.comments.push(newComment);
+    await review.save();
+
+    // Return the new comment with user details
+    return {
+      ...newComment,
+      user: {
+        _id: user._id,
+        firstName: user.firstName,
+        image: user.image
+      }
+    };
+  } catch (error) {
+    console.error('Error in addCommentToReview service:', error);
+    throw error;
+  }
+};
+
+/**
+ * Get comments for a review
+ * @param {String} reviewId - The ID of the review
+ * @returns {Array} List of comments for the review
+ */
+const getCommentsForReview = async (reviewId) => {
+  try {
+    const review = await Review.findById(reviewId)
+      .populate('comments.user', 'firstName image');
+    if (!review) {
+      throw new Error('Review not found');
+    }
+    return review.comments;
+  } catch (error) {
+    console.error('Error in getCommentsForReview service:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   createReview,
   getAllReviews,
@@ -164,4 +216,6 @@ module.exports = {
   getReviewById,
   updateReview,
   deleteReview,
+  addCommentToReview,
+  getCommentsForReview
 };

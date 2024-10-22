@@ -12,12 +12,17 @@ import DestinationDetailSkeleton from "../../../components/DetailedPageSkeleton"
 import Image from 'next/image';
 import FooterComponent from '../../../components/Footer';
 import { useAuth } from '../../../context/authContent';
+
+import { getWeatherByLocation } from '../../api/weather';
+
 import { useFavourites } from '../../../context/favourites';
+
 
 export default function DestinationDetail({ params }) {
   const { id } = params;
   const { user } = useAuth();
   const [destination, setDestination] = useState(null);
+  const [weatherData, setWeatherData] = useState(null);  // Add weather data state
   const [reviews, setReviews] = useState([]);
   const [newComment, setNewComment] = useState('');
   const [activeReviewId, setActiveReviewId] = useState(null);
@@ -44,6 +49,10 @@ export default function DestinationDetail({ params }) {
           const data = await getAttractionById(id);
           setDestination(data);
 
+          // Fetch weather data for the destination
+          const weather = await getWeatherByLocation(data.location);  // Assuming 'data.location' contains the destination's name
+          setWeatherData(weather);
+          console.log(weatherData)
           // Load cached destination info if available and valid
           const cachedInfo = JSON.parse(localStorage.getItem(`destinationInfo_${id}`));
           if (cachedInfo && !isDataExpired(cachedInfo.timestamp)) {
@@ -160,6 +169,30 @@ export default function DestinationDetail({ params }) {
           <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center p-4">
             <h1 className="text-3xl md:text-6xl font-serif mb-2 md:mb-4">{destination.name}</h1>
             <p className="text-lg md:text-2xl mb-2">{destination.description}</p>
+
+            {/* Weather Section */}
+            {weatherData ? (
+              <div className="mt-4 bg-white bg-opacity-70 p-4 rounded-lg shadow-md text-black">
+                <h3 className="text-lg font-semibold">Current Weather in {destination.location}</h3>
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+                    alt="Weather Icon"
+                    className="w-12 h-12"
+                  />
+                  <div>
+                    <p className="text-lg font-medium">
+                      {weatherData.main.temp}°C - {weatherData.weather[0].description}
+                    </p>
+                    <p className="text-sm">
+                      Humidity: {weatherData.main.humidity}% | Wind: {weatherData.wind.speed} m/s
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm">Weather information not available</p>
+            )}
           </div>
 
           {/* Favorite Icon */}

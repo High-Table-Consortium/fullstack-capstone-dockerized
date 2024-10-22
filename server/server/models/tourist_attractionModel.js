@@ -31,6 +31,13 @@ const touristAttractionSchema = new mongoose.Schema({
     minlength: [3, "Location must be at least 3 characters long"], // Minimum length validation
   },
 
+  latitude: {
+    type: Number,
+  },
+
+  longitude: {
+    type: Number,
+  },
   // Description of the tourist attraction
   // - Required field
   description: {

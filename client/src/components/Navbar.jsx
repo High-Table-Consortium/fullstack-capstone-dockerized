@@ -20,8 +20,14 @@ export default function Navbar() {
   };
 
   const handleSignOut = () => {
-    logout();
-    router.push('/');
+    try {
+      logout();
+      router.push('/');
+      console.log("logged out successfully")
+    } catch (error) {
+      console.log("could not log out user", error)
+    }
+
   };
 
   const NavItems = () => (
@@ -67,7 +73,7 @@ export default function Navbar() {
 
         {/* Authentication and Search Icons */}
         <div className="hidden lg:flex items-center space-x-4">
-          {isAuthenticated ? (
+          {user ? (
             <div className="flex items-center space-x-2">
               <Link href="/account">
                 <Avatar className="h-8 w-8">
@@ -155,7 +161,7 @@ export default function Navbar() {
           </div>
 
           {/* Authentication Links */}
-          {!isAuthenticated ? (
+          {!user ? (
             <Link href="/auth/signin" className="px-4 py-2 w-full hover:bg-green-950 hover:text-yellow-500">
               Sign in / Create an account
             </Link>

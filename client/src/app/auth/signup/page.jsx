@@ -8,7 +8,7 @@ import { googleLogin } from '../../api/api';
 
 const SignUp = () => {
   const router = useRouter();
-  const { register, message, setMessage } = useAuth();
+  const { register, message, setError, error } = useAuth();
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -27,17 +27,14 @@ const SignUp = () => {
       return;
     }
 
-    try {
-      const response = await register(firstName, lastName, email, password);
-      if (response?.success) {
-        setErrorMessage('');
-        router.push('/auth/verify-email');
-      } else {
-        setErrorMessage(response?.message || 'Registration failed. Please try again.');
-      }
-    } catch (error) {
-      console.error('Something went wrong', error);
-      setErrorMessage('An error occurred. Please try again later.');
+    if (!firstName || !lastName || !email || !password) {
+      setError('All fields are required');
+      return;
+    }
+
+    const success = await register(firstName, lastName, email, password);
+    if (success) {
+      router.push('/dashboard');
     }
   };
 
@@ -79,9 +76,9 @@ const SignUp = () => {
             <hr className="flex-grow border-gray-300" />
           </div>
 
-          {errorMessage && (
+          {error && (
             <p className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-              {errorMessage}
+              {error}
             </p>
           )}
 
@@ -152,8 +149,8 @@ const SignUp = () => {
               </button>
             </div>
 
-           {/* Confirm Password Field */}
-           <div className="relative space-y-2">
+            {/* Confirm Password Field */}
+            <div className="relative space-y-2">
               <label htmlFor="confirmPassword" className="font-bold text-black">Confirm Password</label>
               <input
                 id="confirmPassword"

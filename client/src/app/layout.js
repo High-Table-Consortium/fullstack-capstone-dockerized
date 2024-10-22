@@ -1,6 +1,7 @@
 import "./globals.css";
 import { CookiesProvider } from "next-client-cookies/server";
 import { AuthProvider } from "../context/authContent";
+import { FavouritesProvider } from "../context/favourites";
 export const metadata = {
   title: "Meeguide",
   description: "Admin dashboard for South African tourist attractions",
@@ -22,13 +23,16 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <AuthProvider>
-      <CookiesProvider>
-        <html lang="en">
-          <body>{children}</body>
-        </html>
-        
-      </CookiesProvider>
-    </AuthProvider>
+    <html lang="en">
+      <body>
+        <AuthProvider>
+          <CookiesProvider>
+            <FavouritesProvider>
+              {children}
+            </FavouritesProvider>
+          </CookiesProvider>
+        </AuthProvider>
+      </body>
+    </html>
   );
 }

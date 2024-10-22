@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Star, MapPin, Clock, Utensils, Heart } from 'lucide-react';
-import { getAttractionById, createReview, addComment, generateDayRoute, generateDestinationInfo } from '../../api/api';
+import { getAttractionById, createReview, addComment, generateDayRoute, generateDestinationInfo } from '../../API/api';
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import ReviewSection from "../../../components/ReviewSection";
@@ -12,6 +12,7 @@ import DestinationDetailSkeleton from "../../../components/DetailedPageSkeleton"
 import Image from 'next/image';
 import FooterComponent from '../../../components/Footer';
 import { useAuth } from '../../../context/authContent';
+import { useFavourites } from '../../../context/favourites';
 
 export default function DestinationDetail({ params }) {
   const { id } = params;
@@ -25,14 +26,15 @@ export default function DestinationDetail({ params }) {
   const [destinationInfo, setDestinationInfo] = useState(null);
   const [showDayRoute, setShowDayRoute] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false); // Add state for favorite icon
+  const {addFavourite, isFavourite} = useFavourites()
   const isDataExpired = (timestamp) => {
     return (Date.now() - timestamp) > 2 * 60 * 60 * 1000; // 24 hours in milliseconds
   };
 
 
   const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    // You can also add code to save the favorite status to localStorage or a backend here
+    addFavourite(id); // Pass the destination ID
+    setIsFavorite(!isFavorite); // Toggle the favorite state
   };
 
   useEffect(() => {
@@ -165,10 +167,11 @@ export default function DestinationDetail({ params }) {
             onClick={toggleFavorite}
             className="absolute top-4 right-4 bg-white bg-opacity-70 p-2 rounded-full hover:bg-opacity-90 transition"
             aria-label="Add to favorites"
+            disabled={isFavourite(id)}
           >
             <Heart
               className={`w-6 h-6 ${isFavorite ? 'text-red-600' : 'text-gray-600'}`}
-              fill={isFavorite ? 'currentColor' : 'none'} // Change fill based on isFavorite state
+              fill={isFavourite ? 'currentColor' : 'none'} // Change fill based on isFavorite state
             />
           </button>
         </div>

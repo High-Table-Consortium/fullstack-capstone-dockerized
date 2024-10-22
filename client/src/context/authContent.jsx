@@ -1,6 +1,6 @@
 'use client';
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
-import { login as apiLogin, register as apiRegister, logout as apiLogout, getUserProfile as apiGetUserProfile } from '../app/api/api';
+import { login as apiLogin, register as apiRegister, logout as apiLogout, getUserProfile as apiGetUserProfile } from '../app/API/api';
 
 const AuthContext = createContext();
 
@@ -25,7 +25,12 @@ export const AuthProvider = ({ children }) => {
                         id: response.user._id,
                         email: response.user.email,
                         firstName: response.user.firstName,
-                        lastName: response.user.lastName
+                        lastName: response.user.lastName,
+                        favourites: response.user.favourites,
+                        recommendations: response.user.recommendations,
+                        viewedAttractions: response.user.viewedAttractions,
+                        preferences: response.user.preferences,
+                        searches: response.user.searches,
                     };
                     console.log('Setting user state to:', userData);
                     setUser(userData);

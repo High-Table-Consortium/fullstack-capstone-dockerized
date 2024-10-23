@@ -13,6 +13,7 @@ import Image from 'next/image';
 import FooterComponent from '../../../components/Footer';
 import { useAuth } from '../../../context/authContent';
 import { useFavourites } from '../../../context/favourites';
+import EnhancedTripPlanner from '../../../components/trip-planner';
 
 export default function DestinationDetail({ params }) {
   const { id } = params;
@@ -291,6 +292,8 @@ export default function DestinationDetail({ params }) {
                   )
                 )
               )}
+
+              <EnhancedTripPlanner/>
             </CardContent>
           </Card>
 

@@ -240,6 +240,93 @@ async def chat(context: ChatContext):
     except Exception as e:
         logging.error("Error in chat: %s", str(e))
         raise HTTPException(status_code=500, detail=str(e))
+
+# Request model for the API
+class TripRequest(BaseModel):
+    destination: str
+    budget: float
+    travel_group: str
+    start_date: str  # Format: "YYYY-MM-DD"
+    end_date: str    # Format: "YYYY-MM-DD"
+
+# Response model for the generated trip plan
+class TripPlan(BaseModel):
+    destination: str
+    budget: float
+    travel_group: str
+    start_date: str
+    end_date: str
+    activities: list
+    places: list
+    accommodations: list
+    transportation: list
+    tips: list
+
+# POST route to generate trip plan
+@app.post("/generate-trip-plan", response_model=TripPlan)
+async def generate_trip_plan(request: TripRequest):
+    try:
+        # Prepare the AI prompt for trip generation
+        prompt = f"""
+        Generate a personalized travel plan for a {request.travel_group} trip to {request.destination}.
+        The budget is ${request.budget}, and the trip will be from {request.start_date} to {request.end_date}.
+        Provide:
+        - Suggested activities
+        - Key places to visit
+        - Recommended accommodations
+        - Best transportation options
+        - Travel tips for the destination
+        """
+
+       # Generate the content
+        model = genai.GenerativeModel('gemini-pro')
+        response = model.generate_content(prompt)
+
+        # Here we will parse the generated text into structured data
+        # (This part would depend on the format of the response from the AI)
+        # Simulating a parsed response from the AI:
+        ai_plan = {
+            "destination": request.destination,
+            "budget": request.budget,
+            "travel_group": request.travel_group,
+            "start_date": request.start_date,
+            "end_date": request.end_date,
+            "activities": [
+                "Visit iconic landmarks",
+                "Explore local markets",
+                "Try authentic local food",
+                "City tour",
+                "Relax in a park"
+            ],
+            "places": [
+                "Central Park",
+                "City Museum",
+                "Popular Beach",
+                "Historic Square"
+            ],
+            "accommodations": [
+                "Downtown Hotel",
+                "Luxury Resort",
+                "Budget Hostel"
+            ],
+            "transportation": [
+                "Public transport",
+                "Bike rentals",
+                "Taxi services"
+            ],
+            "tips": [
+                "Book accommodations early",
+                "Use public transport to save money",
+                "Visit attractions in off-peak hours"
+            ]
+        }
+
+        # Return the structured trip plan as a response
+        return ai_plan
+
+    except Exception as e:
+        logging.error(f"Failed to generate trip plan: {e}")
+        raise HTTPException(status_code=500, detail="Failed to generate trip plan. Please try again.")
     
 if __name__ == "__main__":
     import uvicorn

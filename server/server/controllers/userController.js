@@ -1,6 +1,7 @@
 const User = require("../models/usersModel");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const crypto = require('crypto');  
 const { body, validationResult } = require("express-validator");
 const {
   sendPasswordResetEmail,
@@ -222,7 +223,7 @@ exports.forgotPassword = async (req, res) => {
     // send email
     await sendPasswordResetEmail(
       user.email,
-      `${process.env.CLIENT_URL}/reset-password/${resetToken}`
+      `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`
     );
 
     res
@@ -254,7 +255,7 @@ exports.resetPassword = async (req, res) => {
     }
 
     // update password
-    const hashedPassword = await bcryptjs.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     user.password = hashedPassword;
     user.resetPasswordToken = undefined;

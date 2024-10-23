@@ -212,3 +212,17 @@ export const generateDestinationInfo = async (name: string, location: string) =>
     }
 };
 
+export const AddFavourites = async(user_id :string ,attractionData:string) => {
+    const response = await api.post(`/favourites`, {
+        user_id,
+        attraction_id: attractionData
+    })
+    console.log(response)
+    return response.data
+}
+export const getFavourites = async(userId :string) => {
+    const response = await api.get(`/favourites/${userId}`)
+    console.log(response)
+    return response.data
+}
+

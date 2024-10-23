@@ -55,6 +55,35 @@ const userSchema = new mongoose.Schema(
         ref: "Attraction",
       },
     ],
+    favourites: [
+      {
+        attraction_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "TouristAttraction",
+          required: true,
+        },
+        attraction_name: {
+          type: String,
+          required: true,
+        },
+        attraction_image: {
+          type: String,
+          required: true,
+        },
+        attraction_rating: {
+          type: Number,
+          required: true,
+        },
+        attraction_location: {
+          type: String,
+          required: true,
+        },
+        attraction_category: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
     dateJoined: {
       type: Date,
       default: Date.now,

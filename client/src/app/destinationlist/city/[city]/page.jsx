@@ -46,6 +46,10 @@ export default function DestinationList({ params }) {
     fetchDestinations(nextPage);
   };
 
+  const getFirstSentence = (description) => {
+    return description.split('. ')[0] + '.';
+  };
+
   return (
     <div>
       <Navbar />
@@ -70,6 +74,9 @@ export default function DestinationList({ params }) {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4">
+                <h3 className='text-white text-sm hidden group-hover:block'>
+                  {getFirstSentence(destination.description)}
+                </h3>
                 <h2 className="text-white text-lg font-semibold mb-2">
                   {destination.name}
                 </h2>

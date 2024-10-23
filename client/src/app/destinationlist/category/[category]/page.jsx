@@ -45,6 +45,11 @@ export default function DestinationList({ params }) {
     setPage(nextPage);
     fetchDestinations(nextPage);
   };
+  
+  // Function to extract the first sentence from the description
+  const getFirstSentence = (description) => {
+    return description.split('. ')[0] + '.';
+  };
 
   return (
     <div>
@@ -54,7 +59,7 @@ export default function DestinationList({ params }) {
           {destinations.map((destination, index) => (
             <div
               key={destination.id}
-              className={`relative overflow-hidden rounded-lg ${
+              className={`relative overflow-hidden rounded-lg group ${
                 index === 0 ? 'md:col-span-2 md:row-span-2' : 
                 index === 1 ? 'md:col-span-1 md:row-span-1' : 
                 index === 2 ? 'md:col-span-1 md:row-span-2' : 
@@ -70,6 +75,10 @@ export default function DestinationList({ params }) {
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4">
+                {/* Hover description with the first sentence */}
+                <h3 className='text-white text-sm hidden group-hover:block'>
+                  {getFirstSentence(destination.description)}
+                </h3>
                 <h2 className="text-white text-lg font-semibold mb-2">
                   {destination.name}
                 </h2>
@@ -115,3 +124,4 @@ export default function DestinationList({ params }) {
     </div>
   );
 }
+

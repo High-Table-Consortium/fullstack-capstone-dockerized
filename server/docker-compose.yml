@@ -10,6 +10,8 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
       - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     volumes:
       - db:/data/db
       - ./dbseed.gz:/dbseed.gz
@@ -17,13 +19,15 @@ services:
   mongodb-capstone-test:
     container_name: mongodb-capstone-test
     restart: unless-stopped
-    env_file: ./.env
+    env_file: .env
     logging:
       driver: none
     image: mongo:5.0.3
     environment:
       - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
       - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     volumes:
       - ./dbseed.gz:/dbseed.gz
       - ./dbseed.sh:/docker-entrypoint-initdb.d/mongorestore.sh
@@ -34,7 +38,7 @@ services:
     container_name: node-app
     restart: always
     build: .
-    env_file: ./.env
+    env_file: .env
     volumes:
       - avatars:/backend-app/__cache
       - ./server:/backend-app/server

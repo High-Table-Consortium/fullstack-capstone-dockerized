@@ -226,3 +226,15 @@ export const getFavourites = async(userId :string) => {
     return response.data
 }
 
+export const removeFavourites = async (userId: string, favouriteId: string) => {
+    try {
+        const response = await api.delete(`/favourites`, {
+            data: { user_id: userId, favourite_id: favouriteId }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error removing favourite:', error.response ? error.response.data : error.message);
+        throw new Error('Failed to remove favourite. Please try again.');
+    }
+};
+

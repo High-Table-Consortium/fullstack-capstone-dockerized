@@ -1,6 +1,6 @@
 'use client';
-import { AddFavourites, getFavourites } from '../app/API/api';
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { AddFavourites, getFavourites, removeFavourites } from '../app/API/api';
 import { useAuth } from "../context/authContent";
 
 const FavouritesContext = createContext();
@@ -11,17 +11,16 @@ export const FavouritesProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const { user } = useAuth();
 
+  useEffect(() => {
+    if (user) fetchFavourites();
+  }, [user]);
+
   const fetchFavourites = async () => {
     setLoading(true);
     try {
-      // Ensure that the user has favourites before trying to fetch them
-      if (user.favourites) {
-        const fetchedFavourites = user.favourites;
-  
-        // Log fetched favourites directly for debugging
-        console.log("Fetched favourites from user:", fetchedFavourites);
-  
-        // Set the favourites state
+      // Fetch favourites only if the user has any associated
+      const fetchedFavourites = user?.favourites || [];
+      if (fetchedFavourites.length) {
         setFavourites(fetchedFavourites);
       } else {
         console.warn("No favourites found for the user.");
@@ -33,32 +32,41 @@ export const FavouritesProvider = ({ children }) => {
     }
   };
 
-  
-
-  const addFavourite = async (attraction_id) => {
-    if (user && user.id) {
-      // Check if the attraction is already in favourites
-      if (isFavourite(attraction_id)) {
-        console.warn('Attraction is already in favourites.');
-        return;
-      }
-      try {
-        const updatedFavourites = await AddFavourites(user.id, attraction_id);
-        setFavourites(updatedFavourites);
-      } catch (error) {
-        console.error('Error adding favourite:', error);
-      }
+  const addFavourite = async (favouriteId) => {
+    if (!user?.id) {
+      console.warn('User is not authenticated.');
+      return;
+    }
+    // Avoid duplicating favorite items
+    if (isFavourite(favouriteId)) {
+      console.warn('Item is already in favourites.');
+      return;
+    }
+    try {
+      const updatedFavourites = await AddFavourites(user.id, favouriteId);
+      setFavourites(updatedFavourites);
+    } catch (error) {
+      console.error('Error adding favourite:', error);
     }
   };
 
-  const removeFavourite = (attractionId) => {
-    const updatedFavourites = favourites.filter((attraction) => attraction.id !== attractionId);
-    setFavourites(updatedFavourites);
-    // Optionally, call an API endpoint to remove it from the backend
+  const removeFavourite = async (favouriteId) => {
+    if (!user?.id) {
+      console.warn('User is not authenticated.');
+      return;
+    }
+    try {
+      await removeFavourites(user.id, favouriteId);
+
+      // Filter out the removed favourite locally and update the state
+      setFavourites(prev => prev.filter(favourite => favourite.id !== favouriteId));
+    } catch (error) {
+      console.error('Error removing favourite:', error);
+    }
   };
 
-  const isFavourite = (attractionId) => {
-    return Array.isArray(favourites) && favourites.some((attraction) => attraction.id === attractionId);
+  const isFavourite = (favouriteId) => {
+    return Array.isArray(favourites) && favourites.some(favourite => favourite.id === favouriteId);
   };
 
   return (

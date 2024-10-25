@@ -3,7 +3,6 @@ const User = require("../models/usersModel");
 const TouristAttraction = require("../models/tourist_attractionModel");
 const Favourite = require("../models/favourites");
 
-
 exports.getFavourites = async (req, res) => {
   try {
     const favourites = await Favourites.find({ user_id: req.body.user_id }).populate("attraction_id");
@@ -15,13 +14,11 @@ exports.getFavourites = async (req, res) => {
 
 // GET a specific favourite by ID
 exports.getFavouriteById = async (req, res) => {
-  // Return the favourite fetched by the middleware
   res.json(res.favourite);
 };
 
 exports.createFavourite = async (req, res) => {
-  const { attraction_id } = req.body;
-  const user_id = req.body.user_id;
+  const { attraction_id, user_id } = req.body;
 
   try {
     // Check if the favourite already exists
@@ -65,10 +62,8 @@ exports.createFavourite = async (req, res) => {
   }
 };
 
-
 // UPDATE a favourite
 exports.updateFavourite = async (req, res) => {
-  // Update the favourite fields if they are provided in the request body
   if (req.body.attraction_id != null) {
     res.favourite.attraction_id = req.body.attraction_id;
   }
@@ -77,23 +72,39 @@ exports.updateFavourite = async (req, res) => {
   }
 
   try {
-    // Save the updated favourite to the database
     const updatedFavourite = await res.favourite.save();
     res.json(updatedFavourite);
   } catch (err) {
-    // Handle any errors that occur during the save
-    res.status(400).json({ message: "favourite could not be save,try again!" });
+    res.status(400).json({ message: "Favourite could not be saved, try again!" });
   }
 };
 
-// DELETE a favourite
-exports.deleteFavourite = async (req, res) => {
+// DELETE a favourite using body request
+exports.removeFavourite = async (req, res) => {
+  const { user_id, favourite_id } = req.body; // Expect user_id and favourite_id in the request body
+
   try {
-    // Remove the favourite from the database
-    await res.favourite.remove();
-    res.json({ message: "Favourite deleted" });
+    console.log(`Attempting to delete favourite with id: ${favourite_id} for user: ${user_id}`);
+    
+    // Find the user and remove the favorite from their favourites array
+    const updatedUser = await User.findByIdAndUpdate(
+      user_id,
+      { $pull: { favourites: { _id: favourite_id } } },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedUser) {
+      console.log(`User not found: ${user_id}`);
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Remove the favourite from the Favourites collection
+    await Favourite.findByIdAndDelete(favourite_id);
+
+    console.log(`Favourite with id: ${favourite_id} deleted successfully for user: ${user_id}`);
+    res.json({ message: "Favourite deleted successfully", favourite_id });
   } catch (err) {
-    // Handle any errors that occur during the delete
-    res.status(500).json({ message: "fav not deleted try again" });
+    console.error('Error deleting favourite:', err);
+    res.status(500).json({ message: "Error deleting favourite, please try again." });
   }
 };

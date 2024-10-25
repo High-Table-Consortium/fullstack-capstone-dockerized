@@ -6,11 +6,11 @@ import Image from 'next/image';
 import { MapPin, Trash2 } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter } from '../../components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { Input } from '../../components/ui/input';
 import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/authContent';
 import { useFavourites } from '../../context/favourites';
+import { useToast } from "../../hooks/use-toast";
 
 export default function FavoritesPage() {
   const [filteredFavorites, setFilteredFavorites] = useState([]);
@@ -18,28 +18,28 @@ export default function FavoritesPage() {
   const [filterCategory, setFilterCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
+  const [isRemoving, setIsRemoving] = useState(false);
   const { user } = useAuth();
-  const { fetchFavourites, favourites, removeFavourite } = useFavourites();
+  const { fetchFavourites, favourites = [], removeFavourite } = useFavourites();
+  const { toast } = useToast();
 
-  // Track whether the component has mounted on the client
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true); // Mark as mounted on client-side
+    setMounted(true);
   }, []);
 
   useEffect(() => {
     if (user) {
-      fetchFavourites(); // Fetch favourites if user is available
+      fetchFavourites();
     }
-  }, [user]);
+  }, [user, fetchFavourites]);
 
-  // Filtering and sorting logic
   useEffect(() => {
-    let result = [...favourites]; // Use the fetched favourites
+    let result = Array.isArray(favourites) ? [...favourites] : [];
 
     if (filterCategory !== 'All') {
-      result = result.filter((fav) => fav.category === filterCategory);
+      result = result.filter((fav) => fav.attraction_category === filterCategory);
     }
 
     if (searchQuery) {
@@ -59,8 +59,34 @@ export default function FavoritesPage() {
     setFilteredFavorites(result);
   }, [favourites, filterCategory, searchQuery, sortOption]);
 
+  const handleRemoveFavorite = async (favouriteId) => {
+    try {
+      console.log("Attempting to remove favourite with id:", favouriteId);  // Debugging log
+
+      if (!favouriteId) {
+        throw new Error("Favourite ID is undefined or null");
+      }
+
+      setIsRemoving(true);
+      await removeFavourite(favouriteId);  // This should call your API to delete the favourite
+      toast({
+        title: "Success",
+        description: "Removed from favorites",
+      });
+      setFilteredFavorites((prev) => prev.filter((fav) => fav._id !== favouriteId));
+    } catch (error) {
+      toast({
+        title: "Failure",
+        description: `Failed to remove from favorites: ${error.message}`,
+      });
+      console.error("Error removing favorite:", error);
+    } finally {
+      setIsRemoving(false);
+    }
+  };
+
+
   if (!mounted) {
-    // Return nothing or a loading state during server-side rendering
     return null;
   }
 
@@ -71,11 +97,10 @@ export default function FavoritesPage() {
         <div>
           <h1 className="text-3xl font-bold mb-2">My Favorites</h1>
           <p className="text-xl text-muted-foreground mb-6">
-            Hello, {user ? user.firstName : 'unknown'}! Here are your saved attractions.
+            Hello, {user ? user.firstName : 'Guest'}! Here are your saved attractions.
           </p>
         </div>
 
-        {/* Filtering and sorting UI */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4">
             <select
@@ -87,7 +112,6 @@ export default function FavoritesPage() {
               <option value="rating">Rating</option>
             </select>
 
-            {/* Filtering Option */}
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
@@ -110,26 +134,31 @@ export default function FavoritesPage() {
           </div>
         </div>
 
-        {/* Grid or Map view */}
         {filteredFavorites.length === 0 ? (
-          <p className="text-center text-gray-500">No favorites found matching your criteria.</p>
+          <div className="text-center py-12">
+            <p className="text-lg text-muted-foreground mb-4">No favorites found matching your criteria.</p>
+            <Button asChild variant="outline">
+              <Link href="/">Explore Destinations</Link>
+            </Button>
+          </div>
         ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredFavorites.map(({ attraction_id, attraction_name, attraction_image, attraction_location, attraction_description }) => (
-              <Card key={attraction_id} className="overflow-hidden">
-                <Image
-                  src={attraction_image}
-                  alt={attraction_name}
-                  width={300}
-                  height={200}
-                  className="w-full h-48 object-cover"
-                />
+            {filteredFavorites.map(({ _id, attraction_id, attraction_name, attraction_image, attraction_location, attraction_description }) => (
+              <Card key={_id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+                <div className="relative h-48">
+                  <Image
+                    src={attraction_image}
+                    alt={attraction_name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <CardContent className="p-4">
                   <h3 className="text-xl font-semibold mb-2">{attraction_name}</h3>
                   <p className="text-sm text-muted-foreground mb-2 flex items-center">
                     <MapPin className="mr-1 h-4 w-4" /> {attraction_location}
                   </p>
-                  <p className="text-sm mb-2">{attraction_description}</p>
+                  <p className="text-sm mb-2 line-clamp-2">{attraction_description}</p>
                 </CardContent>
                 <CardFooter className="p-4 pt-0 flex justify-between">
                   <Button variant="outline" asChild>
@@ -139,10 +168,12 @@ export default function FavoritesPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => removeFavourite(attraction_id)}
-                    className="text-red-500 hover:text-red-700 hover:bg-red-100"
+                    onClick={() => handleRemoveFavorite(_id)}  // Pass _id to the function
+                    disabled={isRemoving}
+                    className="text-destructive hover:text-destructive-foreground hover:bg-destructive"
                   >
-                    <Trash2 className="mr-2 h-4 w-4" /> Remove
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    {isRemoving ? 'Removing...' : 'Remove'}
                   </Button>
                 </CardFooter>
               </Card>

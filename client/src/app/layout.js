@@ -2,6 +2,7 @@ import "./globals.css";
 import { CookiesProvider } from "next-client-cookies/server";
 import { AuthProvider } from "../context/authContent";
 import { FavouritesProvider } from "../context/favourites";
+import {Toaster} from "../components/ui/toaster"
 export const metadata = {
   title: "Meeguide",
   description: "Admin dashboard for South African tourist attractions",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
       <body>
         <AuthProvider>
           <CookiesProvider>
+            <Toaster/>
             <FavouritesProvider>
               {children}
             </FavouritesProvider>

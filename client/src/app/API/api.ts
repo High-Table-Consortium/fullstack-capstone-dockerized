@@ -28,10 +28,12 @@ export const getAttractionById = async (id: string) => {
     return response.data;
 };
 
-export const searchAttraction = async (category: string, name: string, location: string,) => {
-    const response = await axios.get(`/attractions/search`, { params: { category, name, location } });
+export const searchAttraction = async (searchTerm = '', sortBy = '', category = '', location = '') => {
+    const response = await api.get(`/attractions/search`, { 
+        params: { searchTerm, sortBy, category, location } 
+    });
     return response.data;
-}
+};
 
 /*
  * handle user profile retrieval

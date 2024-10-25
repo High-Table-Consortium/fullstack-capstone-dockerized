@@ -1,16 +1,15 @@
-"use client";
-
+// Import necessary libraries and components
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icons from lucide-react
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
+// Cities component
 const Cities = () => {
     const [isVisible, setIsVisible] = useState(false);
     const carouselRef = useRef(null); // Ref to the carousel div
-    const router = useRouter(); 
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(true);
@@ -33,9 +32,6 @@ const Cities = () => {
         }
     };
 
-    const handleGoToCity = (city) => {
-        router.push(``,);
-    }
     return (
         <div>
             <section className="pt-5 rounded-2xl bg-background relative">
@@ -63,10 +59,10 @@ const Cities = () => {
                             className="flex space-x-6 overflow-x-auto pb-6 scrollbar-hide"
                         >
                             {[
-                                { name: "Cape Town", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_WMMhbPwXDzmtzcKUxE3m4wLxxx3KhW7EKA&s" },
+                                { name: "Cape-Town", image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_WMMhbPwXDzmtzcKUxE3m4wLxxx3KhW7EKA&s" },
                                 { name: "Johannesburg", image: "https://images.squarespace-cdn.com/content/v1/57b9b98a29687f1ef5c622df/1478273230409-FGHP1T1WJR1OAMAHG6AB/00.jpg?format=1500w" },
                                 { name: "Durban", image: "https://silversea-discover.imgix.net/2024/01/durbanheroistockphoto.jpg?auto=compress%2Cformat&ixlib=php-3.3.1" },
-                                { name: "Port Elizabeth", image: "https://thumbs.dreamstime.com/b/aerial-port-elizabeth-south-africa-view-44811213.jpg" },
+                                { name: "Port-Elizabeth", image: "https://thumbs.dreamstime.com/b/aerial-port-elizabeth-south-africa-view-44811213.jpg" },
                                 { name: "Pretoria", image: "https://upload.wikimedia.org/wikipedia/commons/6/68/Pretoria_Union_Buildings-001.jpg" },
                                 { name: "Bloemfontein", image: "https://south-africa.net/wp-content/uploads/2022/12/bloemfontein.jpg" },
                                 { name: "Kimberley", image: "https://tourismkimberley.com/site/assets/files/1933/tk_provided_kimb_hi_res_5018_hdr_rgb.1800x973p52x39.webp" },
@@ -78,23 +74,22 @@ const Cities = () => {
                                     transition={{ duration: 0.5, delay: index * 0.1 }}
                                     className="flex-shrink-0 w-64"
                                 >
-                                    <Link href={`/destinationlist/city/${city.name}`}>
-                                    
-                                    <div className="overflow-hidden rounded-lg shadow-lg">
-                                        <div className="relative aspect-[3/2]">
-                                            <Image
-                                                src={city.image}
-                                                alt={`${city.name} city`}
-                                                layout="fill"
-                                                objectFit="cover"
-                                                className="transition-transform duration-300 hover:scale-105"
+                                    <Link href={`/destinationlist/city/${encodeURIComponent(city.name)}`}>
+                                        <div className="overflow-hidden rounded-lg shadow-lg">
+                                            <div className="relative aspect-[3/2]">
+                                                <Image
+                                                    src={city.image}
+                                                    alt={`${city.name} city`}
+                                                    layout="fill"
+                                                    objectFit="cover"
+                                                    className="transition-transform duration-300 hover:scale-105"
                                                 />
-                                            <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-opacity duration-300 hover:bg-opacity-30">
-                                                <h3 className="text-white text-2xl font-bold text-center px-4 font-serif">{city.name}</h3>
+                                                <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center transition-opacity duration-300 hover:bg-opacity-30">
+                                                    <h3 className="text-white text-2xl font-bold text-center px-4 font-serif">{city.name}</h3>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                                </Link>
+                                    </Link>
                                 </motion.div>
                             ))}
                         </div>
@@ -114,4 +109,3 @@ const Cities = () => {
 };
 
 export default Cities;
-

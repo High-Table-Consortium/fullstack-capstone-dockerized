@@ -1,95 +1,83 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import React from 'react';
-import Image from "next/legacy/image"
-import Link from 'next/link'
-import { Button } from "../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
-import Searchbar from "../components/Searchbar"
-import { Input } from "../components/ui/input"
-import { ChevronRight, Calendar, Users, MapPin, Search } from 'lucide-react'
-import { motion } from 'framer-motion'
+import Image from "next/legacy/image";
+import Link from 'next/link';
+import { Button } from "../components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
+import Searchbar from "../components/Searchbar";
+import { ChevronRight, Calendar, Users, MapPin, Search } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Navbar from "../components/Navbar";
-import { getAttractions } from './api/api'
-import FooterComponent from '../components/Footer'
+import { getAttractions } from '../app/API/api';
+import FooterComponent from '../components/Footer';
 import Categories from '../components/Categorycards';
-import Map from '../components/Map'
-import Cities from '../components/Cities'
-import Facts from '../components/Facts'
-import {Chatbot} from "../components/Chatbot"
+import Map from '../components/Map';
+import Cities from '../components/Cities';
+import Facts from '../components/Facts';
+import { Chatbot } from "../components/Chatbot";
+import Pagination from "../components/Pagination";
+
 export default function Home() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
   const [destinations, setDestinations] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Declare itemsPerPage as state
 
-
+  // Fetching destination data
   useEffect(() => {
-    setIsVisible(true)
+    setIsVisible(true);
 
     const fetchDestinations = async () => {
       try {
         const data = await getAttractions();
         setDestinations(data);
-        console.log(data)
       } catch (error) {
         console.error('Error fetching destinations:', error);
       }
     };
 
     fetchDestinations();
-  }, [])
+  }, []);
 
-  const recommendedDestinations = [
-    {
-      title: "Table Mountain",
-      description: "Iconic flat-topped mountain with stunning views of Cape Town",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_WMMhbPwXDzmtzcKUxE3m4wLxxx3KhW7EKA&s",
-      location: "Cape Town"
-    },
-    {
-      title: "Kruger National Park",
-      description: "World-renowned wildlife reserve offering incredible safari experiences",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZP0B018XBYNwIJi39rVk9j0SCM-uPyWgX3A&s",
-      location: "Limpopo and Mpumalanga"
-    },
-    {
-      title: "Garden Route",
-      description: "Scenic stretch of coastline with diverse landscapes and activities",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU6qfiWdkpuRWcQiDnR-Lc5WoNBGuOOFrLNA&s",
-      location: "Western and Eastern Cape"
-    },
-    {
-      title: "Robben Island",
-      description: "Historic prison island where Nelson Mandela was incarcerated",
-      image: "https://www.winetourscapetown.com/images/tours/cape-winelands-tour.jpg",
-      location: "Cape Town"
+  // Filter destinations based on search term
+  const filteredDestinations = destinations.filter(dest =>
+    (dest.title && dest.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (dest.description && dest.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (dest.location && dest.location.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
+  // Pagination logic
+  const indexOfLastDestination = currentPage * itemsPerPage;
+  const indexOfFirstDestination = indexOfLastDestination - itemsPerPage;
+  const currentDestinations = filteredDestinations.slice(indexOfFirstDestination, indexOfLastDestination);
+  const totalPages = Math.ceil(filteredDestinations.length / itemsPerPage);
+
+  // Next and Previous page handlers
+  const handleNext = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(prev => prev + 1);
     }
-  ]
+  };
 
-  const filteredDestinations = recommendedDestinations.filter(dest =>
-    dest.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dest.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    dest.location.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  const handlePrev = () => {
+    if (currentPage > 1) {
+      setCurrentPage(prev => prev - 1);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      
       <Navbar />
 
       <main className="flex-grow">
- 
+        {/* Hero Section */}
         <section className="relative h-[60vh] md:h-[80vh] bg-cover bg-center">
-        <video 
-          autoPlay 
-          loop 
-          muted 
-          className="absolute top-0 left-0 w-full h-full object-cover"
-        >
-          <source src="/video.mp4" type="video/mp4" />
-        </video>
+          <video autoPlay loop muted className="absolute top-0 left-0 w-full h-full object-cover">
+            <source src="/video.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-black bg-opacity-30"></div>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -101,18 +89,22 @@ export default function Home() {
               Ready to start your <span className="text-yellow-500">South African</span><br />
               <span className="text-yellow-600">Wonderful Journey</span> with us
             </h1>
-            <p className="text-white text-lg md:text-xl mb-8 max-w-2xl">Explore South Africa's wild and beautiful landscapes for a once-in-a-lifetime trip for you</p>
+            <p className="text-white text-lg md:text-xl mb-8 max-w-2xl">
+              Explore South Africa's wild and beautiful landscapes for a once-in-a-lifetime trip.
+            </p>
             <div className="max-w-md mx-auto mb-8">
-                <Searchbar />  
+              <Searchbar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </div>
           </motion.div>
         </section>
-        
+
+        {/* Recommended Destinations */}
         <section className="py-10">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-semibold text-center mb-2 font-mono">
               Recommended <span className="text-yellow-500">Destinations</span>
             </h2>
+
             <p className="text-center text-gray-600 mb-8">
               Discover South Africa's Most Popular Tourist Attractions
             </p>
@@ -128,15 +120,16 @@ export default function Home() {
                     <Card className="flex flex-col h-full overflow-hidden hover:shadow-lg transition-shadow duration-300">
                       <CardHeader className="p-0">
                         <div className="relative h-48">
-                          <Image 
-                            src={destination.image} 
-                            alt={destination.name} 
-                            layout="fill" 
-                            objectFit="cover" 
+                          <Image
+                            src={destination.image}
+                            alt={destination.name}
+                            layout="fill"
+                            objectFit="cover"
                           />
                         </div>
                       </CardHeader>
                       <CardContent className="p-4 flex flex-col flex-grow">
+
                         <CardTitle className="text-lg mb-2">{destination.name}</CardTitle>
                         <p className="text-sm text-gray-600 mb-4 overflow-hidden line-clamp-3">
                           {destination.description}
@@ -163,32 +156,43 @@ export default function Home() {
                 </Link>
               ))}
             </div>
+
+            {/* Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPrev={handlePrev}
+              onNext={handleNext}
+              onPageChange={(page) => setCurrentPage(page)}
+              itemsPerPage={itemsPerPage}
+              setItemsPerPage={setItemsPerPage}
+              totalItems={filteredDestinations.length}
+            />
           </div>
         </section>
 
-
         <section>
-          <Categories/>
+          <Categories />
         </section>
-
         <section>
-          <Cities/>
+          <Cities />
         </section>
-
         <section>
           <Facts />
         </section>
-
         <section>
           <Map />
         </section>
 
+        {/* Travel Dream Board Section */}
         <section className="py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-semibold text-center mb-4 text-green-900 font-mono">
-            You have to <span className='text-yellow-500'>spend time to make time</span>
+              You have to <span className="text-yellow-500">spend time to make time</span>
             </h2>
-            <p className='mb-8 ml-10 font-semibold text-gray-600'>A journey starts with a dream…and a plan. You're just 3 easy (and fun) steps away from creating your ideal Travel Dream Board.</p>
+            <p className="mb-8 ml-10 font-semibold text-gray-600">
+              A journey starts with a dream…and a plan. You're just 3 easy (and fun) steps away from creating your ideal Travel Dream Board.
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
                 { title: "Step 1:", description: "Choose a city or province in South Africa to explore.", image: "/green-city.png" },
@@ -212,9 +216,11 @@ export default function Home() {
             </div>
           </div>
         </section>
-       <Chatbot/>
+
+        {/* Chatbot and Footer */}
+        <Chatbot />
       </main>
       <FooterComponent />
     </div>
-  )
+  );
 }

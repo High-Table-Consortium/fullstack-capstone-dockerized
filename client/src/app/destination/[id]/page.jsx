@@ -12,8 +12,8 @@ import DestinationDetailSkeleton from "../../../components/DetailedPageSkeleton"
 import Image from 'next/image';
 import FooterComponent from '../../../components/Footer';
 import { useAuth } from '../../../context/authContent';
-
 import { getWeatherByLocation } from '../../api/weather';
+
 
 import { useFavourites } from '../../../context/favourites';
 
@@ -49,10 +49,10 @@ export default function DestinationDetail({ params }) {
           const data = await getAttractionById(id);
           setDestination(data);
 
-          // Fetch weather data for the destination
-          const weather = await getWeatherByLocation(data.location);  // Assuming 'data.location' contains the destination's name
-          setWeatherData(weather);
-          console.log(weatherData)
+          // // Fetch weather data for the destination
+          // const weather = await getWeatherByLocation(data.location);  // Assuming 'data.location' contains the destination's name
+          // setWeatherData(weather);
+          // console.log(weatherData)
           // Load cached destination info if available and valid
           const cachedInfo = JSON.parse(localStorage.getItem(`destinationInfo_${id}`));
           if (cachedInfo && !isDataExpired(cachedInfo.timestamp)) {
@@ -170,7 +170,7 @@ export default function DestinationDetail({ params }) {
             <h1 className="text-3xl md:text-6xl font-serif mb-2 md:mb-4">{destination.name}</h1>
             <p className="text-lg md:text-2xl mb-2">{destination.description}</p>
 
-            {/* Weather Section */}
+            {/* Weather Section
             {weatherData ? (
               <div className="mt-4 bg-white bg-opacity-70 p-4 rounded-lg shadow-md text-black">
                 <h3 className="text-lg font-semibold">Current Weather in {destination.location}</h3>
@@ -192,7 +192,7 @@ export default function DestinationDetail({ params }) {
               </div>
             ) : (
               <p className="text-sm">Weather information not available</p>
-            )}
+            )} */}
           </div>
 
           {/* Favorite Icon */}

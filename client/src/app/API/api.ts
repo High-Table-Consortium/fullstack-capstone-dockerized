@@ -100,7 +100,7 @@ export const register = async (firstName: string, lastName: string, email: strin
  * POST request to /auth/logout
 */
 export const logout = async () => {
-    const response = await api.post(`/auth/logout`);
+    const response = await api.get(`/auth/logout`);
     return response.data;
 };
 export const verifyEmail = async (code: number) => {

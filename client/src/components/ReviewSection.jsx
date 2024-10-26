@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Star, ThumbsUp } from 'lucide-react'
-import { Button } from "./ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { Button } from "../components/ui/button"
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar"
 import {
   Dialog,
   DialogContent,
@@ -10,9 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog"
-import { Textarea } from "./ui/textarea"
-import { Label } from "./ui/label"
-import { addComment, createReview, getReviewsByDestination } from '../app/api/api'
+import { Textarea } from "../components/ui/textarea"
+import { Label } from "../components/ui/label"
+import { addComment, createReview, getReviewsByDestination } from '../app/API/api'
 import { useAuth } from '../context/authContent'
 
 // StarRating Component

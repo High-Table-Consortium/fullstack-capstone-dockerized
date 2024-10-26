@@ -1,26 +1,26 @@
-'use client'
+'use client';
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Trash2, X, Search } from 'lucide-react';
+import { MapPin, Trash2, X } from 'lucide-react'; // Import the cross icon
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
 import Navbar from '../../components/Navbar';
-import FooterComponent from '../../components/Footer';
 import { useAuth } from '../../context/authContent';
 import { useFavourites } from '../../context/favourites';
 import { useToast } from "../../hooks/use-toast";
 
 export default function FavoritesPage() {
+  const [searchQuery, setSearchQuery] = useState(''); // State for the search input
   const [filteredFavorites, setFilteredFavorites] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
   const [isRemoving, setIsRemoving] = useState(false);
   const { user } = useAuth();
-  const { fetchFavourites, favourites = [], setFavourites } = useFavourites();
+  const { fetchFavourites, favourites = [], removeFavourite } = useFavourites();
   const { toast } = useToast();
+
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,56 +33,31 @@ export default function FavoritesPage() {
     }
   }, [user, fetchFavourites]);
 
-  const handleSearch = (query) => {
-    let result = Array.isArray(favourites) ? [...favourites] : [];
-
-    if (query) {
-      result = result.filter(
-        (fav) =>
-          fav.attraction_name.toLowerCase().includes(query.toLowerCase()) ||
-          fav.attraction_location.toLowerCase().includes(query.toLowerCase())
-      );
-    }
-
-    setFilteredFavorites(result);
-  };
-
-  // Handle search on Enter key press
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch(searchQuery);
-    }
-  };
-
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-    if (e.target.value === '') {
-      handleSearch(''); // Clear search results when input is empty
-    }
-  };
-
-  // Clear search
-  const clearSearch = () => {
-    setSearchQuery('');
-    handleSearch('');
-  };
+  useEffect(() => {
+    setFilteredFavorites(Array.isArray(favourites) ? [...favourites] : []);
+  }, [favourites]);
 
   useEffect(() => {
-    handleSearch(searchQuery);
-  }, [favourites]); // Update results when favourites change
+    // Filter favorites based on search query
+    if (searchQuery) {
+      setFilteredFavorites(favourites.filter(fav =>
+        fav.attraction_name.toLowerCase().includes(searchQuery.toLowerCase())
+      ));
+    } else {
+      setFilteredFavorites(favourites); // Reset to all favorites if search query is empty
+    }
+  }, [searchQuery, favourites]);
 
   const handleRemoveFavorite = async (favouriteId) => {
     try {
-      console.log("Attempting to remove favourite with id:", favouriteId);
+      console.log("Attempting to remove favourite with id:", favouriteId); // Debugging log
 
       if (!favouriteId) {
         throw new Error("Favourite ID is undefined or null");
       }
 
       setIsRemoving(true);
-      await axios.delete(`/api/favourites/${user.id}/${favouriteId}`);
-      setFavourites((prev) => prev.filter((fav) => fav._id !== favouriteId));
+      await removeFavourite(favouriteId); // This should call your API to delete the favourite
       toast({
         title: "Success",
         description: "Removed from favorites",
@@ -99,14 +74,26 @@ export default function FavoritesPage() {
     }
   };
 
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      // Trigger search on Enter key
+      setSearchQuery(e.target.value);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery(''); // Clear the search input
+    setFilteredFavorites(favourites); // Reset filtered favorites
+  };
+
   if (!mounted) {
     return null;
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div>
       <Navbar />
-      <div className="container mx-auto px-4 py-8 flex-1">
+      <div className="container mx-auto px-4 py-8">
         <div>
           <h1 className="text-3xl font-bold mb-2">My Favorites</h1>
           <p className="text-xl text-muted-foreground mb-6">
@@ -115,52 +102,31 @@ export default function FavoritesPage() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
-          <div className="relative w-full md:w-auto">
-            <div className="relative flex items-center">
-              <Input
-                type="text"
-                placeholder="Search favorites..."
-                value={searchQuery}
-                onChange={handleSearchChange}
-                onKeyPress={handleKeyPress}
-                className="pr-24" // Add padding for the buttons
-              />
-              <div className="absolute right-0 flex items-center space-x-1 pr-2">
-                {searchQuery && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={clearSearch}
-                    className="h-8 w-8"
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleSearch(searchQuery)}
-                  className="h-8 w-8"
-                >
-                  <Search className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
+          <div className="flex items-center space-x-4">
+            <Input
+              type="text"
+              placeholder="Search favorites..."
+              value={searchQuery} // Bind search query to input
+              onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
+              onKeyPress={handleSearchKeyPress} // Handle Enter key press
+              className="w-full md:w-auto"
+            />
+            {searchQuery && ( // Show cross button if there is a search query
+              <Button variant="outline" onClick={clearSearch} className="flex items-center">
+                <X className="h-4 w-4" />
+              </Button>
+            )}
           </div>
         </div>
 
         {filteredFavorites.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground mb-4">
-              {searchQuery 
-                ? "No favorites found matching your search criteria." 
-                : "No favorites yet, explore to add one."}
-            </p>
+            <p className="text-lg text-muted-foreground mb-4">No favorites found.</p>
             <Button asChild variant="outline">
               <Link href="/">Explore Destinations</Link>
             </Button>
           </div>
-        ) : (
+        ) : viewMode === 'grid' ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredFavorites.map(({ _id, attraction_id, attraction_name, attraction_image, attraction_location, attraction_description }) => (
               <Card key={_id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -187,7 +153,7 @@ export default function FavoritesPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => handleRemoveFavorite(_id)}
+                    onClick={() => handleRemoveFavorite(_id)} // Pass _id to the function
                     disabled={isRemoving}
                     className="text-destructive hover:text-destructive-foreground hover:bg-destructive"
                   >
@@ -198,9 +164,12 @@ export default function FavoritesPage() {
               </Card>
             ))}
           </div>
+        ) : (
+          <div className="bg-muted h-[400px] flex items-center justify-center rounded-lg">
+            <p className="text-muted-foreground">Map view would be implemented here</p>
+          </div>
         )}
       </div>
-      <FooterComponent />
     </div>
   );
 }

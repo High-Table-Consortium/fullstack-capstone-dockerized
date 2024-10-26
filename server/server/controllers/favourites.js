@@ -79,13 +79,13 @@ exports.updateFavourite = async (req, res) => {
   }
 };
 
-// DELETE a favourite using body request
+/// DELETE a favourite using body request
 exports.removeFavourite = async (req, res) => {
   const { user_id, favourite_id } = req.body; // Expect user_id and favourite_id in the request body
 
   try {
     console.log(`Attempting to delete favourite with id: ${favourite_id} for user: ${user_id}`);
-    
+
     // Find the user and remove the favorite from their favourites array
     const updatedUser = await User.findByIdAndUpdate(
       user_id,
@@ -99,7 +99,10 @@ exports.removeFavourite = async (req, res) => {
     }
 
     // Remove the favourite from the Favourites collection
-    await Favourite.findByIdAndDelete(favourite_id);
+    const deletedFavourite = await Favourite.findByIdAndDelete(favourite_id);
+    if (!deletedFavourite) {
+      return res.status(404).json({ message: "Favourite not found." });
+    }
 
     console.log(`Favourite with id: ${favourite_id} deleted successfully for user: ${user_id}`);
     res.json({ message: "Favourite deleted successfully", favourite_id });

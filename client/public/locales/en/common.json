@@ -1,0 +1,148 @@
+{  
+    "home-page": {
+       "explore": "Ready to start your South African Wonderful Journey with us",
+       "text": "Explore South Africa's wild and beautiful landscapes for a once-in-a-lifetime trip for you",
+       "button": "Search Destination",
+       "recommend": "Recommended Destination",
+       "text2": "Discover South Africa's Most Popular Tourist Attractions",
+       "facts": "Fun Facts About South Africa",
+       "fact1": "Fact #1",
+       "text3": "South Africa has 12 official languages.",
+       "fact2": "Fact #2",
+       "text4": "Kruger National Park is home to the Big Five: lion, leopard, rhinoceros, elephant, and Cape buffalo.",
+       "fact3": "Fact #3",
+       "text5": "South Africa is home to the world's largest green canyon, Blyde River Canyon.",
+       "fact4": "Fact #4",
+       "text6": "Table Mountain in Cape Town is one of the oldest mountains in the world.",
+       "fact5": "Fact #5",
+       "text7": "It's the only country in the world with three capital cities.",
+       "fact6": "Fact #6",
+       "text8": "South Africa is the largest producer of platinum in the world.",
+       "h1": "Our provinces",
+       "h1_": "You have to spend time to make time",
+       "text9": "A journey starts with a dream…and a plan. You're just 3 easy (and fun) steps away from creating your ideal Travel Dream Board.",
+       "step1": "Step 1:",
+       "text10": "Choose a city or province in South Africa to explore.",
+       "step2": "Step 2:",
+       "text11": "Decide who are your travel companions.",
+       "step3": "Step 3:",
+       "text12": "Decide who are your travel companions."
+},
+
+   "navbar": {
+        "explore": "Explore",
+        "wishlist": "Wishlist",
+        "about us": "About Us",
+        "contact_us": "Contact Us",
+        "sign in/ create an account": "Sign in/ Create an account"
+    },
+
+    "signin": {
+        "hi": "Sign In",
+        "text1": "Enter your email address",
+        "button": "Sign up with Google",
+        "email": "mail@safari.com",
+        "password": "Enter a password",
+        "button2": "Sign in",
+        "button3": "Keep me logged in",
+        "forot password": "Forgot your password",
+        "not registered": "Not registered yet? Creat an Account"
+    },
+
+    "create account": {
+        "button": "Sign up with Google",
+        "or": "Or",
+        "firstname": "Enter your first name",
+        "lastname": "Enter your last name",
+        "email address": "enter your email",
+        "password": "Enter your password",
+        "confirm password": "Confirm your password"
+    },
+
+    "password streghth": {
+        "characters": "Atleaset 6 characters",
+        "letterU": "Contains uppercase Letter",
+        "letterL": "Contains lowercase Letter",
+        "number": "Contains a number",
+        "sepcial characters": "Contains special characters",
+        "button": "Sign Up",
+        "text1": "Already have an account? Sign In"
+    }, 
+
+    "languages": {
+        "en": "English",
+        "tr": "Turkish"
+      },
+
+    "explore": {
+        "discover": "Discover South Africa's iconic destinations.",
+        "text1": "WHERE LUXURY INTERTWINES SEAMLESSLY WITH THRILLING ESCAPADES",
+        "jouney": "JOURNEY THROUGH THE HEART OF SOUTH AFRICA",
+        "text2": "As a country of striking diversity, South Africa offers a captivating blend of natural beauty, rich culture, and vibrant cities. From the vast savannahs of the Kruger National Park teeming with wildlife to the majestic peaks of the Drakensberg mountains and the stunning coastline along the Garden Route, South Africa's landscapes are as varied as they are breathtaking. Cape Town, with its iconic Table Mountain and vibrant waterfront, lures visitors with its cosmopolitan charm, while Johannesburg pulses with the energy of a modern metropolis. South Africans, known for their warmth and resilience, take great pride in their history and traditions, making every encounter with the people as memorable as the places.The country's nine provinces each offer a unique cultural experience, from the heart of the Zulu kingdom in KwaZulu-Natal to the vineyards of the Western Cape, ensuring that every journey is rich with diversity."
+    },
+
+    "escape": {
+        "escape": "Escape to Our Provinces",
+        "text1": "Discover the Beauty all nine of our provinces",
+        "escape2": "Escape to our Favorite Cities",
+        "text2": "Discover the Beauty of South Africa's Most Popular Tourist Spots"
+    },
+
+    "Wishlist": {
+        "favorites": "My Favorites",
+        "text1": "Hello, unknown! Here are your saved attractions",
+        "name": "Name",
+        "categories": "All Categories"
+    },
+
+    "all categories dropdown": {
+        "historical": "Historical",
+        "nature": "Nature",
+        "adventure": "Adventure"
+    },
+
+    "about us": {
+        "Us": "About us.",
+        "text1": "JOURNEY WITH US AND TOGETHER WE'LL LEAVE OUR WORLD A BETTER PLACE",
+        "mission": "Our Mission",
+        "text2": "We aim to make travel planning easy by providing detailed and personalized recommendations for tourist attractions, empowering travelers to create unforgettable experiences.",
+        "story": "Our Story",
+        "text3": "MeeGuide was born from our own travel frustrations. As avid travelers, we often found ourselves overwhelmed by the sheer number of attractions and the lack of personalized recommendations. We decided to combine our love for travel with cutting-edge technology to create a platform that simplifies travel planning and enhances the exploration experience.Today, we're proud to help millions of travelers discover and enjoy the world's most amazing attractions.",
+        "values": "Our Core Values",
+        "adventure": "Adventure",
+        "text4": "Encouraging exploration and new experiences",
+        "sustainability": "Sustainability",
+        "text5": "Promoting responsible and eco-friendly travel",
+        "cultural appreciation": "Cultural Appreciation",
+        "text6": "Fostering a sense of community and shared experience",
+        "innovation": "Innovation",
+        "text7": "Continuously improving our technology to serve travelers better",
+        "explore": "Ready to Explore?",
+        "text8": "Start your journey with MeeGuide and discover amazing attractions tailored just for you.",
+        "get in touch": "Get in touch",
+        "text9": "We'd love to hear from you!"
+    },
+
+    "footer": {
+        "h2": "Policies",
+        "text1": "Terms & Conditions",
+        "text2": "Privacy",
+        "h2.": "Connect With Us",
+        "h2..": "Quick Links",
+        "home": "Home",
+        "explore": "Explore",
+        "review": "Review",
+        "about us": "About Us",
+        "your account": "Your Account"
+    },
+
+    "Ai": {
+        "button": "Chat with AI"
+    },
+
+    "Ai_chat": {
+        "h2": "AI TRavel Assistant",
+        "search": "Ask a question",
+        "buttom": "Send"
+    }
+}

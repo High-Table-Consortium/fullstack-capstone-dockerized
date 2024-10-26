@@ -2,7 +2,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { login as apiLogin, register as apiRegister, logout as apiLogout, getUserProfile as apiGetUserProfile,
     forgotPassword as apiForgotPassword, resetPassword as apiResetPassword
-} from '../app/api/api';
+} from '../app/API/api';
 
 const AuthContext = createContext();
 

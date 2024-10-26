@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Trash2 } from 'lucide-react';
+import { MapPin, Trash2, X } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
@@ -14,15 +14,12 @@ import { useToast } from "../../hooks/use-toast";
 
 export default function FavoritesPage() {
   const [filteredFavorites, setFilteredFavorites] = useState([]);
-  const [sortOption, setSortOption] = useState('name');
-  const [filterCategory, setFilterCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState('grid');
   const [isRemoving, setIsRemoving] = useState(false);
   const { user } = useAuth();
   const { fetchFavourites, favourites = [], removeFavourite } = useFavourites();
   const { toast } = useToast();
-
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -38,37 +35,28 @@ export default function FavoritesPage() {
   useEffect(() => {
     let result = Array.isArray(favourites) ? [...favourites] : [];
 
-    if (filterCategory !== 'All') {
-      result = result.filter((fav) => fav.attraction_category === filterCategory);
-    }
-
     if (searchQuery) {
       result = result.filter(
         (fav) =>
           fav.attraction_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           fav.attraction_location.toLowerCase().includes(searchQuery.toLowerCase())
       );
+    } else {
+      result = [...favourites]; // If no search query, show all favorites
     }
 
-    result.sort((a, b) => {
-      if (sortOption === 'name') return a.attraction_name.localeCompare(b.attraction_name);
-      if (sortOption === 'rating') return b.attraction_rating - a.attraction_rating;
-      return 0;
-    });
-
     setFilteredFavorites(result);
-  }, [favourites, filterCategory, searchQuery, sortOption]);
+  }, [favourites, searchQuery]);
 
   const handleRemoveFavorite = async (favouriteId) => {
     try {
-      console.log("Attempting to remove favourite with id:", favouriteId);  // Debugging log
-
+      console.log("Attempting to remove favourite with id:", favouriteId);
       if (!favouriteId) {
         throw new Error("Favourite ID is undefined or null");
       }
 
       setIsRemoving(true);
-      await removeFavourite(favouriteId);  // This should call your API to delete the favourite
+      await removeFavourite(favouriteId);
       toast({
         title: "Success",
         description: "Removed from favorites",
@@ -85,6 +73,15 @@ export default function FavoritesPage() {
     }
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      console.log("Enter pressed, triggering search for:", searchQuery);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+  };
 
   if (!mounted) {
     return null;
@@ -103,45 +100,34 @@ export default function FavoritesPage() {
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 space-y-4 md:space-y-0">
           <div className="flex items-center space-x-4">
-            <select
-              value={sortOption}
-              onChange={(e) => setSortOption(e.target.value)}
-              className="w-[180px] border border-gray-300 rounded-md p-2"
-            >
-              <option value="name">Name</option>
-              <option value="rating">Rating</option>
-            </select>
-
-            <select
-              value={filterCategory}
-              onChange={(e) => setFilterCategory(e.target.value)}
-              className="w-[180px] border border-gray-300 rounded-md p-2"
-            >
-              <option value="All">All Categories</option>
-              <option value="Historical">Historical</option>
-              <option value="Nature">Nature</option>
-              <option value="Adventure">Adventure</option>
-            </select>
-          </div>
-          <div className="flex items-center space-x-4">
             <Input
               type="text"
               placeholder="Search favorites..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleKeyPress}
               className="w-full md:w-auto"
             />
+            {searchQuery && (
+              <button onClick={clearSearch} className="flex items-center justify-center h-8 w-8 text-muted-foreground hover:text-destructive">
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
         </div>
 
         {filteredFavorites.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground mb-4">No favorites found matching your criteria.</p>
+            {searchQuery ? (
+              <p className="text-lg text-muted-foreground mb-4">No favorites found matching your criteria.</p>
+            ) : (
+              <p className="text-lg text-muted-foreground mb-4">You have no favorites yet.</p>
+            )}
             <Button asChild variant="outline">
               <Link href="/">Explore Destinations</Link>
             </Button>
           </div>
-        ) : viewMode === 'grid' ? (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredFavorites.map(({ _id, attraction_id, attraction_name, attraction_image, attraction_location, attraction_description }) => (
               <Card key={_id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -168,7 +154,7 @@ export default function FavoritesPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => handleRemoveFavorite(_id)}  // Pass _id to the function
+                    onClick={() => handleRemoveFavorite(_id)}
                     disabled={isRemoving}
                     className="text-destructive hover:text-destructive-foreground hover:bg-destructive"
                   >
@@ -178,10 +164,6 @@ export default function FavoritesPage() {
                 </CardFooter>
               </Card>
             ))}
-          </div>
-        ) : (
-          <div className="bg-muted h-[400px] flex items-center justify-center rounded-lg">
-            <p className="text-muted-foreground">Map view would be implemented here</p>
           </div>
         )}
       </div>

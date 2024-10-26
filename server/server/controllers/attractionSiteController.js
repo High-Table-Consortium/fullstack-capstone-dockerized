@@ -81,7 +81,7 @@ exports.getAttractionSiteById = async (req, res) => {
 };
 
 exports.createAttractionSite = async (req, res) => {
-  const { name, location, description, category, rating, hours, admission_price, image, nearby_restaurants, other_activities } = req.body;
+  const { name, location, description, category, rating, hours, admission_price, image, nearby_restaurants, other_activities, gallery } = req.body;
 
   try {
     const newAttractionSite = new AttractionSite({
@@ -94,7 +94,8 @@ exports.createAttractionSite = async (req, res) => {
       admission_price,
       image,
       nearby_restaurants,
-      other_activities
+      other_activities,
+      gallery
     });
 
     await newAttractionSite.save();
@@ -136,26 +137,41 @@ exports.deleteAttractionSite = async (req, res) => {
 };
 
 exports.searchAttractionSites = async (req, res) => {
-  const { name, category, location } = req.query;
+  const { searchTerm = '', sortBy = '', category = '', location = '' } = req.query;
 
   try {
     const queryConditions = {};
-    
-    if (name) {
-      queryConditions.name = { $regex: name.trim(), $options: "i" }; // Trimmed name
+
+    // Apply full-text search if a search term is provided
+    if (searchTerm) {
+      queryConditions.$text = { $search: searchTerm };
     }
-    
+
+    // Apply additional filters if provided in the query parameters
     if (category) {
-      queryConditions.category = { $regex: category.trim(), $options: "i" }; // Trimmed category
+      queryConditions.category = { $regex: category, $options: 'i' };
     }
     if (location) {
-      queryConditions.location = { $regex: location.trim(), $options: "i" }; // Trimmed location
+      queryConditions.location = { $regex: location, $options: 'i' };
     }
 
-    const attractionSites = await AttractionSite.find(queryConditions);
+    // Initialize the query with conditions
+    let query = AttractionSite.find(queryConditions);
 
-    res.status(200).json(attractionSites);
+    // Apply sorting based on sortBy parameter
+    if (sortBy === 'popularity') {
+      query = query.sort({ visits: -1 });
+    } else if (sortBy === 'rating') {
+      query = query.sort({ rating: -1 });
+    }
+
+    // Execute the query and get results
+    const results = await query;
+    
+    // Send results as JSON response
+    res.status(200).json(results);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error('Error querying attraction sites:', error);
+    res.status(500).json({ message: 'An error occurred while retrieving attraction sites.' });
   }
 };

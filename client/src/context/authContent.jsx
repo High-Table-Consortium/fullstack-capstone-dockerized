@@ -1,8 +1,9 @@
 'use client';
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
 import { login as apiLogin, register as apiRegister, logout as apiLogout, getUserProfile as apiGetUserProfile,
-    forgotPassword as apiForgotPassword, resetPassword as apiResetPassword
+forgotPassword as apiForgotPassword, resetPassword as apiResetPassword
 } from '../app/API/api';
+
 
 const AuthContext = createContext();
 
@@ -18,16 +19,21 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await apiGetUserProfile();
             // console.log('API Response:', response);
-            
+
             if (response.success && response.user) {
                 // console.log('Response user data:', response.user);
-                
+
                 if (response.user.email && response.user.firstName && response.user.lastName) {
                     const userData = {
                         id: response.user._id,
                         email: response.user.email,
                         firstName: response.user.firstName,
-                        lastName: response.user.lastName
+                        lastName: response.user.lastName,
+                        favourites: response.user.favourites,
+                        recommendations: response.user.recommendations,
+                        viewedAttractions: response.user.viewedAttractions,
+                        preferences: response.user.preferences,
+                        searches: response.user.searches,
                     };
                     // console.log('Setting user state to:', userData);
                     setUser(userData);
@@ -86,15 +92,9 @@ export const AuthProvider = ({ children }) => {
         setError(null);
         try {
             const response = await apiRegister(firstName, lastName, email, password);
-            // console.log('Register API Response:', response);
-            if (response.success) {
-                await fetchUserProfile(); // Fetch user profile after successful registration
-                return true;
-            } else {
-                throw new Error(response.message || "Registration failed.");
-            }
+            console.log(response)
         } catch (error) {
-            const errorMessage = error.message || "Registration failed.";
+            const errorMessage = error.response?.data?.message || error.message || "Registration failed.";
             setError(errorMessage);
             console.warn('Registration failed:', errorMessage);
             return false;
@@ -110,7 +110,8 @@ export const AuthProvider = ({ children }) => {
             if (response.success) {
                 setUser(null);
             } else {
-                throw ne            }
+                throw new error
+            }
         } catch (error) {
             console.warn('Logout failed:', error);
             setError(error.message || "Logout failed.");

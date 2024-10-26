@@ -28,10 +28,12 @@ export const getAttractionById = async (id: string) => {
     return response.data;
 };
 
-export const searchAttraction = async (category: string, name: string, location: string,) => {
-    const response = await axios.get(`/attractions/search`, { params: { category, name, location } });
+export const searchAttraction = async (searchTerm = '', sortBy = '', category = '', location = '') => {
+    const response = await api.get(`/attractions/search`, { 
+        params: { searchTerm, sortBy, category, location } 
+    });
     return response.data;
-}
+};
 
 /*
  * handle user profile retrieval
@@ -209,6 +211,32 @@ export const generateDestinationInfo = async (name: string, location: string) =>
     } catch (error) {
         console.error('Error generating destination info:', error);
         throw error; // Re-throw the error for further handling
+    }
+};
+
+export const AddFavourites = async(user_id :string ,attractionData:string) => {
+    const response = await api.post(`/favourites`, {
+        user_id,
+        attraction_id: attractionData
+    })
+    console.log(response)
+    return response.data
+}
+export const getFavourites = async(userId :string) => {
+    const response = await api.get(`/favourites/${userId}`)
+    console.log(response)
+    return response.data
+}
+
+export const removeFavourites = async (userId: string, favouriteId: string) => {
+    try {
+        const response = await api.delete(`/favourites`, {
+            data: { user_id: userId, favourite_id: favouriteId }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error removing favourite:', error.response ? error.response.data : error.message);
+        throw new Error('Failed to remove favourite. Please try again.');
     }
 };
 

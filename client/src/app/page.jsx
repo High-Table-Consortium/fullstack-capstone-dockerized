@@ -104,11 +104,12 @@ export default function Home() {
             <h2 className="text-3xl font-semibold text-center mb-2 font-mono">
               Recommended <span className="text-yellow-500">Destinations</span>
             </h2>
-            <p className="text-center text-gray-600 mb-8">Discover South Africa's Most Popular Tourist Attractions</p>
 
-            {/* Destinations Grid */}
+            <p className="text-center text-gray-600 mb-8">
+              Discover South Africa's Most Popular Tourist Attractions
+            </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-[55px]">
-              {currentDestinations.map((destination, index) => (
+              {destinations.slice(0, 8).map((destination, index) => (
                 <Link href={`/destination/${destination._id}`} key={index} className="h-full">
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -128,15 +129,23 @@ export default function Home() {
                         </div>
                       </CardHeader>
                       <CardContent className="p-4 flex flex-col flex-grow">
-                        <CardTitle className="text-lg mb-2">{destination.title}</CardTitle>
-                        <p className="text-sm text-gray-600 mb-4 overflow-hidden line-clamp-3">{destination.description}</p>
+
+                        <CardTitle className="text-lg mb-2">{destination.name}</CardTitle>
+                        <p className="text-sm text-gray-600 mb-4 overflow-hidden line-clamp-3">
+                          {destination.description}
+                        </p>
                         <div className="mt-auto">
                           <div className="flex items-center space-x-1 mb-4">
                             <MapPin className="h-4 w-4 text-gray-400" />
-                            <span className="text-sm text-gray-600">{destination.location}</span>
+                            <span className="text-sm text-gray-600">
+                              {destination.location}
+                            </span>
                           </div>
                           <div className="flex items-center justify-end">
-                            <Button variant="outline" className="text-yellow-500 border-yellow-600 hover:bg-blue-50 transition-colors">
+                            <Button 
+                              variant="outline" 
+                              className="text-yellow-500 border-yellow-600 hover:bg-blue-50 transition-colors"
+                            >
                               Explore
                             </Button>
                           </div>
@@ -162,7 +171,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Other Sections */}
         <section>
           <Categories />
         </section>

@@ -23,7 +23,7 @@ export function FooterComponent() {
               </li>
               <li>
                 <Link
-                  href="/privacy"
+                  href="/Privacy Policy"
                   className="text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Privacy Policy

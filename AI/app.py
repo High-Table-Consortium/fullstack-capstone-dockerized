@@ -21,7 +21,7 @@ logging.basicConfig(level=logging.INFO)
 @app.middleware("http")
 async def add_cors_headers(request, call_next):
     response = await call_next(request)
-    response.headers["Access-Control-Allow-Origin"] = "https://www.teste.com.br, http://localhost:3000"
+    response.headers["Access-Control-Allow-Origin"] = "https://main.d2t1jx5oghptbq.amplifyapp.com, http://localhost:3000"
     response.headers["Access-Control-Allow-Credentials"] = "true"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"

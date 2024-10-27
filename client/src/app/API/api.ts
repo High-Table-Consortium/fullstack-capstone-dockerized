@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:3001/api";
-const ModelURL = "https://fullstack-capstone-dockerized-ai.onrender.com"
+const baseURL = "https://fullstack-capstone-ar7c.onrender.com/api";
+const ModelURL = "https://meeguideai-819192751389.africa-south1.run.app"
 const api = axios.create({
     baseURL,
     withCredentials: true, // This ensures cookies are sent with requests
@@ -41,7 +41,7 @@ export const searchAttraction = async (searchTerm = '', sortBy = '', category = 
 */
 export const getUserProfile = async () => {
     const response = await api.get(`/auth/check-auth`);
-    // console.log(response)
+    console.log(response)
     return response.data;
 };
 
@@ -83,6 +83,7 @@ export const getAttractionByProvince = async (province: string) => {
 */
 export const login = async (email: string, password: string) => {
     const response = await api.post(`/auth/login`, { email, password });
+    console.log(response)
     return response.data;
 };
 
@@ -191,7 +192,7 @@ export const generateDayRoute = async (attractionData: {
     nearby_restaurants: [],
     other_activities: [],
 }) => {
-    const response = await api.post(`${ModelURL}/generate-routine`, {
+    const response = await axios.post(`${ModelURL}/generate-routine`, {
         attraction: attractionData,
         days: 3
     });

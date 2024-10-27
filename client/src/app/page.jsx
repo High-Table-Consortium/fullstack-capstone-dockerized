@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import React from 'react';
 import Image from "next/legacy/image";
 import Link from 'next/link';
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import Searchbar from "../components/Searchbar";
-import { ChevronRight, Calendar, Users, MapPin, Search } from 'lucide-react';
+import { ChevronRight, Calendar, Users, MapPin, Search, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import Navbar from "../components/Navbar";
 import { getAttractions } from '../app/API/api';
@@ -24,12 +24,10 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [destinations, setDestinations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10); // Declare itemsPerPage as state
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // Fetching destination data
   useEffect(() => {
     setIsVisible(true);
-
     const fetchDestinations = async () => {
       try {
         const data = await getAttractions();
@@ -38,35 +36,48 @@ export default function Home() {
         console.error('Error fetching destinations:', error);
       }
     };
-
     fetchDestinations();
   }, []);
 
   // Filter destinations based on search term
-  const filteredDestinations = destinations.filter(dest =>
+  const filteredDestinations = useMemo(() => destinations.filter(dest =>
     (dest.title && dest.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (dest.description && dest.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
     (dest.location && dest.location.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  ), [destinations, searchTerm]);
 
-  // Pagination logic
   const indexOfLastDestination = currentPage * itemsPerPage;
   const indexOfFirstDestination = indexOfLastDestination - itemsPerPage;
-  const currentDestinations = filteredDestinations.slice(indexOfFirstDestination, indexOfLastDestination);
-  const totalPages = Math.ceil(filteredDestinations.length / itemsPerPage);
+  const currentDestinations = useMemo(() => {
+    const indexOfLastDestination = currentPage * itemsPerPage;
+    const indexOfFirstDestination = indexOfLastDestination - itemsPerPage;
+    return filteredDestinations.slice(indexOfFirstDestination, indexOfLastDestination);
+  }, [filteredDestinations, currentPage, itemsPerPage]);
+  const totalPages = Math.ceil(filteredDestinations.length / itemsPerPage) || 1;
 
-  // Next and Previous page handlers
+  // Debugging logs to verify the data slice
+  console.log("Filtered Destinations:", filteredDestinations);
+  console.log("Current Destinations (Page Data):", currentDestinations);
   const handleNext = () => {
     if (currentPage < totalPages) {
       setCurrentPage(prev => prev + 1);
+      console.log("Next Page:", currentPage + 1);
     }
   };
 
   const handlePrev = () => {
     if (currentPage > 1) {
       setCurrentPage(prev => prev - 1);
+      console.log("Previous Page:", currentPage - 1);
     }
   };
+
+  console.log({
+    currentPage,
+    totalPages,
+    itemsPerPage,
+    displayedItems: currentDestinations.length
+  });
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -101,14 +112,19 @@ export default function Home() {
         {/* Recommended Destinations */}
         <section className="py-10">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-semibold text-center mb-2 font-mono">
-              Recommended <span className="text-yellow-500">Destinations</span>
-            </h2>
-
-            <p className="text-center text-gray-600 mb-8">
-              Discover South Africa's Most Popular Tourist Attractions
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-[55px]">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="text-center mb-12"
+            >
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Popular <span className="text-yellow-600">Destinations</span></h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                Explore South Africa&apos;s most beloved locations, from stunning natural wonders to vibrant cultural sites
+              </p>
+            </motion.div>
+            {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-[55px]">
               {destinations.slice(0, 8).map((destination, index) => (
                 <Link href={`/destination/${destination._id}`} key={index} className="h-full">
                   <motion.div
@@ -152,6 +168,42 @@ export default function Home() {
                         </div>
                       </CardContent>
                     </Card>
+                  </motion.div>
+                </Link>
+              ))}
+            </div> */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {currentDestinations.map((destination, index) => (
+                <Link href={`/destination/${destination._id}`} key={index} className="h-full">
+
+                  <motion.div
+                    key={destination._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="card group cursor-pointer"
+                  >
+                    <div className="relative h-64">
+                      <img
+                        src={destination.image}
+                        alt={destination.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className="absolute bottom-4 left-4 text-white">
+                        <h3 className="text-xl font-semibold mb-1">{destination.name}</h3>
+                        <div className="flex items-center space-x-2">
+                          <MapPin className="h-4 w-4" />
+                          <span>{destination.location}</span>
+                        </div>
+                      </div>
+                      <div className="absolute top-4 right-4 bg-white/90 px-2 py-1 rounded-full flex items-center">
+                        <Star className="h-4 w-4 text-yellow-400 mr-1" />
+                        <span className="text-sm font-medium">{destination.rating}</span>
+                      </div>
+                    </div>
                   </motion.div>
                 </Link>
               ))}

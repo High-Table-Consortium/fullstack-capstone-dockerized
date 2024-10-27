@@ -28,7 +28,7 @@ async def add_cors_headers(request, call_next):
     return response
 
 origins = [
-    "https://teste.com.br",
+    "https://main.d2t1jx5oghptbq.amplifyapp.com",
     "http://localhost:3000",
 ]
 

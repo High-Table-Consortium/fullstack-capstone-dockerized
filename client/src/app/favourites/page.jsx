@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Trash2, X } from 'lucide-react'; // Import the cross icon
+import { MapPin, Trash2, X } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
@@ -11,9 +11,10 @@ import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/authContent';
 import { useFavourites } from '../../context/favourites';
 import { useToast } from "../../hooks/use-toast";
+import FooterComponent from '../../components/Footer'; 
 
 export default function FavoritesPage() {
-  const [searchQuery, setSearchQuery] = useState(''); // State for the search input
+  const [searchQuery, setSearchQuery] = useState('');
   const [filteredFavorites, setFilteredFavorites] = useState([]);
   const [viewMode, setViewMode] = useState('grid');
   const [isRemoving, setIsRemoving] = useState(false);
@@ -38,26 +39,25 @@ export default function FavoritesPage() {
   }, [favourites]);
 
   useEffect(() => {
-    // Filter favorites based on search query
     if (searchQuery) {
       setFilteredFavorites(favourites.filter(fav =>
         fav.attraction_name.toLowerCase().includes(searchQuery.toLowerCase())
       ));
     } else {
-      setFilteredFavorites(favourites); // Reset to all favorites if search query is empty
+      setFilteredFavorites(favourites);
     }
   }, [searchQuery, favourites]);
 
   const handleRemoveFavorite = async (favouriteId) => {
     try {
-      console.log("Attempting to remove favourite with id:", favouriteId); // Debugging log
+      console.log("Attempting to remove favourite with id:", favouriteId);
 
       if (!favouriteId) {
         throw new Error("Favourite ID is undefined or null");
       }
 
       setIsRemoving(true);
-      await removeFavourite(favouriteId); // This should call your API to delete the favourite
+      await removeFavourite(favouriteId);
       toast({
         title: "Success",
         description: "Removed from favorites",
@@ -76,14 +76,13 @@ export default function FavoritesPage() {
 
   const handleSearchKeyPress = (e) => {
     if (e.key === 'Enter') {
-      // Trigger search on Enter key
       setSearchQuery(e.target.value);
     }
   };
 
   const clearSearch = () => {
-    setSearchQuery(''); // Clear the search input
-    setFilteredFavorites(favourites); // Reset filtered favorites
+    setSearchQuery('');
+    setFilteredFavorites(favourites);
   };
 
   if (!mounted) {
@@ -106,12 +105,12 @@ export default function FavoritesPage() {
             <Input
               type="text"
               placeholder="Search favorites..."
-              value={searchQuery} // Bind search query to input
-              onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
-              onKeyPress={handleSearchKeyPress} // Handle Enter key press
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleSearchKeyPress}
               className="w-full md:w-auto"
             />
-            {searchQuery && ( // Show cross button if there is a search query
+            {searchQuery && (
               <Button variant="outline" onClick={clearSearch} className="flex items-center">
                 <X className="h-4 w-4" />
               </Button>
@@ -153,7 +152,7 @@ export default function FavoritesPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => handleRemoveFavorite(_id)} // Pass _id to the function
+                    onClick={() => handleRemoveFavorite(_id)}
                     disabled={isRemoving}
                     className="text-destructive hover:text-destructive-foreground hover:bg-destructive"
                   >
@@ -170,6 +169,7 @@ export default function FavoritesPage() {
           </div>
         )}
       </div>
+      <FooterComponent /> 
     </div>
   );
 }

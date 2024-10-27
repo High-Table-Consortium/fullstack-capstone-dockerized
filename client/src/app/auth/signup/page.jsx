@@ -34,7 +34,7 @@ const SignUp = () => {
 
     const success = await register(firstName, lastName, email, password);
     if (success) {
-      router.push('/dashboard');
+      router.push('/verify-email');
     }
   };
 

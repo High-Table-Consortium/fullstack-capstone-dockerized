@@ -9,6 +9,8 @@ import json
 import logging
 import requests
 import re
+from typing import List
+
 load_dotenv()
 
 app = FastAPI()
@@ -41,7 +43,92 @@ app.add_middleware(
 # Configure the Gemini API
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
-class AttractionData(BaseModel):
+# class AttractionData(BaseModel):
+#     name: str
+#     location: str
+#     description: str
+#     category: str
+#     rating: float
+#     hours: str
+#     admission_price: dict
+#     image: str
+#     nearby_restaurants: list
+#     other_activities: list
+
+# class RoutineRequest(BaseModel):
+#     attraction: AttractionData
+#     days: int
+
+# @app.post("/generate-routine")
+# async def generate_routine(request: RoutineRequest):
+#     try:
+#         # Prepare the prompt for Gemini
+#         prompt = f"""
+#         Create a fun and enjoyable {request.days}-day routine for a visit to {request.attraction.name}.
+#         Location: {request.attraction.location}
+#         Description: {request.attraction.description}
+#         Category: {request.attraction.category}
+#         Rating: {request.attraction.rating}
+#         Hours: {request.attraction.hours}
+#         Admission Price: Adults - {request.attraction.admission_price['adults']}, Children - {request.attraction.admission_price['children']}
+#         Other Activities: {', '.join(request.attraction.other_activities)}
+
+#         Nearby Restaurants:
+#         {', '.join([restaurant['name'] for restaurant in request.attraction.nearby_restaurants])}
+
+#         Please provide a detailed itinerary for each day, including:
+#         - Recommended activities
+#         - Suggested timings
+#         - Meal recommendations (using the nearby restaurants)
+#         - add tips or things to keep in mind
+
+#         Format the response as a JSON object with days as keys (e.g., "Day 1", "Day 2") and the activities as arrays, make sure to not repeat day 1 also for day 3. 
+#         Only include valid JSON without any additional text.
+        
+#         Example format:
+#         {{
+#             "Day 1": [
+#                 {{"time": "9:00 AM", "activity": "Start your day with a fun morning walk through the park's beautiful trails."}},
+#                 {{"time": "11:00 AM", "activity": "Visit the nearby attractions, such as {', '.join(request.attraction.other_activities)} for an exciting morning."}},
+#                 {{"time": "12:00 PM", "activity": "Enjoy a delicious lunch at a local favorite restaurant with a vibrant atmosphere."}}
+#             ],
+#             "Day 2": [
+#                 {{"time": "10:00 AM", "activity": "Experience a guided adventure tour for some excitement."}},
+#                 {{"time": "1:00 PM", "activity": "Explore another local attraction, such as {', '.join(request.attraction.other_activities)}."}},
+#                 {{"time": "3:00 PM", "activity": "Relax and enjoy a coffee at a nearby cafe before heading to dinner."}}
+#             ]
+#         }}
+#         """
+
+#         # Generate content using Gemini
+#         model = genai.GenerativeModel('gemini-pro')
+#         response = model.generate_content(prompt)
+
+#         # Ensure the response text is valid JSON
+        
+#         try:
+#             routine = json.loads(response.text)
+#         except json.JSONDecodeError:
+#             # Handle the case where the model returns non-JSON formatted text
+#             raise HTTPException(status_code=500, detail="The model response is not valid JSON.")
+
+#         return {"routine": routine}
+
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+class TimeSlotActivity(BaseModel):
+    time: str
+    activity: str
+
+class RoutineDay(BaseModel):
+    morning: List[TimeSlotActivity]
+    afternoon: List[TimeSlotActivity]
+    evening: List[TimeSlotActivity]
+
+# Define the Attraction class as part of RoutineRequest
+class Attraction(BaseModel):
     name: str
     location: str
     description: str
@@ -49,14 +136,14 @@ class AttractionData(BaseModel):
     rating: float
     hours: str
     admission_price: dict
-    image: str
-    nearby_restaurants: list
-    other_activities: list
-
+    other_activities: List[str]
+    nearby_restaurants: List[dict]
+    
+# Define the RoutineRequest class for the request payload
 class RoutineRequest(BaseModel):
-    attraction: AttractionData
     days: int
-
+    attraction: Attraction
+    
 @app.post("/generate-routine")
 async def generate_routine(request: RoutineRequest):
     try:
@@ -74,28 +161,40 @@ async def generate_routine(request: RoutineRequest):
         Nearby Restaurants:
         {', '.join([restaurant['name'] for restaurant in request.attraction.nearby_restaurants])}
 
-        Please provide a detailed itinerary for each day, including:
-        - Recommended activities
-        - Suggested timings
-        - Meal recommendations (using the nearby restaurants)
-        - add tips or things to keep in mind
-
-        Format the response as a JSON object with days as keys (e.g., "Day 1", "Day 2") and the activities as arrays, make sure to not repeat day 1 also for day 3. 
-        Only include valid JSON without any additional text.
+        Please provide a detailed itinerary for each day, dividing the day into morning, afternoon, and evening sessions.
         
-        Example format:
+        Format the response as a JSON object with days as keys (e.g., "Day 1", "Day 2") and each day containing "morning", "afternoon", and "evening" arrays of activities with time and description, like this:
         {{
-            "Day 1": [
-                {{"time": "9:00 AM", "activity": "Start your day with a fun morning walk through the park's beautiful trails."}},
-                {{"time": "11:00 AM", "activity": "Visit the nearby attractions, such as {', '.join(request.attraction.other_activities)} for an exciting morning."}},
-                {{"time": "12:00 PM", "activity": "Enjoy a delicious lunch at a local favorite restaurant with a vibrant atmosphere."}}
-            ],
-            "Day 2": [
-                {{"time": "10:00 AM", "activity": "Experience a guided adventure tour for some excitement."}},
-                {{"time": "1:00 PM", "activity": "Explore another local attraction, such as {', '.join(request.attraction.other_activities)}."}},
-                {{"time": "3:00 PM", "activity": "Relax and enjoy a coffee at a nearby cafe before heading to dinner."}}
-            ]
+            "Day 1": {{
+                "morning": [
+                    {{"time": "9:00 AM", "activity": "Cable car ride to the summit"}},
+                    {{"time": "10:30 AM", "activity": "Explore the viewing platforms"}},
+                    {{"time": "11:30 AM", "activity": "Short hiking trail on top"}}
+                ],
+                "afternoon": [
+                    {{"time": "12:00 PM", "activity": "Lunch at Table Mountain Café"}},
+                    {{"time": "1:30 PM", "activity": "Visit the Souvenir Shop"}},
+                    {{"time": "3:00 PM", "activity": "Photography session"}}
+                ],
+                "evening": [
+                    {{"time": "5:30 PM", "activity": "Sunset viewing"}},
+                    {{"time": "6:30 PM", "activity": "Cable car descent"}},
+                    {{"time": "7:30 PM", "activity": "Dinner at nearby restaurant"}}
+                ]
+            }},
+            "Day 2": {{
+                "morning": [
+                    ...
+                ],
+                "afternoon": [
+                    ...
+                ],
+                "evening": [
+                    ...
+                ]
+            }}
         }}
+        Only include valid JSON with no additional text.
         """
 
         # Generate content using Gemini
@@ -103,7 +202,6 @@ async def generate_routine(request: RoutineRequest):
         response = model.generate_content(prompt)
 
         # Ensure the response text is valid JSON
-        
         try:
             routine = json.loads(response.text)
         except json.JSONDecodeError:
@@ -114,7 +212,7 @@ async def generate_routine(request: RoutineRequest):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
+    
 # Define the DestinationRequest model
 class DestinationRequest(BaseModel):
     name: str
@@ -241,6 +339,7 @@ async def chat(context: ChatContext):
         logging.error("Error in chat: %s", str(e))
         raise HTTPException(status_code=500, detail=str(e))
     
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8080)

@@ -6,4 +6,4 @@ COPY package.json .
 RUN npm install
 WORKDIR /backend-app/server
 COPY ./server ./server
-CMD [ "node", "server/index.js" ]
+CMD [ "node", "index.js" ]

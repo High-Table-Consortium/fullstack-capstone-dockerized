@@ -56,28 +56,28 @@ export default function Home() {
   const totalPages = Math.ceil(filteredDestinations.length / itemsPerPage) || 1;
 
   // Debugging logs to verify the data slice
-  console.log("Filtered Destinations:", filteredDestinations);
-  console.log("Current Destinations (Page Data):", currentDestinations);
+  // console.log("Filtered Destinations:", filteredDestinations);
+  // console.log("Current Destinations (Page Data):", currentDestinations);
   const handleNext = () => {
     if (currentPage < totalPages) {
       setCurrentPage(prev => prev + 1);
-      console.log("Next Page:", currentPage + 1);
+      // console.log("Next Page:", currentPage + 1);
     }
   };
 
   const handlePrev = () => {
     if (currentPage > 1) {
       setCurrentPage(prev => prev - 1);
-      console.log("Previous Page:", currentPage - 1);
+      // console.log("Previous Page:", currentPage - 1);
     }
   };
 
-  console.log({
-    currentPage,
-    totalPages,
-    itemsPerPage,
-    displayedItems: currentDestinations.length
-  });
+  // console.log({
+  //   currentPage,
+  //   totalPages,
+  //   itemsPerPage,
+  //   displayedItems: currentDestinations.length
+  // });
 
   return (
     <div className="flex flex-col min-h-screen bg-background">

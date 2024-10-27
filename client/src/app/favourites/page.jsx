@@ -11,12 +11,11 @@ import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/authContent';
 import { useFavourites } from '../../context/favourites';
 import { useToast } from "../../hooks/use-toast";
-import FooterComponent from '../../components/Footer'; 
+import FooterComponent from '../../components/Footer';
 
 export default function FavoritesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredFavorites, setFilteredFavorites] = useState([]);
-  const [viewMode, setViewMode] = useState('grid');
   const [isRemoving, setIsRemoving] = useState(false);
   const { user } = useAuth();
   const { fetchFavourites, favourites = [], removeFavourite } = useFavourites();
@@ -34,17 +33,24 @@ export default function FavoritesPage() {
     }
   }, [user, fetchFavourites]);
 
+  // Ensure filteredFavorites is an array
   useEffect(() => {
-    setFilteredFavorites(Array.isArray(favourites) ? [...favourites] : []);
+    if (Array.isArray(favourites)) {
+      setFilteredFavorites(favourites);
+    } else {
+      setFilteredFavorites([]); // Handle if favourites is not an array
+    }
   }, [favourites]);
 
   useEffect(() => {
     if (searchQuery) {
-      setFilteredFavorites(favourites.filter(fav =>
-        fav.attraction_name.toLowerCase().includes(searchQuery.toLowerCase())
-      ));
+      setFilteredFavorites(Array.isArray(favourites) 
+        ? favourites.filter(fav =>
+            fav.attraction_name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        : []);
     } else {
-      setFilteredFavorites(favourites);
+      setFilteredFavorites(Array.isArray(favourites) ? favourites : []);
     }
   }, [searchQuery, favourites]);
 
@@ -125,7 +131,7 @@ export default function FavoritesPage() {
               <Link href="/">Explore Destinations</Link>
             </Button>
           </div>
-        ) : viewMode === 'grid' ? (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredFavorites.map(({ _id, attraction_id, attraction_name, attraction_image, attraction_location, attraction_description }) => (
               <Card key={_id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -163,13 +169,9 @@ export default function FavoritesPage() {
               </Card>
             ))}
           </div>
-        ) : (
-          <div className="bg-muted h-[400px] flex items-center justify-center rounded-lg">
-            <p className="text-muted-foreground">Map view would be implemented here</p>
-          </div>
         )}
       </div>
-      <FooterComponent /> 
+      <FooterComponent />
     </div>
   );
 }

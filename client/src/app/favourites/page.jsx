@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { MapPin, Trash2, X } from 'lucide-react'; // Import the cross icon
+import { MapPin, Trash2, X } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter } from '../../components/ui/card';
 import { Input } from '../../components/ui/input';
@@ -11,11 +11,11 @@ import Navbar from '../../components/Navbar';
 import { useAuth } from '../../context/authContent';
 import { useFavourites } from '../../context/favourites';
 import { useToast } from "../../hooks/use-toast";
+import FooterComponent from '../../components/Footer';
 
 export default function FavoritesPage() {
-  const [searchQuery, setSearchQuery] = useState(''); // State for the search input
+  const [searchQuery, setSearchQuery] = useState('');
   const [filteredFavorites, setFilteredFavorites] = useState([]);
-  const [viewMode, setViewMode] = useState('grid');
   const [isRemoving, setIsRemoving] = useState(false);
   const { user } = useAuth();
   const { fetchFavourites, favourites = [], removeFavourite } = useFavourites();
@@ -33,31 +33,37 @@ export default function FavoritesPage() {
     }
   }, [user, fetchFavourites]);
 
+  // Ensure filteredFavorites is an array
   useEffect(() => {
-    setFilteredFavorites(Array.isArray(favourites) ? [...favourites] : []);
+    if (Array.isArray(favourites)) {
+      setFilteredFavorites(favourites);
+    } else {
+      setFilteredFavorites([]); // Handle if favourites is not an array
+    }
   }, [favourites]);
 
   useEffect(() => {
-    // Filter favorites based on search query
     if (searchQuery) {
-      setFilteredFavorites(favourites.filter(fav =>
-        fav.attraction_name.toLowerCase().includes(searchQuery.toLowerCase())
-      ));
+      setFilteredFavorites(Array.isArray(favourites) 
+        ? favourites.filter(fav =>
+            fav.attraction_name.toLowerCase().includes(searchQuery.toLowerCase())
+          )
+        : []);
     } else {
-      setFilteredFavorites(favourites); // Reset to all favorites if search query is empty
+      setFilteredFavorites(Array.isArray(favourites) ? favourites : []);
     }
   }, [searchQuery, favourites]);
 
   const handleRemoveFavorite = async (favouriteId) => {
     try {
-      console.log("Attempting to remove favourite with id:", favouriteId); // Debugging log
+      console.log("Attempting to remove favourite with id:", favouriteId);
 
       if (!favouriteId) {
         throw new Error("Favourite ID is undefined or null");
       }
 
       setIsRemoving(true);
-      await removeFavourite(favouriteId); // This should call your API to delete the favourite
+      await removeFavourite(favouriteId);
       toast({
         title: "Success",
         description: "Removed from favorites",
@@ -76,14 +82,13 @@ export default function FavoritesPage() {
 
   const handleSearchKeyPress = (e) => {
     if (e.key === 'Enter') {
-      // Trigger search on Enter key
       setSearchQuery(e.target.value);
     }
   };
 
   const clearSearch = () => {
-    setSearchQuery(''); // Clear the search input
-    setFilteredFavorites(favourites); // Reset filtered favorites
+    setSearchQuery('');
+    setFilteredFavorites(favourites);
   };
 
   if (!mounted) {
@@ -106,12 +111,12 @@ export default function FavoritesPage() {
             <Input
               type="text"
               placeholder="Search favorites..."
-              value={searchQuery} // Bind search query to input
-              onChange={(e) => setSearchQuery(e.target.value)} // Update search query on input change
-              onKeyPress={handleSearchKeyPress} // Handle Enter key press
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={handleSearchKeyPress}
               className="w-full md:w-auto"
             />
-            {searchQuery && ( // Show cross button if there is a search query
+            {searchQuery && (
               <Button variant="outline" onClick={clearSearch} className="flex items-center">
                 <X className="h-4 w-4" />
               </Button>
@@ -126,7 +131,7 @@ export default function FavoritesPage() {
               <Link href="/">Explore Destinations</Link>
             </Button>
           </div>
-        ) : viewMode === 'grid' ? (
+        ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredFavorites.map(({ _id, attraction_id, attraction_name, attraction_image, attraction_location, attraction_description }) => (
               <Card key={_id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
@@ -153,7 +158,7 @@ export default function FavoritesPage() {
                   </Button>
                   <Button
                     variant="outline"
-                    onClick={() => handleRemoveFavorite(_id)} // Pass _id to the function
+                    onClick={() => handleRemoveFavorite(_id)}
                     disabled={isRemoving}
                     className="text-destructive hover:text-destructive-foreground hover:bg-destructive"
                   >
@@ -164,12 +169,9 @@ export default function FavoritesPage() {
               </Card>
             ))}
           </div>
-        ) : (
-          <div className="bg-muted h-[400px] flex items-center justify-center rounded-lg">
-            <p className="text-muted-foreground">Map view would be implemented here</p>
-          </div>
         )}
       </div>
+      <FooterComponent />
     </div>
   );
 }

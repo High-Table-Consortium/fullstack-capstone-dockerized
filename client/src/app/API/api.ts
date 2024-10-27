@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseURL = "https://fullstack-capstone-ar7c.onrender.com/api";
-const ModelURL = "https://meeguideai-819192751389.africa-south1.run.app"
+const ModelURL = "https://fullstack-capstone-dockerized-ai.onrender.com"
 const api = axios.create({
     baseURL,
     withCredentials: true, // This ensures cookies are sent with requests

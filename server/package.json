@@ -2,9 +2,9 @@
   "name": "capstoneserver",
   "version": "1.0.0",
   "description": "Express server for capstone",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
-    "dev": "nodemon server/index.js",
+    "dev": "node server/index.js",
     "start:app": "NODE_ENV=development nodemon server/index.js",
     "postinstall": "CONT=$(docker ps -aqf name=node-app) && [ $CONT ] && docker exec -w /backend-app $CONT npm i || true",
     "start": "docker-compose up",

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react'; 
 import Router from 'next/navigation';
 import Link from 'next/link';
@@ -59,14 +59,14 @@ const Provinces = () => {
                         >
                             {[
                                 { name: "Gauteng", image: "https://south-africa.net/wp-content/uploads/2023/01/gauteng.jpg" },
-                                { name: "Western Cape", image: "https://images.myguide-cdn.com/capetown/companies/customized-private-wine-tour/large/customized-private-wine-tour-3676073.jpg" },
-                                { name: "Kwa-Zulu Natal", image: "https://s43365.pcdn.co/wp-content/uploads/2021/07/kzn-KwaZulu-Natal-iStock-.jpg" },
-                                { name: "Eastern Cape", image: "https://satmedia.azureedge.net/satcache/4/2/d/0/c/b/42d0cbc199ebd637301ee0da123994a2ac41a578.jpg" },
-                                { name: "Free State", image: "https://averagesouthafrican.com/wp-content/uploads/2016/09/img_6104.jpg?w=584" },
+                                { name: "Western-Cape", image: "https://images.myguide-cdn.com/capetown/companies/customized-private-wine-tour/large/customized-private-wine-tour-3676073.jpg" },
+                                { name: "KwaZulu-Natal", image: "https://s43365.pcdn.co/wp-content/uploads/2021/07/kzn-KwaZulu-Natal-iStock-.jpg" },
+                                { name: "Eastern-Cape", image: "https://satmedia.azureedge.net/satcache/4/2/d/0/c/b/42d0cbc199ebd637301ee0da123994a2ac41a578.jpg" },
+                                { name: "Free-State", image: "https://averagesouthafrican.com/wp-content/uploads/2016/09/img_6104.jpg?w=584" },
                                 { name: "Mpumalanga", image: "https://lh3.googleusercontent.com/rLRDgUAuj26GvPg7N5U97lbG8Younb1C-6EqQ1bbZZlhx0Lg3Md-ZvTH8-1X1jyBf_iLQg1UfSUX83KzNR1Ev9yRYyqBtH58Rw=s1500" },
                                 { name: "North-West", image: "https://daddysdeals.co.za/wp-content/uploads/2022/06/activities-in-hartbeerspoort.webp" },
                                 { name: "Limpopo", image: "https://www.railbookers.ca/sites/railbookers/files/styles/hero/public/media/images/kruger-national-park_big-5_web_786552829.jpeg?h=73545cb6&itok=XFxbOQ46" },
-                                { name: "Northern Cape", image: "https://www.wineenthusiast.com/wp-content/uploads/2021/05/SOCIAL_Fallback_A_Fynbos_Pincussion_Protea_at_Cape_Point_Vineyards_WOSA_Pierre_van_der_Spuy_1920x1280.jpg" },
+                                { name: "Northern-Cape", image: "https://www.wineenthusiast.com/wp-content/uploads/2021/05/SOCIAL_Fallback_A_Fynbos_Pincussion_Protea_at_Cape_Point_Vineyards_WOSA_Pierre_van_der_Spuy_1920x1280.jpg" },
                             ].map((province, index) => (
                                 <motion.div
                                     key={index}

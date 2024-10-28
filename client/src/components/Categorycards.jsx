@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from "next/navigation";
-import Image from "next/image";
+import Image from "next/legacy/image";
 
 const categories = [
   {
@@ -13,7 +13,7 @@ const categories = [
     image: "https://museumexplorer.co.za/wp-content/uploads/2023/03/Voortrekker-Monument.jpg"
   },
   {
-    name: "Nature & Wildlife",
+    name: "Nature-Wildlife",
     image: "https://www.lukimbi.com/wp-content/uploads/2020/08/IMG_1859.jpg"
   },
   {
@@ -21,7 +21,7 @@ const categories = [
     image: "https://www.gauteng.net/wp-content/uploads/2022/04/GRC_Gal18-1.jpg"
   },
   {
-    name: "Scenic View",
+    name: "Scenic-View",
     image: "https://www.fodors.com/wp-content/uploads/2019/11/TableMountain101__HERO_shutterstock_165749363.jpg"
   },
   {

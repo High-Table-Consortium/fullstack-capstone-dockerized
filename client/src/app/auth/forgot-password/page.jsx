@@ -3,10 +3,10 @@
 import { useRouter } from "next/navigation";
 import Forms from "../../../components/Forms";
 import { useAuth } from "../../../context/authContent";
-
+import { toast } from "../../../hooks/use-toast";
 const ForgotPasswordPage = () => {
     const router = useRouter();
-    const { forgotPassword } = useAuth();
+    const { forgotPassword, isLoading, error } = useAuth();
 
     const forgotPasswordFields = [
         {
@@ -14,7 +14,7 @@ const ForgotPasswordPage = () => {
             type: "email",
             label: "Email*",
             placeholder: "Enter your registered email",
-            required: true,
+            // required: true,
         },
     ];
 
@@ -28,9 +28,27 @@ const ForgotPasswordPage = () => {
 
     const handleForgotPassword = async (formData) => {
         try {
-            await forgotPassword(formData.email);
+            const success = await forgotPassword(formData.email);
+            if (success) {
+                toast({
+                    title: "Success",
+                    description: "Password reset email sent. Please check your inbox.",
+                });
+                router.push('/auth/signin');
+            } else {
+                toast({
+                    title: "Error",
+                    description: error || "Failed to send password reset email.",
+                    variant: "destructive",
+                });
+            }
         } catch (error) {
             console.error("Forgot password error:", error);
+            toast({
+                title: "Error",
+                description: "An unexpected error occurred. Please try again.",
+                variant: "destructive",
+            });
         }
     };
 

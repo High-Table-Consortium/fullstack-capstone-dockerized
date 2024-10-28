@@ -1,6 +1,9 @@
 'use client';
 import React, { createContext, useContext, useEffect, useRef, useState, useCallback } from 'react';
-import { login as apiLogin, register as apiRegister, logout as apiLogout, getUserProfile as apiGetUserProfile } from '../app/api/api';
+import { login as apiLogin, register as apiRegister, logout as apiLogout, getUserProfile as apiGetUserProfile,
+forgotPassword as apiForgotPassword, resetPassword as apiResetPassword
+} from '../app/API/api';
+
 
 const AuthContext = createContext();
 
@@ -25,9 +28,14 @@ export const AuthProvider = ({ children }) => {
                         id: response.user._id,
                         email: response.user.email,
                         firstName: response.user.firstName,
-                        lastName: response.user.lastName
+                        lastName: response.user.lastName,
+                        favourites: response.user.favourites,
+                        recommendations: response.user.recommendations,
+                        viewedAttractions: response.user.viewedAttractions,
+                        preferences: response.user.preferences,
+                        searches: response.user.searches,
                     };
-                    console.log('Setting user state to:', userData);
+                    // console.log('Setting user state to:', userData);
                     setUser(userData);
                 } else {
                     // console.error('Response user data is missing required fields:', response.user);
@@ -38,7 +46,7 @@ export const AuthProvider = ({ children }) => {
                 throw new Error("User data is missing in response.");
             }
         } catch (error) {
-            console.error('Failed to fetch user profile:', error);
+            console.warn('Failed to fetch user profile:', error);
             setError(error.message || "An error occurred while fetching user data.");
         } finally {
             setIsLoading(false);
@@ -53,9 +61,9 @@ export const AuthProvider = ({ children }) => {
         }
     }, [fetchUserProfile]);
 
-    useEffect(() => {
-        console.log('User state changed:', user);
-    }, [user]);
+    // useEffect(() => {
+    //     console.log('User state changed:', user);
+    // }, [user]);
 
     const login = async (email, password) => {
         setIsLoading(true);
@@ -88,7 +96,7 @@ export const AuthProvider = ({ children }) => {
         } catch (error) {
             const errorMessage = error.response?.data?.message || error.message || "Registration failed.";
             setError(errorMessage);
-            console.error('Registration failed:', errorMessage);
+            console.warn('Registration failed:', errorMessage);
             return false;
         } finally {
             setIsLoading(false);
@@ -105,7 +113,7 @@ export const AuthProvider = ({ children }) => {
                 throw new error
             }
         } catch (error) {
-            console.error('Logout failed:', error);
+            console.warn('Logout failed:', error);
             setError(error.message || "Logout failed.");
             throw error;
         } finally {
@@ -113,8 +121,50 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const forgotPassword = async (email) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await apiForgotPassword(email);
+            if (response.success) {
+                console.log(response)
+                return true;
+            } else {
+                throw new Error(response.message || "Failed to send password reset email.");
+            }
+        } catch (error) {
+            const errorMessage = error.message || "Failed to send password reset email.";
+            setError(errorMessage);
+            console.warn('Forgot password failed:', errorMessage);
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const resetPassword = async (token, newPassword) => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            const response = await apiResetPassword(token, newPassword);
+            if (response.success) {
+                return true;
+            } else {
+                throw new Error(response.message || "Failed to reset password.");
+            }
+        } catch (error) {
+            const errorMessage = error.message || "Failed to reset password.";
+            setError(errorMessage);
+            console.warn('Reset password failed:', errorMessage);
+            return false;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
     return (
-        <AuthContext.Provider value={{ user, isLoading, error, setError, login, register, logout, fetchUserProfile }}>
+        <AuthContext.Provider value={{ user, isLoading, error, setError, login, register, logout, fetchUserProfile, forgotPassword, resetPassword }}>
             {children}
         </AuthContext.Provider>
     );

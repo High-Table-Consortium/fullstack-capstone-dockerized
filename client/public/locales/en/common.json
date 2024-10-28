@@ -71,7 +71,10 @@
 
     "languages": {
         "en": "English",
-        "tr": "Turkish"
+
+        "tr": "Turkish",
+        "ar": "Arabic"
+
       },
 
     "explore": {
@@ -81,7 +84,9 @@
         "text2": "As a country of striking diversity, South Africa offers a captivating blend of natural beauty, rich culture, and vibrant cities. From the vast savannahs of the Kruger National Park teeming with wildlife to the majestic peaks of the Drakensberg mountains and the stunning coastline along the Garden Route, South Africa's landscapes are as varied as they are breathtaking. Cape Town, with its iconic Table Mountain and vibrant waterfront, lures visitors with its cosmopolitan charm, while Johannesburg pulses with the energy of a modern metropolis. South Africans, known for their warmth and resilience, take great pride in their history and traditions, making every encounter with the people as memorable as the places.The country's nine provinces each offer a unique cultural experience, from the heart of the Zulu kingdom in KwaZulu-Natal to the vineyards of the Western Cape, ensuring that every journey is rich with diversity."
     },
 
-    "escape": {
+
+    "escaping": {
+
         "escape": "Escape to Our Provinces",
         "text1": "Discover the Beauty all nine of our provinces",
         "escape2": "Escape to our Favorite Cities",
@@ -91,8 +96,13 @@
     "Wishlist": {
         "favorites": "My Favorites",
         "text1": "Hello, unknown! Here are your saved attractions",
+        "search": "Serach Favorites",
+        "no": "No favorites found matching your criteria",
+        "discover": "Discover More Attractions",
+        "button": "Explore All Attractions"
         "name": "Name",
         "categories": "All Categories"
+
     },
 
     "all categories dropdown": {
@@ -106,6 +116,7 @@
         "text1": "JOURNEY WITH US AND TOGETHER WE'LL LEAVE OUR WORLD A BETTER PLACE",
         "mission": "Our Mission",
         "text2": "We aim to make travel planning easy by providing detailed and personalized recommendations for tourist attractions, empowering travelers to create unforgettable experiences.",
+        "team": "The Team",
         "story": "Our Story",
         "text3": "MeeGuide was born from our own travel frustrations. As avid travelers, we often found ourselves overwhelmed by the sheer number of attractions and the lack of personalized recommendations. We decided to combine our love for travel with cutting-edge technology to create a platform that simplifies travel planning and enhances the exploration experience.Today, we're proud to help millions of travelers discover and enjoy the world's most amazing attractions.",
         "values": "Our Core Values",
@@ -119,6 +130,7 @@
         "text7": "Continuously improving our technology to serve travelers better",
         "explore": "Ready to Explore?",
         "text8": "Start your journey with MeeGuide and discover amazing attractions tailored just for you.",
+        "button": "Get Started",
         "get in touch": "Get in touch",
         "text9": "We'd love to hear from you!"
     },
@@ -133,7 +145,8 @@
         "explore": "Explore",
         "review": "Review",
         "about us": "About Us",
-        "your account": "Your Account"
+        "your account": "Your Account",
+        "rights": "2024 Meeguide. All rights reserved."
     },
 
     "Ai": {

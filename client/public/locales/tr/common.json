@@ -105,6 +105,7 @@
     "Us": "Hakkımızda",
     "text1": "BİZİMLE YOLCULUK YAPIN VE DÜNYAMIZI DAHA İYİ BİR YER OLARAK BIRAKALIM",
     "mission": "Misyonumuz",
+    "team": "Takım",
     "text2": "Seyahat planlamayı kolaylaştırmak için ayrıntılı ve kişiselleştirilmiş öneriler sunarak gezginlerin unutulmaz deneyimler yaratmalarını sağlamayı amaçlıyoruz.",
     "story": "Hikayemiz",
     "text3": "MeeGuide, seyahatle ilgili kendi hayal kırıklıklarımızdan doğdu. Sık seyahat edenler olarak, çoğu zaman çok sayıda cazibe merkezi ve kişisel önerilerin eksikliği nedeniyle bunalmış hissederdik. Seyahate olan sevgimizi en son teknoloji ile birleştirerek, seyahat planlamayı kolaylaştıran ve keşif deneyimini artıran bir platform oluşturmak istedik. Bugün, milyonlarca gezgine dünyanın en harika cazibe merkezlerini keşfetmeleri ve tadını çıkarmaları için yardım etmekten gurur duyuyoruz.",
@@ -118,7 +119,7 @@
     "innovation": "Yenilikçilik",
     "text7": "Gezginlere daha iyi hizmet sunmak için teknolojimizi sürekli geliştirmek",
     "explore": "Keşfetmeye Hazır mısınız?",
-    "text8": "MeeGuide ile yolculuğunuza başlayın ve size özel harika atraksiyonları keşfedin.",
+    "button":  "Başlayın",
     "get in touch": "İletişime Geçin",
     "text9": "Sizden haber almak isteriz!"
   },

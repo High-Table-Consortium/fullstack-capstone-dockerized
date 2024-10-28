@@ -4,9 +4,12 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icons from lucide-react
 import Link from 'next/link';
+import translations from '../../public/locales/en/common.json';
+import { useTranslation } from 'react-i18next';
 
 // Cities component
 const Cities = () => {
+     const { t } = useTranslation();
     const [isVisible, setIsVisible] = useState(false);
     const carouselRef = useRef(null); // Ref to the carousel div
 
@@ -37,10 +40,10 @@ const Cities = () => {
             <section className="pt-5 rounded-2xl bg-background relative">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-semibold text-center mb-2 font-mono">
-                        Escape to Our <span className="text-yellow-500">Favorite Cities</span>
+                      {t('escape.escape')} <span className="text-yellow-500">{translations.escape.escape2}</span>
                     </h2>
                     <p className="text-center text-gray-600 mb-12">
-                        Discover the Beauty of South Africa's Most Popular Tourist Spots
+                        {t('escape.text2')}
                     </p>
 
                     {/* Carousel container */}

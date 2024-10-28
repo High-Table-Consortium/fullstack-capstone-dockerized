@@ -6,6 +6,19 @@ import Image from "next/image";
 import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 
 export default function FooterComponent() {
+  const footerContent = {
+    h2: "Policies",
+    text1: "Terms & Conditions",
+    text2: "Privacy",
+    "h2.": "Connect With Us",
+    "h2..": "Quick Links",
+    "home": "Home",
+    "explore": "Explore",
+    "review": "Review",
+    "about us": "About Us",
+    "your account": "Your Account",
+  };
+
   return (
     <footer className="bg-green-950 border-t w-full">
       <div className="container mx-auto px-4 py-8">
@@ -22,14 +35,14 @@ export default function FooterComponent() {
               <span className="font-bold text-xl">MeeGuide</span>
             </Link> */}
           <div>
-            <h3 className="text-lg text-yellow-100 font-semibold mb-4">Policies</h3>
+            <h3 className="text-lg text-yellow-100 font-semibold mb-4">{footerContent.h2}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/terms"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Terms & Conditions
+                  {footerContent.text1}
                 </Link>
               </li>
               <li>
@@ -37,7 +50,7 @@ export default function FooterComponent() {
                   href="/privacy"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Privacy Policy
+                  {footerContent.text2}
                 </Link>
               </li>
             </ul>
@@ -45,7 +58,7 @@ export default function FooterComponent() {
 
           {/* Social Media Links */}
           <div>
-            <h3 className="text-lg font-semibold text-yellow-100 mb-4">Connect With Us</h3>
+            <h3 className="text-lg font-semibold text-yellow-100 mb-4">{footerContent["h2."]}</h3>
             <div className="flex space-x-4">
               <a
                 href="https://facebook.com"
@@ -88,14 +101,14 @@ export default function FooterComponent() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg text-yellow-100 font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg text-yellow-100 font-semibold mb-4">{footerContent["h2.."]}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Home
+                 {footerContent["home"]}
                 </Link>
               </li>
               <li>
@@ -103,7 +116,7 @@ export default function FooterComponent() {
                   href="/explore"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Explore
+                 {footerContent["explore"]}
                 </Link>
               </li>
               <li>
@@ -111,7 +124,7 @@ export default function FooterComponent() {
                   href="/review"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Review
+                  {footerContent["review"]}
                 </Link>
               </li>
               <li>
@@ -119,7 +132,7 @@ export default function FooterComponent() {
                   href="/about"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  About Us
+                 {footerContent["about us"]}
                 </Link>
               </li>
               <li>
@@ -127,7 +140,7 @@ export default function FooterComponent() {
                   href="/accountinfo"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Your account
+                 {footerContent["your account"]}
                 </Link>
               </li>
             </ul>

@@ -12,8 +12,11 @@ import {
   SheetTrigger,
 } from "../components/ui/sheet";
 import { MessageSquare } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
 
 export function Chatbot() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -83,7 +86,7 @@ export function Chatbot() {
       console.error("Error:", error);
       const errorMessage = {
         role: "assistant",
-        content: "Sorry, I encountered an error. Please try again.",
+        content: t("error_message"),
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages((prev) => [...prev, errorMessage]);
@@ -98,12 +101,12 @@ export function Chatbot() {
         onClick={() => setIsOpen(true)}
         className="fixed bottom-4 right-4"
       >
-        <MessageSquare className="mr-2 h-4 w-4" /> Chat with AI
+        <MessageSquare className="mr-2 h-4 w-4" /> {t('Ai.button')}
       </Button>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetContent className="w-[400px] sm:w-[540px]">
           <SheetHeader>
-            <SheetTitle>AI Travel Assistant</SheetTitle>
+            <SheetTitle>{t("Ai_chat.h2")}</SheetTitle>
           </SheetHeader>
           <div className="flex flex-col h-[calc(100vh-120px)]">
             <ScrollArea className="flex-grow mb-4">
@@ -137,10 +140,10 @@ export function Chatbot() {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
-                placeholder="Ask a question..."
+                placeholder={t("Ai_chat.search")}
                 className="flex-grow mr-2"
               />
-              <Button onClick={handleSendMessage}>Send</Button>
+              <Button onClick={handleSendMessage}>{t('Ai_chat.buttom')}</Button>
             </div>
           </div>
         </SheetContent>

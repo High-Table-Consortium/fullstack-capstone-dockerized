@@ -7,8 +7,10 @@ import Navbar from '../../components/Navbar'
 import FooterComponent from '../../components/Footer'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from "react";
+import { useTranslation } from 'react-i18next';
 
 export default function AboutUs() {
+   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
@@ -96,9 +98,9 @@ export default function AboutUs() {
             className="container mx-auto px-4 h-full flex flex-col justify-center relative z-10"
           >
             <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 font-serif">
-              About <span className='text-yellow-500'>us</span>.
+               {t('about us.Us')} <span className='text-yellow-500'>{t('about us.Us')}</span>.
             </h1>
-            <p className="text-white text-lg md:text-xl mb-8 max-w-2xl">JOURNEY WITH US AND TOGETHER WE'LL LEAVE OUR WORLD A BETTER PLACE</p>
+            <p className="text-white text-lg md:text-xl mb-8 max-w-2xl">{aboutUs.text1}</p>
             <div className="max-w-md mx-auto mb-8"> 
             </div>
           </motion.div>
@@ -107,10 +109,9 @@ export default function AboutUs() {
       <div className="container mx-auto px-4 py-8">
         {/* Mission Statement */}
         <section className="mb-12 text-center">
-          <h2 className="text-3xl text-green-900 font-bold mb-4 font-mono">Our Mission</h2>
+          <h2 className="text-3xl text-green-900 font-bold mb-4 font-mono">{t('about us.mission')}n</h2>
           <p className="text-xl text-black">
-            We aim to make travel planning easy by providing detailed and personalized recommendations for tourist attractions,
-            empowering travelers to create unforgettable experiences.
+            {t('about us.text2')}
           </p>
         </section>
 
@@ -169,7 +170,7 @@ export default function AboutUs() {
 
         {/* Our Story */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center font-mono">Our Story</h2>
+          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center font-mono">{t('about us.story')}</h2>
           <div className="flex flex-col md:flex-row items-center">
             <div className="md:w-1/2 mb-6 md:mb-0 md:pr-8">
               <Image
@@ -182,10 +183,7 @@ export default function AboutUs() {
             </div>
             <div className="md:w-1/2">
               <p className="text-black mb-4">
-                MeeGuide was born from our own travel frustrations. As avid travelers, we often found ourselves overwhelmed
-                by the sheer number of attractions and the lack of personalized recommendations. We decided to combine our
-                love for travel with cutting-edge technology to create a platform that simplifies travel planning and enhances
-                the exploration experience.
+                {t('about us.text3')}
               </p>
               <p className="text-black">
                 Today, we're proud to help millions of travelers discover and enjoy the world's most amazing attractions.
@@ -196,7 +194,7 @@ export default function AboutUs() {
 
         {/* Core Values */}
         <section className="mb-12">
-          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center font-mono">Our Core Values</h2>
+          <h2 className="text-3xl font-bold text-green-900 mb-6 text-center font-mono">{t('about us.values')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {[
               { value: "Adventure", description: "Encouraging exploration and new experiences" },
@@ -214,9 +212,9 @@ export default function AboutUs() {
 
         {/* Call to Action */}
         <section className="mb-12 text-center">
-          <h2 className="text-3xl text-green-900 font-bold mb-4 font-mono">Ready to <span className='text-yellow-500'>Explore?</span></h2>
+          <h2 className="text-3xl text-green-900 font-bold mb-4 font-mono">{t('about us.explore')} <span className='text-yellow-500'>Explore?</span></h2>
           <p className="text-xl text-black mb-6">
-            Start your journey with MeeGuide and discover amazing attractions tailored just for you.
+           {t('about us.text8')}
           </p>
           <Link href="/explore" className="bg-yellow-500 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-green-900 transition duration-300">
             Get Started
@@ -225,8 +223,8 @@ export default function AboutUs() {
 
         {/* Contact Information */}
         <section className="text-center">
-          <h2 className="text-3xl font-bold mb-6 font-mono">Get in Touch</h2>
-          <p className="text-xl text-gray-600 mb-4">We'd love to hear from you!</p>
+          <h2 className="text-3xl font-bold mb-6 font-mono"> {t('about us.get in touch')}</h2>
+          <p className="text-xl text-gray-600 mb-4"> {t('about us.text9')}</p>
           <div className="flex justify-center space-x-6">
             <Link href="mailto:info@meeguide.com" className="text-gray-600 hover:text-red-600">
               <Mail className="w-8 h-8" />

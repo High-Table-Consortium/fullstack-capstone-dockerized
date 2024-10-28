@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 
 const sender = {
   email: "hello@meeguide.com",
-  name: "Auth Company",
+  name: "meeguide Auth",
 };
 
 module.exports = { transporter, sender };

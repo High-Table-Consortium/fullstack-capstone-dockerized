@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Star, MapPin, Clock, Utensils, Heart } from 'lucide-react';
-import { getAttractionById, createReview, addComment, generateDayRoute, generateDestinationInfo } from '../../api/api';
+import { Star, MapPin, Clock, Utensils, Heart, Info, Users, Calendar } from 'lucide-react';
+import { getAttractionById, createReview, addComment, generateDayRoute, generateDestinationInfo } from '../../API/api';
 import { Button } from "../../../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../../../components/ui/card";
 import ReviewSection from "../../../components/ReviewSection";
@@ -12,6 +12,13 @@ import DestinationDetailSkeleton from "../../../components/DetailedPageSkeleton"
 import Image from 'next/image';
 import FooterComponent from '../../../components/Footer';
 import { useAuth } from '../../../context/authContent';
+
+
+import { useFavourites } from '../../../context/favourites';
+import DestinationInfo from '@/components/destination/DestinationInfo';
+import TripPlanner from '@/components/destination/TripPlanner';
+import DayRoutineGenerator from '@/components/destination/DayRoutineGenerator';
+
 
 export default function DestinationDetail({ params }) {
   const { id } = params;
@@ -25,14 +32,16 @@ export default function DestinationDetail({ params }) {
   const [destinationInfo, setDestinationInfo] = useState(null);
   const [showDayRoute, setShowDayRoute] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false); // Add state for favorite icon
+  const { addFavourite, isFavourite } = useFavourites()
+  const [activeTab, setActiveTab] = useState('info');
   const isDataExpired = (timestamp) => {
     return (Date.now() - timestamp) > 2 * 60 * 60 * 1000; // 24 hours in milliseconds
   };
 
 
   const toggleFavorite = () => {
-    setIsFavorite(!isFavorite);
-    // You can also add code to save the favorite status to localStorage or a backend here
+    addFavourite(id); // Pass the destination ID
+    setIsFavorite(!isFavorite); // Toggle the favorite state
   };
 
   useEffect(() => {
@@ -42,7 +51,6 @@ export default function DestinationDetail({ params }) {
           const data = await getAttractionById(id);
           setDestination(data);
 
-          // Load cached destination info if available and valid
           const cachedInfo = JSON.parse(localStorage.getItem(`destinationInfo_${id}`));
           if (cachedInfo && !isDataExpired(cachedInfo.timestamp)) {
             setDestinationInfo(cachedInfo.data);
@@ -143,10 +151,9 @@ export default function DestinationDetail({ params }) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full"
+        className="w-full bg-gray-50"
       >
-        {/* Header Section */}
-        <div className="relative h-[50vh] md:h-[70vh] w-full">
+        {/* <div className="relative h-[50vh] md:h-[70vh] w-full ">
           <Image
             src={destination.image}
             alt={destination.name}
@@ -157,142 +164,131 @@ export default function DestinationDetail({ params }) {
           <div className="absolute inset-0 bg-black bg-opacity-30" />
           <div className="absolute inset-0 flex flex-col justify-center items-center text-white text-center p-4">
             <h1 className="text-3xl md:text-6xl font-serif mb-2 md:mb-4">{destination.name}</h1>
-            <p className="text-lg md:text-2xl mb-2">{destination.description}</p>
-          </div>
+            <p className="text-lg md:text-2xl mb-2">{destination.description}</p> */}
 
-          {/* Favorite Icon */}
+        {/* Weather Section
+            {weatherData ? (
+              <div className="mt-4 bg-white bg-opacity-70 p-4 rounded-lg shadow-md text-black">
+                <h3 className="text-lg font-semibold">Current Weather in {destination.location}</h3>
+                <div className="flex items-center space-x-4">
+                  <img
+                    src={`https://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
+                    alt="Weather Icon"
+                    className="w-12 h-12"
+                  />
+                  <div>
+                    <p className="text-lg font-medium">
+                      {weatherData.main.temp}°C - {weatherData.weather[0].description}
+                    </p>
+                    <p className="text-sm">
+                      Humidity: {weatherData.main.humidity}% | Wind: {weatherData.wind.speed} m/s
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-sm">Weather information not available</p>
+            )} */}
+        {/* </div> */}
+
+        {/* Favorite Icon
           <button
             onClick={toggleFavorite}
             className="absolute top-4 right-4 bg-white bg-opacity-70 p-2 rounded-full hover:bg-opacity-90 transition"
             aria-label="Add to favorites"
+            disabled={isFavourite(id)}
           >
             <Heart
               className={`w-6 h-6 ${isFavorite ? 'text-red-600' : 'text-gray-600'}`}
-              fill={isFavorite ? 'currentColor' : 'none'} // Change fill based on isFavorite state
+              fill={isFavourite ? 'currentColor' : 'none'} // Change fill based on isFavorite state
+            />
+          </button>
+        </div> */}
+
+        {/* Hero Image */}
+        <div className="relative h-[400px]">
+          <img
+            src={destination.image}
+            alt={destination.name}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-40" />
+          <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
+            <div className="max-w-7xl mx-auto">
+              <h1 className="text-4xl font-bold mb-2">{destination.name}</h1>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center">
+                  <MapPin className="h-5 w-5 mr-1" />
+                  <span>{destination.location}</span>
+                </div>
+                <div className="flex items-center">
+                  <Star className="h-5 w-5 text-yellow-400 fill-current mr-1" />
+                  <span>{destination.rating}</span>
+                  <span className="ml-1">({destination.reviews} reviews)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={toggleFavorite}
+            className="absolute top-4 right-4 bg-white bg-opacity-70 p-2 rounded-full hover:bg-opacity-90 transition"
+            aria-label="Add to favorites"
+            disabled={isFavourite(id)}
+          >
+            <Heart
+              className={`w-6 h-6 ${isFavorite ? 'text-red-600' : 'text-gray-600'}`}
+              fill={isFavourite ? 'currentColor' : 'none'} // Change fill based on isFavorite state
             />
           </button>
         </div>
 
-        {/* Main Content Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-6 md:mt-10 mx-auto py-6 px-4 md:px-8 w-full">
-
-          {/* Generated Destination Info Section */}
-          {destinationInfo && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card className="shadow-lg p-6 rounded-lg border border-gray-200 w-full">
-                <CardHeader>
-                  <CardTitle className="text-xl font-semibold">Destination Information</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <h3 className="text-lg font-bold">Description</h3>
-                  <p className="text-gray-700">{destinationInfo.description || 'Description not available'}</p>
-
-                  <h3 className="text-lg font-bold">Why Visit {destination.name}</h3>
-                  <ul className="list-disc list-inside mb-4">
-                    {destinationInfo.why_visit?.map((reason, index) => (
-                      <li key={index} className="text-gray-700">{reason}</li>
-                    ))}
-                  </ul>
-
-                  <h3 className="text-lg font-bold">Top Activities</h3>
-                  <ul className="list-disc list-inside mb-4">
-                    {destinationInfo.top_activities?.map((activity, index) => (
-                      <li key={index} className="text-gray-700">
-                        {activity.activity} - <span className="font-semibold">{activity.duration}</span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <h3 className="text-lg font-bold">Nearby Attractions</h3>
-                  <ul className="list-disc list-inside mb-4">
-                    {destinationInfo.nearby_attractions?.map((attraction, index) => (
-                      <li key={index} className="text-gray-700">{attraction}</li>
-                    ))}
-                  </ul>
-
-                  <h3 className="text-lg font-bold">Tips</h3>
-                  <ul className="list-disc list-inside mb-4">
-                    {destinationInfo.tips?.map((tip, index) => (
-                      <li key={index} className="text-gray-700">{tip}</li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </motion.div>
-          )}
-
-          {/* Details Section */}
-          <Card className="shadow-lg p-6 rounded-lg border border-gray-200 w-full">
-            <CardContent className="space-y-4">
-              <h2 className="text-xl md:text-2xl font-semibold text-gray-800">Details</h2>
-              <div className="flex items-center space-x-2">
-                <MapPin className="text-primary" />
-                <span className="text-lg">Location - {destination.location}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Star className="text-yellow-400" />
-                <span className="text-lg">Rating - {destination.rating} / 5</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Clock className="text-primary" />
-                <span className="text-lg">Hours- {destination.hours}</span>
-              </div>
-
-              {/* Button to Show/Hide Day Route */}
-              <Button onClick={() => {
-                setShowDayRoute(!showDayRoute);
-                if (!showDayRoute) handleGenerateDayRoute(); // Only generate if showing
-              }}>
-                {showDayRoute ? 'Hide Day Route' : 'Generate Day Route'}
-              </Button>
-
-              {/* Generated Route Display */}
-              {showDayRoute && (
-                loading ? (
-                  <p>Loading route...</p>
-                ) : (
-                  generatedRoute && generatedRoute.routine && (
-                    <motion.div
-                      initial={{ opacity: 0, height: 0 }}
-                      animate={{ opacity: 1, height: 'auto' }}
-                      exit={{ opacity: 0, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="mt-4" // Add margin for spacing
-                    >
-                      <h3 className="text-lg font-bold">Suggested Day Route</h3>
-                      {Object.keys(generatedRoute.routine).map((day, index) => (
-                        <div key={index} className="mb-4">
-                          <h4 className="text-xl font-bold mb-2">{day}</h4>
-                          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
-                            {Array.isArray(generatedRoute.routine[day]) ? (
-                              generatedRoute.routine[day].map((activity, idx) => (
-                                <div key={idx} className="border rounded-lg p-4 shadow-md">
-                                  <span className="font-semibold">{activity.time}:</span>
-                                  <span> {activity.activity}</span>
-                                </div>
-                              ))
-                            ) : (
-                              <div className="border rounded-lg p-4 shadow-md">
-                                <span>{generatedRoute.routine[day]}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </motion.div>
-                  )
-                )
-              )}
-            </CardContent>
-          </Card>
-
-
+        {/* Navigation Tabs */}
+        <div className="border-b bg-white">
+          <div className="max-w-7xl mx-auto px-4">
+            <nav className="flex space-x-8">
+              {[
+                { id: 'info', label: 'Information', icon: Info },
+                { id: 'planner', label: 'Trip Planner', icon: Calendar },
+                { id: 'routine', label: 'Day Routine', icon: Clock }
+              ].map(({ id, label, icon: Icon }) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id)}
+                  className={`flex items-center px-4 py-4 border-b-2 font-medium ${activeTab === id
+                    ? 'border-emerald-500 text-emerald-600'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`}
+                >
+                  <Icon className="h-5 w-5 mr-2" />
+                  {label}
+                </button>
+              ))}
+            </nav>
+          </div>
         </div>
+
+        {/* Content */}
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          {/* <DestinationInfo destination={destination} destinationInfo={destinationInfo} /> */}
+          {activeTab === 'info' && <DestinationInfo destination={destination} destinationInfo={destinationInfo} />}
+          {activeTab === 'planner' && <TripPlanner destination={destination} />}
+          {activeTab === 'routine' && <DayRoutineGenerator destination={destination} />}
+
+
+          {/* Main Content Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-1 gap-6 mt-6 md:mt-10 mx-auto py-6 px-4 md:px-8 w-full">
+
+            {/* Generated Destination Info Section */}
+
+
+            {/* Details Section */}
+
+
+
+          </div>
+        </div>
+
+
 
         <div className="mx-auto py-6 px-4 md:px-8">
           <h2 className="text-2xl font-semibold mb-4">Nearby Restaurants</h2>

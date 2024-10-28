@@ -7,7 +7,8 @@ const {
   getReviewByDestination,
   getReviewById,
   updateReview,
-  deleteReview
+  deleteReview,
+  addComment
 } = require('../controllers/reviewController');
 const { authenticateToken, verifyToken } = require('../middleware/authMiddleware');
 const handleValidationErrors = require('../middleware/handleValidation');
@@ -70,5 +71,7 @@ router.delete(
   handleValidationErrors, // Middleware to handle validation errors
   deleteReview // Controller to delete a review
 );
+
+router.post('/:reviewId/comments', addComment);
 
 module.exports = router;

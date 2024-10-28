@@ -11,6 +11,23 @@ const restaurantSchema = new mongoose.Schema({
   image: { type: String, required: true, trim: true }, // Image URL of the restaurant
 });
 
+const gallerySchema = new mongoose.Schema({
+  image: {
+    type: String,
+    default:
+      "https://coffective.com/wp-content/uploads/2018/06/default-featured-image.png.jpg", // Default image URL if not provided
+
+    validate: {
+      validator: function (value) {
+        // Regex for validating URLs
+        return /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif))$/.test(value);
+      },
+      message:
+        "Image must be a valid URL ending with .png, .jpg, .jpeg, or .gif",
+    },
+  },
+});
+
 // Define the schema for Tourist Attraction model
 const touristAttractionSchema = new mongoose.Schema({
   // Name of the tourist attraction
@@ -31,6 +48,13 @@ const touristAttractionSchema = new mongoose.Schema({
     minlength: [3, "Location must be at least 3 characters long"], // Minimum length validation
   },
 
+  latitude: {
+    type: Number,
+  },
+
+  longitude: {
+    type: Number,
+  },
   // Description of the tourist attraction
   // - Required field
   description: {
@@ -92,6 +116,11 @@ const touristAttractionSchema = new mongoose.Schema({
       message:
         "Image must be a valid URL ending with .png, .jpg, .jpeg, or .gif",
     },
+  },
+
+  gallery: {
+    type: [gallerySchema],
+    default: [], // Default to an empty array if no images provided
   },
 });
 

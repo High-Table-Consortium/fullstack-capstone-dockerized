@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../context/authContent';
 import PasswordStrengthMeter from '../../../components/PasswordStrengthMeter';
-import { googleLogin } from '../../api/api';
+import { googleLogin } from '../../API/api';
 
 const SignUp = () => {
   const router = useRouter();
@@ -34,7 +34,7 @@ const SignUp = () => {
 
     const success = await register(firstName, lastName, email, password);
     if (success) {
-      router.push('/dashboard');
+      router.push('/verify-email');
     }
   };
 

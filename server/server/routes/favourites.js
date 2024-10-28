@@ -5,7 +5,7 @@ const {
   getFavouriteById,
   createFavourite,
   updateFavourite,
-  deleteFavourite,
+  removeFavourite,
 } = require('../controllers/favourites');
 const { authenticateToken } = require('../middleware/authMiddleware');
 const { handleValidationErrors } = require('../middleware/handleValidation');
@@ -23,7 +23,7 @@ router.post('/', authenticateToken, createFavourite);
 router.put('/:id', authenticateToken, updateFavourite);
 
 // Delete a favourite
-router.delete('/:id', authenticateToken, deleteFavourite);
+router.delete('/', authenticateToken, removeFavourite);
 
 module.exports = router;
 

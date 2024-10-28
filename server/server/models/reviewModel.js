@@ -22,13 +22,41 @@ const reviewSchema = new mongoose.Schema({
 
   // Comment or review text provided by the user
   // - Required field
-  comment: { 
-    type: String, 
-    required: true 
+  comment: {
+    type: String,
+    required: true,
   },
   rating: { type: Number, required: true, min: 1, max: 5 },
-  
-  createdAt: { type: Date, default: Date.now }
+
+  comment: {
+    type: String,
+    required: true,
+  },
+  likes: {
+    type: Number,
+    default: 0,
+  },
+  comments: [
+    {
+      user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: true,
+      },
+      text: {
+        type: String,
+        required: true,
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now,
+      },
+    },
+  ],
+  ownerResponse: {
+    type: String,
+  },
+  createdAt: { type: Date, default: Date.now },
 });
 
 // Create the Review model using the schema

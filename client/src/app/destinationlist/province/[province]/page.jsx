@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { getAttractionByProvince, getAttractionByprovince } from '../../../API/api';
+import { getAttractionByProvince } from '../../../API/api';
 import { useRouter } from 'next/navigation';
 import Navbar from '../../../../components/Navbar';
 import FooterComponent from '../../../../components/Footer';
+import Link from 'next/link'
 
 export default function DestinationList({ params }) {
   const router = useRouter();
@@ -15,17 +16,22 @@ export default function DestinationList({ params }) {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const ITEMS_PER_PAGE = 7;
 
   const fetchDestinations = async (pageNumber) => {
     setLoading(true);
     try {
       const data = await getAttractionByProvince(province);
+      const slicedData = pageNumber === 1 
+        ? data.slice(0, ITEMS_PER_PAGE) 
+        : data.slice(ITEMS_PER_PAGE * (pageNumber - 1), ITEMS_PER_PAGE * pageNumber);
+      
       if (pageNumber === 1) {
-        setDestinations(data);
+        setDestinations(slicedData);
       } else {
-        setDestinations((prev) => [...prev, ...data]);
+        setDestinations((prev) => [...prev, ...slicedData]);
       }
-      setHasMore(data.hasMore);
+      setHasMore(data.length > ITEMS_PER_PAGE * pageNumber);
     } catch (error) {
       console.error('Error fetching destinations:', error);
     } finally {
@@ -46,56 +52,82 @@ export default function DestinationList({ params }) {
     fetchDestinations(nextPage);
   };
 
+  const getFirstSentence = (description) => {
+    return description.split('. ')[0] + '.';
+  };
+
+  // const handleDestinationClick = (destinationId) => {
+  //   router.push(`/destination/detail/${destinationId}`);
+  // };
+
+  const getLayoutClass = (index) => {
+    const position = index % 7;
+    
+    switch (position) {
+      case 0:
+        return 'col-span-4 row-span-2';
+      case 1:
+        return 'col-span-2 row-span-1';
+      case 2:
+        return 'col-span-2 row-span-2';
+      case 3:
+        return 'col-span-2 row-span-1';
+      case 4:
+        return 'col-span-2 row-span-1';
+      case 5:
+        return 'col-span-3 row-span-1';
+      case 6:
+        return 'col-span-3 row-span-1';
+      default:
+        return 'col-span-3 row-span-1';
+    }
+  };
+
   return (
-    <div>
+    <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-6 gap-4 auto-rows-[200px]">
           {destinations.map((destination, index) => (
             <div
               key={destination.id}
-              className={`relative overflow-hidden rounded-lg ${
-                index === 0 ? 'md:col-span-2 md:row-span-2' : 
-                index === 1 ? 'md:col-span-1 md:row-span-1' : 
-                index === 2 ? 'md:col-span-1 md:row-span-2' : 
-                index === 3 ? 'md:col-span-1 md:row-span-1' : 
-                index === 4 ? 'md:col-span-2 md:row-span-1' : 
-                index === 5 ? 'md:col-span-1 md:row-span-1' : ''
-              }`}>
+              className={`relative overflow-hidden rounded-lg group transition-transform duration-300 hover:scale-[1.02] cursor-pointer ${getLayoutClass(index)}`}
+              onClick={() => {
+                router.push(`/destination/${destination._id}`);
+              } }
+            >
               <Image
                 src={destination.image}
                 alt={destination.name}
-                width={600}
-                height={400}
-                className="w-full h-full object-cover"
+                width={1200}
+                height={800}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4">
-                <h2 className="text-white text-lg font-semibold mb-2">
-                  {destination.name}
-                </h2>
-                <button
-                  className="self-start text-white border border-white hover:bg-yellow-500 hover:border-yellow-500 hover:text-white transition-colors p-2 rounded"
-                  onClick={() => router.push(`/destination/${destination._id}`)}
-                >
-                  Discover
-                </button>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/70 group-hover:to-black/80 transition-all duration-300">
+                <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                  <div className="space-y-2">
+                    <h3 className="text-white text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      {getFirstSentence(destination.description)}
+                    </h3>
+                    <h2 className="text-white text-xl font-semibold">
+                      {destination.name}
+                    </h2>
+                    <button
+                      className="mt-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white border border-white/30 rounded-full hover:bg-white hover:text-black transition-all duration-300 text-sm font-medium"
+                    >
+                      View Experience
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
+          // </Link>
           ))}
         </div>
 
         {loading && (
           <div className="flex justify-center mt-8">
-            <svg className="w-6 h-6 animate-spin" viewBox="0 0 24 24">
-              <circle
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-                fill="none"
-              />
-            </svg>
+            <div className="w-8 h-8 border-4 border-gray-300 border-t-blue-500 rounded-full animate-spin"></div>
           </div>
         )}
 
@@ -104,9 +136,9 @@ export default function DestinationList({ params }) {
             <button
               onClick={loadMore}
               disabled={loading}
-              className="p-2 bg-green-900 text-white rounded hover:bg-yellow-500 transition-colors"
+              className="px-6 py-3 bg-green-950 text-white rounded-full hover:bg-yellow-500 transition-colors duration-300 disabled:opacity-50"
             >
-              Load More
+              Load More Destinations
             </button>
           </div>
         )}

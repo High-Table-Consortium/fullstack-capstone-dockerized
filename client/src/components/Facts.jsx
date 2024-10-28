@@ -1,6 +1,10 @@
 'use client'
+<<<<<<< HEAD
 import React from "react";
 import { useTranslation } from "react-i18next";
+=======
+import React, { useEffect, useState } from "react";
+>>>>>>> 6ba0ddf1c9f9b2a5358adaa3e127b288071b9109
 
  const { t } = useTranslation();
 const southAfricaFacts = [
@@ -21,15 +25,22 @@ const southAfricaFacts = [
   ];
   
   export default function Facts() {
+    const [facts, setFacts] = useState([]);
+
+  useEffect(() => {
     // Shuffle and slice the array to get 6 random facts
-    const randomFacts = southAfricaFacts.sort(() => 0.5 - Math.random()).slice(0, 6);
+    const shuffledFacts = [...southAfricaFacts].sort(() => 0.5 - Math.random());
+    setFacts(shuffledFacts.slice(0, 6));
+  }, []);
+    // Shuffle and slice the array to get 6 random facts
+    // const randomFacts = southAfricaFacts.sort(() => 0.5 - Math.random()).slice(0, 6);
   
     return (
       <div className="container mx-auto p-4 rounded-md bg-[url('https://cdn.britannica.com/27/4227-050-00DBD10A/Flag-South-Africa.jpg')] bg-cover bg-center"
       style={{ minHeight: "100vh" }} >
         <h2 className="text-4xl font-bold mb-12 p-6 text-center text-green-900">{t('home-page.facts')} <span className="text-yellow-400">{t('home-page.facts')}</span></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {randomFacts.map((fact, index) => (
+          {facts.map((fact, index) => (
             <div key={index} className="border p-4 rounded-lg shadow h-full bg-green-950">
               <h3 className="text-lg font-bold mb-2 text-yellow-500">Fact #{index + 1}</h3>
               <p className="text-white">{fact}</p>

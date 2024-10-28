@@ -1,0 +1,150 @@
+{
+  "home-page": {
+    "explore": "Güney Afrika'nın Harika Yolculuğuna Bizimle Başlamaya Hazır mısınız?",
+    "text": "Hayatınızda bir kez yapabileceğiniz bir seyahat için Güney Afrika'nın vahşi ve güzel manzaralarını keşfedin",
+    "button": "Destinasyon Ara",
+    "recommend": "Önerilen Destinasyon",
+    "text2": "Güney Afrika'nın En Popüler Turistik Yerlerini Keşfedin",
+    "facts": "Güney Afrika Hakkında Eğlenceli Bilgiler",
+    "fact1": "Bilgi #1",
+    "text3": "Güney Afrika'nın 12 resmi dili vardır.",
+    "fact2": "Bilgi #2",
+    "text4": "Kruger Ulusal Parkı, Aslan, Leopar, Gergedan, Fil ve Cape Bufalosu'na ev sahipliği yapmaktadır.",
+    "fact3": "Bilgi #3",
+    "text5": "Güney Afrika, dünyanın en büyük yeşil kanyonu olan Blyde River Kanyonu'na ev sahipliği yapmaktadır.",
+    "fact4": "Bilgi #4",
+    "text6": "Cape Town'daki Masa Dağı, dünyanın en eski dağlarından biridir.",
+    "fact5": "Bilgi #5",
+    "text7": "Dünyada üç başkenti olan tek ülkedir.",
+    "fact6": "Bilgi #6",
+    "text8": "Güney Afrika, dünyanın en büyük platin üreticisidir.",
+    "h1": "Eyaletlerimiz",
+    "h1": "Zaman Kazanmak İçin Zaman Harcamalısınız",
+    "text9": "Bir yolculuk, bir hayalle ve bir planla başlar... Hayalinizdeki Seyahat Panosunu oluşturmak için sadece 3 kolay (ve eğlenceli) adım uzaktasınız.",
+    "step1": "Adım 1:",
+    "text10": "Keşfetmek için Güney Afrika'da bir şehir veya eyalet seçin.",
+    "step2": "Adım 2:",
+    "text11": "Seyahat arkadaşlarınızı belirleyin.",
+    "step3": "Adım 3:",
+    "text12": "Seyahat arkadaşlarınızı belirleyin."
+  },
+
+  "navbar": {
+    "explore": "Keşfet",
+    "wishlist": "Dilek Listesi",
+    "about us": "Hakkımızda",
+    "contact_us": "Bize Ulaşın",
+    "sign in/ create an account": "Giriş Yap / Hesap Oluştur"
+  },
+
+  "signin": {
+    "hi": "Giriş Yap",
+    "text1": "E-posta adresinizi girin",
+    "button": "Google ile Kayıt Ol",
+    "email": "mail@safari.com",
+    "password": "Şifre girin",
+    "button": "Giriş Yap",
+    "button2": "Beni girişte tut",
+    "forot password": "Şifrenizi mi unuttunuz",
+    "not registered": "Henüz kayıt olmadınız mı? Hesap Oluşturun"
+  },
+
+  "create account": {
+    "button": "Google ile Kayıt Ol",
+    "or": "Veya",
+    "firstname": "Adınızı girin",
+    "lastname": "Soyadınızı girin",
+    "email address": "E-postanızı girin",
+    "password": "Şifrenizi girin",
+    "confirm password": "Şifrenizi doğrulayın"
+  },
+
+  "password streghth": {
+    "characters": "En az 6 karakter",
+    "letterU": "Büyük harf içerir",
+    "letterL": "Küçük harf içerir",
+    "number": "Bir sayı içerir",
+    "sepcial characters": "Özel karakterler içerir",
+    "button": "Kayıt Ol",
+    "text1": "Zaten bir hesabınız var mı? Giriş Yap"
+  },
+
+  "languages": {
+    "en": "İngilizce",
+    "tr": "Türkçe"
+  },
+
+  "explore": {
+    "discover": "Güney Afrika'nın ikonik destinasyonlarını keşfedin.",
+    "text1": "LÜKS MACERALARLA KUSURSUZ BİRLEŞİYOR",
+    "jouney": "GÜNEY AFRİKA'NIN KALBİNDE YOLCULUK",
+    "text2": "Çarpıcı çeşitlilikte bir ülke olan Güney Afrika, doğal güzellikler, zengin kültür ve canlı şehirlerin büyüleyici bir karışımını sunar. Güney Afrika'nın manzaraları, Kruger Ulusal Parkı'ndaki geniş savanlardan, Drakensberg dağlarının muhteşem zirvelerine ve Garden Route boyunca uzanan etkileyici kıyı şeridine kadar değişken olduğu kadar nefes kesicidir. Masa Dağı ve canlı sahili ile Cape Town kozmopolit cazibesiyle ziyaretçileri çekerken, Johannesburg modern metropolün enerjisini yansıtır. Sıcak kanlı ve dayanıklı Güney Afrikalılar, tarihleri ve gelenekleriyle gurur duyarlar, bu da insanlarla her karşılaşmayı yerler kadar unutulmaz kılar. Ülkenin dokuz eyaleti, her biri Zulu krallığının kalbi KwaZulu-Natal'dan Batı Cape'in üzüm bağlarına kadar benzersiz bir kültürel deneyim sunar, her yolculuğu çeşitlilikle zenginleştirir."
+  },
+
+  "escape": {
+    "escape": "Eyaletlerimize Kaçış",
+    "text1": "Dokuz eyaletimizin güzelliklerini keşfedin",
+    "escape": "Favori Şehirlerimize Kaçış",
+    "text2": "Güney Afrika'nın En Popüler Turistik Yerlerinin Güzelliğini Keşfedin"
+  },
+
+  "Wishlist": {
+    "favorites": "Favorilerim",
+    "text1": "Merhaba, bilinmeyen! İşte kaydettiğiniz atraksiyonlar",
+    "name": "Ad",
+    "categories": "Tüm Kategoriler"
+  },
+
+  "all categories dropdown": {
+    "historical": "Tarihi",
+    "nature": "Doğa",
+    "adventure": "Macera"
+  },
+
+  "about us": {
+    "Us": "Hakkımızda",
+    "text1": "BİZİMLE YOLCULUK YAPIN VE DÜNYAMIZI DAHA İYİ BİR YER OLARAK BIRAKALIM",
+    "mission": "Misyonumuz",
+    "team": "Takım",
+    "text2": "Seyahat planlamayı kolaylaştırmak için ayrıntılı ve kişiselleştirilmiş öneriler sunarak gezginlerin unutulmaz deneyimler yaratmalarını sağlamayı amaçlıyoruz.",
+    "story": "Hikayemiz",
+    "text3": "MeeGuide, seyahatle ilgili kendi hayal kırıklıklarımızdan doğdu. Sık seyahat edenler olarak, çoğu zaman çok sayıda cazibe merkezi ve kişisel önerilerin eksikliği nedeniyle bunalmış hissederdik. Seyahate olan sevgimizi en son teknoloji ile birleştirerek, seyahat planlamayı kolaylaştıran ve keşif deneyimini artıran bir platform oluşturmak istedik. Bugün, milyonlarca gezgine dünyanın en harika cazibe merkezlerini keşfetmeleri ve tadını çıkarmaları için yardım etmekten gurur duyuyoruz.",
+    "values": "Temel Değerlerimiz",
+    "adventure": "Macera",
+    "text4": "Keşfetmeyi ve yeni deneyimleri teşvik etmek",
+    "sustainability": "Sürdürülebilirlik",
+    "text5": "Sorumlu ve çevre dostu seyahati teşvik etmek",
+    "cultural appreciation": "Kültürel Takdir",
+    "text6": "Bir topluluk ve ortak deneyim duygusu oluşturmak",
+    "innovation": "Yenilikçilik",
+    "text7": "Gezginlere daha iyi hizmet sunmak için teknolojimizi sürekli geliştirmek",
+    "explore": "Keşfetmeye Hazır mısınız?",
+    "text8": "MeeGuide ile yolculuğunuza başlayın ve size özel harika atraksiyonları keşfedin.",
+    "button":  "Başlayın",
+    "get in touch": "İletişime Geçin",
+    "text9": "Sizden haber almak isteriz!"
+  },
+
+  "footer": {
+    "h2": "Politikalar",
+    "text1": "Şartlar ve Koşullar",
+    "text2": "Gizlilik",
+    "h2": "Bizimle Bağlantı Kurun",
+    "h2": "Hızlı Linkler",
+    "home": "Ana Sayfa",
+    "explore": "Keşfet",
+    "review": "İnceleme",
+    "about us": "Hakkımızda",
+    "your account": "Hesabınız"
+  },
+
+  "Ai": {
+    "button": "Yapay Zeka ile Sohbet Et"
+},
+
+"Ai_chat": {
+    "h2": "Yapay Zeka Seyahat Asistanı",
+    "search": "Bir soru sorun",
+    "buttom": "Gönder"
+}
+}

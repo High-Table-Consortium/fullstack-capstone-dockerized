@@ -36,10 +36,10 @@ const Provinces = () => {
             <section className="rounded-2xl bg-background relative">
                 <div className="container mx-auto px-4">
                     <h2 className="text-3xl font-semibold text-center mb-2 font-mono">
-                        Escape to Our <span className="text-yellow-500">Provinces</span>
+                         {provincesData.escape.escape} <span className="text-yellow-500">Provinces</span>
                     </h2>
                     <p className="text-center text-gray-600 mb-12">
-                        Discover the Beauty all nine of our provinces
+                        {provincesData.escape.text1}
                     </p>
 
                     {/* Carousel container */}

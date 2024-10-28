@@ -1,18 +1,17 @@
 'use client'
 import React, { useEffect, useState } from "react";
 
-
 const southAfricaFacts = [
-    "South Africa has 12 official languages.",
-    "It's the only country in the world with three capital cities.",
+     translations["home-page"].text3,
+     translations["home-page"].text7,
     "The world's largest diamond was found in South Africa in 1905.",
-    "South Africa is home to the world's largest green canyon, Blyde River Canyon.",
-    "Table Mountain in Cape Town is one of the oldest mountains in the world.",
+    translations["home-page"].text5,
+    translations["home-page"].text6,
     "South Africa has the longest wine route in the world, Route 62.",
     "The country is home to the oldest meteor scar in the world, called the Vredefort Dome.",
-    "South Africa is the largest producer of platinum in the world.",
+    translations["home-page"].text8,
     "The country has the third highest level of biodiversity in the world.",
-    "Kruger National Park is home to the Big Five: lion, leopard, rhinoceros, elephant, and Cape buffalo.",
+    translations["home-page"].text4,,
     "Just like the UK, Australia and New Zealand, South Africa drives on the left side of the road",
     "The first ever heart transplant was performed in South Africa in 1957 ",
     "South Africa’s national animal is the springbok",

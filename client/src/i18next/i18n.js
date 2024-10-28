@@ -10,6 +10,11 @@ i18n.use(Backend).use(LanguageDetector).use(initReactI18next).init({
     order: ['queryString', 'cookie'],
     cache: ['cookie']
   },
+
+backend: {
+      loadPath: '/locales/en/common.json'
+},
+
   interpolation: {
     escapeValue: false
   }

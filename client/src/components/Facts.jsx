@@ -1,7 +1,8 @@
 'use client'
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-
+ const { t } = useTranslation();
 const southAfricaFacts = [
     "South Africa has 12 official languages.",
     "It's the only country in the world with three capital cities.",
@@ -26,7 +27,7 @@ const southAfricaFacts = [
     return (
       <div className="container mx-auto p-4 rounded-md bg-[url('https://cdn.britannica.com/27/4227-050-00DBD10A/Flag-South-Africa.jpg')] bg-cover bg-center"
       style={{ minHeight: "100vh" }} >
-        <h2 className="text-4xl font-bold mb-12 p-6 text-center text-green-900">Fun Facts About <span className="text-yellow-400">South Africa</span></h2>
+        <h2 className="text-4xl font-bold mb-12 p-6 text-center text-green-900">{t('home-page.facts')} <span className="text-yellow-400">{t('home-page.facts')}</span></h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {randomFacts.map((fact, index) => (
             <div key={index} className="border p-4 rounded-lg shadow h-full bg-green-950">

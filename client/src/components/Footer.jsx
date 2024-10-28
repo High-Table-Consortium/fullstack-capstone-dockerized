@@ -22,14 +22,14 @@ export default function FooterComponent() {
               <span className="font-bold text-xl">MeeGuide</span>
             </Link> */}
           <div>
-            <h3 className="text-lg text-yellow-100 font-semibold mb-4">Policies</h3>
+            <h3 className="text-lg text-yellow-100 font-semibold mb-4">{t('footer.h2')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/terms"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Terms & Conditions
+                 {t('footer.text1')}
                 </Link>
               </li>
               <li>
@@ -37,7 +37,7 @@ export default function FooterComponent() {
                   href="/privacy"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Privacy Policy
+                 {t('footer.text2')}
                 </Link>
               </li>
             </ul>
@@ -45,7 +45,7 @@ export default function FooterComponent() {
 
           {/* Social Media Links */}
           <div>
-            <h3 className="text-lg font-semibold text-yellow-100 mb-4">Connect With Us</h3>
+            <h3 className="text-lg font-semibold text-yellow-100 mb-4">{t('footer.h2')}</h3>
             <div className="flex space-x-4">
               <a
                 href="https://facebook.com"
@@ -88,14 +88,14 @@ export default function FooterComponent() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg text-yellow-100 font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg text-yellow-100 font-semibold mb-4">{t('footer.h2..')}</h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href="/"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Home
+                  {t('footer.home')}
                 </Link>
               </li>
               <li>
@@ -103,7 +103,7 @@ export default function FooterComponent() {
                   href="/explore"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Explore
+                   {t('footer.explore')}
                 </Link>
               </li>
               <li>
@@ -111,7 +111,7 @@ export default function FooterComponent() {
                   href="/review"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Review
+                  {t('footer.review')}
                 </Link>
               </li>
               <li>
@@ -119,7 +119,7 @@ export default function FooterComponent() {
                   href="/about"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  About Us
+                  {t('footer.about us')}
                 </Link>
               </li>
               <li>
@@ -127,7 +127,7 @@ export default function FooterComponent() {
                   href="/accountinfo"
                   className="text-yellow-500 hover:text-gray-900 transition-colors"
                 >
-                  Your account
+                   {t('footer.your account')}
                 </Link>
               </li>
             </ul>
@@ -135,7 +135,7 @@ export default function FooterComponent() {
         </div>
         <div className="mt-8 border-t pt-8 text-center text-yellow-500">
           <p>
-            &copy; {new Date().getFullYear()} MeeGuide. All rights reserved.
+            &copy; {new Date().getFullYear()}  {t('footer.rights')}
           </p>
         </div>
       </div>

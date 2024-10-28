@@ -7,8 +7,10 @@ import Navbar from '../../components/Navbar'
 import FooterComponent from '../../components/Footer'
 import { motion } from 'framer-motion'
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function AboutUs() {
+   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {

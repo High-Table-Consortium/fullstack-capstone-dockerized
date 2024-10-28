@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseURL = "http://localhost:3001/api";
+const baseURL = "https://fullstack-capstone-ar7c.onrender.com/api";
 const ModelURL = "https://fullstack-capstone-dockerized-ai.onrender.com"
 const api = axios.create({
     baseURL,
@@ -83,6 +83,7 @@ export const getAttractionByProvince = async (province: string) => {
 */
 export const login = async (email: string, password: string) => {
     const response = await api.post(`/auth/login`, { email, password });
+    // console.log(response)
     return response.data;
 };
 
@@ -115,7 +116,7 @@ export const forgotPassword = async (email: string) => {
 };
 export const resetPassword = async (token: string, newPassword: string) => {
     const response = await api.post(`/auth/reset-password/${token}`, { password: newPassword });
-    console.log(response)
+    // console.log(response)
     return response.data
 };
 
@@ -191,11 +192,11 @@ export const generateDayRoute = async (attractionData: {
     nearby_restaurants: [],
     other_activities: [],
 }) => {
-    const response = await api.post(`${ModelURL}/generate-routine`, {
+    const response = await axios.post(`${ModelURL}/generate-routine`, {
         attraction: attractionData,
         days: 3
     });
-    console.log(response)
+    // console.log(response)
     return response.data;
 };
 
@@ -219,12 +220,12 @@ export const AddFavourites = async(user_id :string ,attractionData:string) => {
         user_id,
         attraction_id: attractionData
     })
-    console.log(response)
+    // console.log(response)
     return response.data
 }
 export const getFavourites = async(userId :string) => {
     const response = await api.get(`/favourites/${userId}`)
-    console.log(response)
+    // console.log(response)
     return response.data
 }
 

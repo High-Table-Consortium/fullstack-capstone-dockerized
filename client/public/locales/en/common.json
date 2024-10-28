@@ -71,7 +71,10 @@
 
     "languages": {
         "en": "English",
-        "tr": "Turkish"
+
+        "tr": "Turkish",
+        "ar": "Arabic"
+
       },
 
     "explore": {
@@ -91,8 +94,13 @@
     "Wishlist": {
         "favorites": "My Favorites",
         "text1": "Hello, unknown! Here are your saved attractions",
+        "search": "Serach Favorites",
+        "no": "No favorites found matching your criteria",
+        "discover": "Discover More Attractions",
+        "button": "Explore All Attractions"
         "name": "Name",
         "categories": "All Categories"
+
     },
 
     "all categories dropdown": {
@@ -106,6 +114,7 @@
         "text1": "JOURNEY WITH US AND TOGETHER WE'LL LEAVE OUR WORLD A BETTER PLACE",
         "mission": "Our Mission",
         "text2": "We aim to make travel planning easy by providing detailed and personalized recommendations for tourist attractions, empowering travelers to create unforgettable experiences.",
+        "team": "The Team",
         "story": "Our Story",
         "text3": "MeeGuide was born from our own travel frustrations. As avid travelers, we often found ourselves overwhelmed by the sheer number of attractions and the lack of personalized recommendations. We decided to combine our love for travel with cutting-edge technology to create a platform that simplifies travel planning and enhances the exploration experience.Today, we're proud to help millions of travelers discover and enjoy the world's most amazing attractions.",
         "values": "Our Core Values",
@@ -119,6 +128,7 @@
         "text7": "Continuously improving our technology to serve travelers better",
         "explore": "Ready to Explore?",
         "text8": "Start your journey with MeeGuide and discover amazing attractions tailored just for you.",
+        "button": "Get Started",
         "get in touch": "Get in touch",
         "text9": "We'd love to hear from you!"
     },
@@ -133,7 +143,8 @@
         "explore": "Explore",
         "review": "Review",
         "about us": "About Us",
-        "your account": "Your Account"
+        "your account": "Your Account",
+        "rights": "2024 Meeguide. All rights reserved."
     },
 
     "Ai": {

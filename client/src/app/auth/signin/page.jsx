@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Forms from '../../../components/Forms';
 import Link from 'next/link';
-import { googleLogin } from '../../api/api';
+import { googleLogin } from '../../API/api';
 import { useAuth } from '../../../context/authContent';
 import { useState } from 'react';
 
@@ -45,7 +45,8 @@ const SignInPage = () => {
     try {
       await login(formData.email, formData.password);
       setError(''); // Clear messages
-      router.push('/');
+      // router.push('/');
+      
     } catch (error) {
       console.error('Sign-in error:', error);
       setError('An error occurred during sign-in. Please try again later.');

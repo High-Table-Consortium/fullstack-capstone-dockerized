@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react'; 
 import Router from 'next/navigation';
 import Link from 'next/link';

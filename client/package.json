@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "start": "docker-compose up",
+    "start": "next start",
     "build": "next build",
     "prune": "docker-compose down -v",
     "stop": "docker-compose down",

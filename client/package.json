@@ -6,6 +6,8 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
+    "export": "next export",
+    "netlify-build": "next build && next export",
     "prune": "docker-compose down -v",
     "stop": "docker-compose down",
     "lint": "next lint"
@@ -35,6 +37,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@netlify/plugin-nextjs": "^5.10.0",
     "@types/node": "22.7.4",
     "@types/react": "18.3.11",
     "autoprefixer": "^10.0.1",

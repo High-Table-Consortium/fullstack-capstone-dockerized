@@ -7,10 +7,11 @@ export const metadata = {
   title: "Meeguide",
   description: "Admin dashboard for South African tourist attractions",
   // Add Open Graph image metadata
+  metadataBase: new URL('https://meeguide.netlify.app/'),
   openGraph: {
     title: "Meeguide",
     description: "Admin dashboard for South African tourist attractions",
-    url: "https://Meeguide.com",
+    url: "https://meeguide.netlify.app/",
     images: [
       {
         url: "/mg.svg",

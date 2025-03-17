@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const baseURL = "https://fullstack-capstone-ar7c.onrender.com/api";
-const ModelURL = "https://fullstack-capstone-dockerized-ai.onrender.com"
+const baseURL = process.env.NEXT_PUBLIC_API_URL || "https://fullstack-capstone-ar7c.onrender.com/api";
+const ModelURL = process.env.NEXT_PUBLIC_MODEL_URL || "https://fullstack-capstone-dockerized-ai.onrender.com"
 const api = axios.create({
     baseURL,
     withCredentials: true, // This ensures cookies are sent with requests
@@ -240,4 +240,3 @@ export const removeFavourites = async (userId: string, favouriteId: string) => {
         throw new Error('Failed to remove favourite. Please try again.');
     }
 };
-

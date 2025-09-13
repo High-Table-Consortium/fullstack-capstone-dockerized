@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/legacy/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react'; // Import icons from lucide-react
+import { ChevronLeft, ChevronRight } from 'lucide-react'; // bbbbImport icons from lucide-react
 import Link from 'next/link';
 
 // Cities component
